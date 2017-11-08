@@ -10,7 +10,6 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
   * [Official C/C++ Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
   * [C/C++ Clang Command Adapter Extension](https://marketplace.visualstudio.com/items?itemName=mitaki28.vscode-clang)
   * [Include Autocomplete Extension](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
-  * (Optional) [Studio Icons Extension](https://marketplace.visualstudio.com/items?itemName=jtlowe.vscode-icon-theme)
 
 ## Installation
 
@@ -25,6 +24,8 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
 
 ## Configuration
 
+At this point, everything you need is installed
+
 1. Open the **sfml-vscode-boilerplate** folder in VS Code. You should see an lime-green status bar at the bottom (color-picked from the SFML logo).
 2. At this point you should be able to run a build task (**Ctrl+Shift+B** > **Build & Run**), but it'll be nicer to add keybindings for these tasks so you can build with 1 keypress.
 3. Open the .vscode folder and click on the **\_keybindings.json** file. This is not an officially recognized file, but just contains the keybindings you can copy into the actual keybindings.json file.
@@ -33,6 +34,8 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
 6. Hit the **F9** key to run the **Build & Run: Release** task. It should run the Makefile, find the compiler, build the Main.cpp into Main.o, and launch the green circle hello world that you should recognize from the official SFML guide. **Shift+F9** will launch the basic Debug build, and F8 will launch the actual Debugger along with the Debug build.
 
 ## Adding source files & libraries to the Makefile
+
+If you're moving to this from CodeBlocks, think of this as adding files to your project. The src files might already be there, but you need to tell the compiler to include them.
 
 1. Open the Makefile. The only two variables you should be concerned about at this point are **\_SRCS** & **\_LLS** at the very top. Add .cpp files to the **\_SRCS** separated by a space character. Example:
 ```
@@ -64,7 +67,7 @@ If you need to add additional external libraries, these are a couple different p
 
 ## Notes
 
-* By default, this configuration uses the C++14 standard. If you want to use 11, you can change it in the **Makefile** & **"clang.cxxflags"** in settings.json
+* By default, this configuration uses the C++14 standard. If you want to use 11, you can change it in the **Makefile** & **"clang.cxxflags"** in settings.json.
 * Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 * This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well.
 
