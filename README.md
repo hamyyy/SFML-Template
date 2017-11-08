@@ -41,17 +41,17 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
 
 If you need to add additional external libraries, these are a couple different places to keep in mind.
 
-* .vscode\\c\_cpp\_properties.json - You'll see "includePath" & "browse.path" which look very similar, but one search directories recursively and another cannot. Both contain the default search directories for the GCC 6.1.0 MinGW compiler, along with SFML's directory
-  * "includePath" - Used by the default linting/intellisense engine from the C/C++ plugin - if "C_Cpp.intelliSenseEngine" is set to "Default" in settings.json. includePath is also used by the "Include Autocomplete" plugin.
-  * "browse.path" - Can be largely ignored. Only used if "C_Cpp.intelliSenseEngine" is set to "Tag Parser" from what I understand. Can search directories recursively, so you can put a "\\*" after large include directories
-* .vscode\\settings.json - Contain all of your workspace settings & override VS Code's main settings.json. Both can contain the same settings though. Go down to "clang.cxxflags"
-  * "clang.cxxflags" - Contain the search directories for the Clang extension's auto-complete, which is an absolute must have for this environment. Any time you add a directory to "includePath", add it here too, but with "-I" in front of it, surrounded by quotes, separated by commas (VS Code will let you know if there's a general .json syntax error if you're not familiar)
-  * "files.exclude" - Add any filetypes you want to exclude from the folder panel.
-  * "files.encoding" - This uses the same encoding as CodeBlocks (windows1252), but feel free to change it to suit your needs
-  * "editor.fontFamily" - I set this to Courier by default to get more of that CodeBlocks feel, but feel free to remove this line if you want to stick to VS Code's default (Consolas), or your own preference
-* .vscode\\launch.json - Used to store the configuration to launch the debugger.
-* .vscode\\tasks.json - Used to store the task definitions (Build & Run commands, etc.)
-* .vscode\\_keybindings.json - As mentioned before, this is used purely to store handy keybindings that one can add themselves, and not recognized by VS Code.
+* **.vscode\\c\_cpp\_properties.json** - You'll see "includePath" & "browse.path" which look very similar, but one search directories recursively and another cannot. Both contain the default search directories for the GCC 6.1.0 MinGW compiler, along with SFML's directory
+  * _"includePath"_ - Used by the default linting/intellisense engine from the C/C++ plugin - if "C_Cpp.intelliSenseEngine" is set to "Default" in settings.json. includePath is also used by the "Include Autocomplete" plugin.
+  * _"browse.path"_ - Can be largely ignored. Only used if "C_Cpp.intelliSenseEngine" is set to "Tag Parser" from what I understand. Can search directories recursively, so you can put a "\\*" after large include directories
+* **.vscode\\settings.json** - Contain all of your workspace settings & override VS Code's main settings.json. Both can contain the same settings though. Go down to "clang.cxxflags"
+  * _"clang.cxxflags"_ - Contain the search directories for the Clang extension's auto-complete, which is an absolute must have for this environment. Any time you add a directory to "includePath", add it here too, but with "-I" in front of it, surrounded by quotes, separated by commas (VS Code will let you know if there's a general .json syntax error if you're not familiar)
+  * _"files.exclude"_ - Add any filetypes you want to exclude from the folder panel.
+  * _"files.encoding"_ - This uses the same encoding as CodeBlocks (windows1252), but feel free to change it to suit your needs
+  * _"editor.fontFamily"_ - I set this to Courier by default to get more of that CodeBlocks feel, but feel free to remove this line if you want to stick to VS Code's default (Consolas), or your own preference
+* **.vscode\\launch.json** - Used to store the configuration to launch the debugger.
+* **.vscode\\tasks.json** - Used to store the task definitions (Build & Run commands, etc.)
+* **.vscode\\_keybindings.json** - As mentioned before, this is used purely to store handy keybindings that one can add themselves, and not recognized by VS Code.
 
 ## Notes
 
