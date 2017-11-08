@@ -1,0 +1,4 @@
+src/obj/Release/**
+src/obj/Debug/**
+src/obj/**
+Thumbs.db

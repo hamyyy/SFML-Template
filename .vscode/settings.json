@@ -1,0 +1,83 @@
+{
+	"editor.fontFamily": "'Courier New', monospace",
+    "editor.lineHeight": 20,
+    "editor.fontSize": 14,
+    "editor.tabSize": 4,
+	"editor.insertSpaces": false,
+
+	"workbench.colorCustomizations": {
+        "statusBar.background": "#8ac242",
+        "statusBar.foreground": "#ffffff",
+        "statusBar.debuggingBackground": "#5e9517",
+		"statusBar.debuggingForeground": "#ffffff"
+	},
+
+	"files.encoding": "windows1252",
+	"files.trimTrailingWhitespace": true,
+	"files.exclude": {
+        "bin": true,
+		"src/obj": true,
+		"**/*.7z": true,
+        "**/*.rar": true,
+        "**/Thumbs.db": true
+    },
+	"files.associations": {
+		"array": "cpp",
+		"*.tcc": "cpp",
+		"cctype": "cpp",
+		"clocale": "cpp",
+		"cmath": "cpp",
+		"cstdint": "cpp",
+		"cstdio": "cpp",
+		"cstdlib": "cpp",
+		"cwchar": "cpp",
+		"cwctype": "cpp",
+		"exception": "cpp",
+		"initializer_list": "cpp",
+		"iosfwd": "cpp",
+		"istream": "cpp",
+		"limits": "cpp",
+		"new": "cpp",
+		"optional": "cpp",
+		"ostream": "cpp",
+		"sstream": "cpp",
+		"stdexcept": "cpp",
+		"streambuf": "cpp",
+		"string_view": "cpp",
+		"system_error": "cpp",
+		"tuple": "cpp",
+		"type_traits": "cpp",
+		"typeinfo": "cpp",
+		"utility": "cpp"
+	},
+
+	"C_Cpp.autocomplete": "Disabled",
+    "C_Cpp.errorSquiggles": "Disabled",
+
+	"clang.executable": "C:\\Program Files\\LLVM\\bin\\clang.exe",
+    "clang.completion.enable": true,
+    "clang.completion.completeMacros": true,
+    "clang.completion.triggerChars": [
+        ".",
+        ":",
+        ">"
+    ],
+    "clang.cxxflags": [
+		"-fexpensive-optimizations",
+		"-Os",
+		"-Wfatal-errors",
+		"-Wextra",
+		"-Wall",
+		"-std=c++14",
+		"-IC:\\SFML-2.4.2\\include",
+		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++",
+		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\i686-w64-mingw32",
+		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\backward",
+		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\tr1",
+		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\tr2",
+		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include",
+		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include-fixed",
+		"-IC:\\mingw-w64\\i686-w64-mingw32\\include",
+		"-IC:\\mingw-w64\\include"
+    ]
+}
