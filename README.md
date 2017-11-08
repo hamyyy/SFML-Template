@@ -34,30 +34,37 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
 
 ## Adding source files & libraries to the Makefile
 
-1. Open the Makefile. The only two variables you should be concerned about at this point are **\_SRCS** & **\_LLS** at the very top. Add .cpp files to the **\_SRCS** separated by a space character. Example: **\_SRS=Main.cpp Window.cpp Character.cpp libs/Collision.cpp libs/ParticleSystem.cpp**
-2. Add any additional link libraries you need to the **\_LLS** variable, prefixed with **-l** and separated by a space character. Example: **\_LLS=-lXInput -luser32 -lsomething**
+1. Open the Makefile. The only two variables you should be concerned about at this point are **\_SRCS** & **\_LLS** at the very top. Add .cpp files to the **\_SRCS** separated by a space character. Example:
+```
+\_SRS=Main.cpp Window.cpp Character.cpp libs/Collision.cpp libs/ParticleSystem.cpp
+```
+
+2. Add any additional link libraries you need to the **\_LLS** variable, prefixed with **-l** and separated by a space character. Example:
+```
+\_LLS=-lXInput -luser32 -lsomething
+```
 
 ## Include directories & .vscode folder
 
 If you need to add additional external libraries, these are a couple different places to keep in mind.
 
-* **.vscode\\c\_cpp\_properties.json** - You'll see **"includePath"** & **"browse.path"** which look very similar, but one search directories recursively and another cannot. Both contain the default search directories for the GCC 6.1.0 MinGW compiler, along with SFML's directory
-  * **_"includePath"_** - Used by the default linting/intellisense engine from the C/C++ plugin - if **"C_Cpp.intelliSenseEngine"** is set to **"Default"** in settings.json. includePath is also used by the **Include Autocomplete** plugin.
-  * **_"browse.path"_** - Can be largely ignored. Only used if **"C_Cpp.intelliSenseEngine"** is set to **"Tag Parser"** from what I understand. Can search directories recursively, so you can put a "\\*" after large include directories
+* **.vscode\\c\_cpp\_properties.json** - You'll see **"includePath"** & **"browse.path"** which look very similar, but one search directories recursively and another cannot. Both contain the default search directories for the GCC 6.1.0 MinGW compiler, along with SFML's directory. Add addtional libraries to both sections for consistency, but includePath is the only one used out of the box.
+  * **_"includePath"_** - Used by the C/C++ plugin if **"C_Cpp.intelliSenseEngine"** is set to **"Default"** in settings.json. includePath is also used by the **Include Autocomplete** plugin.
+  * **_"browse.path"_** - Can be largely ignored in this config. Only used if **"C_Cpp.intelliSenseEngine"** is set to **"Tag Parser"** from what I understand. Can search directories recursively, so you can put a **\\\*** after large include directories
 
-* **.vscode\\settings.json** - Contain all of your workspace settings & override VS Code's main settings.json. Both can contain the same settings though. Here are some of interest:
-  * **_"clang.cxxflags"_** - Contain the search directories for the Clang extension's auto-complete, which is an absolute must have for this environment. Any time you add a directory to "includePath", add it here too, but with **-I** in front of it, surrounded by quotes, separated by commas (VS Code will let you know if there's a general .json syntax error if you're not familiar)
+* **.vscode\\settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
+  * **_"clang.cxxflags"_** - Contain the search directories for the Clang extension's auto-complete. Any time you add a directory to "includePath", add it here too, but with **-I** in front of it, surrounded by quotes, separated by commas (VS Code will let you know if there's a general .json syntax error if you're not familiar).
   * **_"files.exclude"_** - Add any filetypes you want to exclude from the folder panel.
-  * **_"files.encoding"_** - This uses the same encoding as CodeBlocks (**windows1252**), but feel free to change it to suit your needs
-  * **_"editor.fontFamily"_** - I set this to Courier by default to get more of that CodeBlocks feel, but feel free to remove this line if you want to stick to VS Code's default (Consolas), or your own preference
+  * **_"files.encoding"_** - This uses the same encoding as CodeBlocks (**windows1252**), but feel free to change it to suit your needs.
+  * **_"editor.fontFamily"_** - I set this to Courier by default to that CodeBlocks feel. Change/remove this line if you want to stick to VS Code's default (Consolas), or your own preference. Same with **"editor.fontSize"** & **"editor.lineHeight"**.
 
 * **.vscode\\launch.json** - Used to store the configuration to launch the debugger.
-* **.vscode\\tasks.json** - Used to store the task definitions (Build & Run commands, etc.)
+* **.vscode\\tasks.json** - Used to store the task definitions (Build & Run commands, etc.).
 * **.vscode\\_keybindings.json** - As mentioned before, this is used purely to store handy keybindings that one can add themselves, and not recognized by VS Code.
 
 ## Notes
 
-* By default, this configuration uses the C++14 standard. If you want to use 11, you can change it in the Makefile & the "clang.cxxflags" in settings.json
+* By default, this configuration uses the C++14 standard. If you want to use 11, you can change it in the **Makefile** & **"clang.cxxflags"** in settings.json
 * Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 * This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well.
 
