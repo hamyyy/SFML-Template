@@ -36,12 +36,12 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
 
 1. Open the Makefile. The only two variables you should be concerned about at this point are **\_SRCS** & **\_LLS** at the very top. Add .cpp files to the **\_SRCS** separated by a space character. Example:
 ```
-\_SRS=Main.cpp Window.cpp Character.cpp libs/Collision.cpp libs/ParticleSystem.cpp
+_SRS=Main.cpp Window.cpp Character.cpp libs/Collision.cpp libs/ParticleSystem.cpp
 ```
 
 2. Add any additional link libraries you need to the **\_LLS** variable, prefixed with **-l** and separated by a space character. Example:
 ```
-\_LLS=-lXInput -luser32 -lsomething
+_LLS=-lXInput -luser32 -lsomething
 ```
 
 ## Include directories & .vscode folder
