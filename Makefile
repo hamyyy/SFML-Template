@@ -1,7 +1,9 @@
 #==============================================================================
-# Add project cpp files here (relative to src directory)
+# Project .cpp or .rc files (relative to src directory)
 _SRCS=Main.cpp
-# Add additional link libraries here (prefixed with -l)
+# Subdirectories within src\ that contain source files
+_SUBDIRS=
+# Link libraries (prefixed with -l)
 _LLS=
 
 #==============================================================================
@@ -21,19 +23,25 @@ LIB_DEB=-lsfml-graphics-d -lsfml-audio-d -lsfml-network-d -lsfml-window-d -lsfml
 
 # Compiler & flags
 CC=i686-w64-mingw32-g++.exe
+RC=windres.exe
 CFLAGS=-fexpensive-optimizations -Os -Wfatal-errors -Wextra -Wall -std=c++14
 
 # Scripts
-ODIR=obj\$(BUILD)
-_OBJS=$(_SRCS:.cpp=.o)
-OBJS=$(patsubst %,src\$(ODIR)\\%,$(_OBJS))
+ODIR=src\obj\$(BUILD)
+_RESS=$(_SRCS:.rc=.res)
+_OBJS=$(_RESS:.cpp=.o)
+OBJS=$(patsubst %,$(ODIR)\\%,$(_OBJS))
+SUBDIRS=$(patsubst %,$(ODIR)\\%,$(_SUBDIRS))
 
 all: build
 
 rebuild: clean build
 
-src\$(ODIR)\\%.o: src\\%.cpp | src\$(ODIR)
+$(ODIR)\\%.o: src\%.cpp | $(ODIR) $(SUBDIRS)
 	$(CC) -g $(CFLAGS) -I$(INC) -o $@ -c $<
+
+$(ODIR)\\%.res: src\%.rc | $(ODIR) $(SUBDIRS)
+	$(RC) -J rc -O coff -i $< -o $@
 
 build: $(OBJS) | bin\$(BUILD)
 ifeq ($(BUILD),Release)
@@ -42,12 +50,12 @@ else
 	$(CC) -L$(SFMLLIB) -o bin\$(BUILD)\$(NAME).exe $(OBJS) $(LIB_DEB)
 endif
 
-src\obj\$(BUILD):
-	mkdir src\obj\$(BUILD)
+$(ODIR) $(SUBDIRS):
+	mkdir $@
 
 bin\$(BUILD):
-	mkdir bin\$(BUILD)
+	mkdir $@
 
 .PHONY: clean
 clean:
-	del $(OBJS)
+	if exist $(ODIR) del $(ODIR) /F /Q

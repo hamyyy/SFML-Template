@@ -37,12 +37,18 @@ At this point, everything you need is installed
 
 If you're moving to this from CodeBlocks, think of this as adding files to your project. The src files might already be there, but you need to tell the compiler to include them.
 
-1. Open the Makefile. The only two variables you should be concerned about at this point are **\_SRCS** & **\_LLS** at the very top. Add .cpp files to the **\_SRCS** separated by a space character. Example:
+1. Open the Makefile. The only three variables you should be concerned about at this point are **\_SRCS**, **\_SUBDIRS** & **\_LLS** at the very top.
+2. Add **.cpp** or **.rc** files to the **\_SRCS** separated by a space character. Example:
 ```
 _SRS=Main.cpp Window.cpp Character.cpp libs/Collision.cpp libs/ParticleSystem.cpp
 ```
 
-2. Add any additional link libraries you need to the **\_LLS** variable, prefixed with **-l** and separated by a space character. Example:
+3. Add any additional subfolders you have contained within src\ to the **\_SUBDIRS** variable, separated by a space character. Example:
+```
+_SUBDIRS=libs render net
+```
+
+4. Add any additional link libraries you need to the **\_LLS** variable, prefixed with **-l** and separated by a space character. Example:
 ```
 _LLS=-lXInput -luser32 -lsomething
 ```
@@ -53,7 +59,7 @@ If you need to add additional external libraries, these are a couple different p
 
 * **.vscode\\c\_cpp\_properties.json** - You'll see **"includePath"** & **"browse.path"** which look very similar, but one can search directories recursively and another cannot. Both contain the default search directories for the GCC 6.1.0 MinGW compiler, along with SFML's directory. Add addtional libraries to both sections for consistency, but includePath is the only one used out of the box.
 
-  * **_"includePath"_** - Used by the C/C++ plugin if **"C_Cpp.intelliSenseEngine"** is set to **"Default"** in settings.json. includePath is also used by the **Include Autocomplete** plugin.
+  * **_"includePath"_** - Used by the C/C++ extension if **"C_Cpp.intelliSenseEngine"** is set to **"Default"** in settings.json. includePath is also used by the **Include Autocomplete** extension.
   * **_"browse.path"_** - Can be largely ignored in this config. Only used if **"C_Cpp.intelliSenseEngine"** is set to **"Tag Parser"** from what I understand. Can search directories recursively, so you can put a **\\\*** after large include directories
 
 * **.vscode\\settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
@@ -71,6 +77,7 @@ If you need to add additional external libraries, these are a couple different p
 
 * This configuration assumes all source files are contained within the **src** folder, but uses the **root** as the working directory for assets & things referenced in your project.
 * By default, this configuration uses the C++14 standard. If you want to use 11, you can change it in the **Makefile** & **"clang.cxxflags"** in settings.json.
+* If for some reason after an update, the build scripts don't work, reinstall the C/C++ extension and it should work again.
 * Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 * This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well.
 
