@@ -1,26 +1,26 @@
 {
 	"editor.fontFamily": "'Courier New', monospace",
-    "editor.lineHeight": 20,
-    "editor.fontSize": 14,
-    "editor.tabSize": 4,
+	"editor.lineHeight": 20,
+	"editor.fontSize": 14,
+	"editor.tabSize": 4,
 	"editor.insertSpaces": false,
 
 	"workbench.colorCustomizations": {
-        "statusBar.background": "#8ac242",
-        "statusBar.foreground": "#ffffff",
-        "statusBar.debuggingBackground": "#5e9517",
+		"statusBar.background": "#8ac242",
+		"statusBar.foreground": "#ffffff",
+		"statusBar.debuggingBackground": "#5e9517",
 		"statusBar.debuggingForeground": "#ffffff"
 	},
 
 	"files.encoding": "windows1252",
 	"files.trimTrailingWhitespace": true,
 	"files.exclude": {
-        "bin": true,
+		"bin": true,
 		"src/obj": true,
 		"**/*.7z": true,
-        "**/*.rar": true,
-        "**/Thumbs.db": true
-    },
+		"**/*.rar": true,
+		"**/Thumbs.db": true
+	},
 	"files.associations": {
 		"array": "cpp",
 		"*.tcc": "cpp",
@@ -52,17 +52,17 @@
 	},
 
 	"C_Cpp.autocomplete": "Disabled",
-    "C_Cpp.errorSquiggles": "Disabled",
+	"C_Cpp.errorSquiggles": "Disabled",
 
 	"clang.executable": "C:\\Program Files\\LLVM\\bin\\clang.exe",
-    "clang.completion.enable": true,
-    "clang.completion.completeMacros": true,
-    "clang.completion.triggerChars": [
-        ".",
-        ":",
-        ">"
-    ],
-    "clang.cxxflags": [
+	"clang.completion.enable": true,
+	"clang.completion.completeMacros": true,
+	"clang.completion.triggerChars": [
+		".",
+		":",
+		">"
+	],
+	"clang.cxxflags": [
 		"-fexpensive-optimizations",
 		"-Os",
 		"-Wfatal-errors",
@@ -79,5 +79,5 @@
 		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include-fixed",
 		"-IC:\\mingw-w64\\i686-w64-mingw32\\include",
 		"-IC:\\mingw-w64\\include"
-    ]
+	]
 }
