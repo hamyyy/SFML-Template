@@ -56,20 +56,18 @@
 
 	"clang.executable": "C:\\Program Files\\LLVM\\bin\\clang.exe",
 	"clang.completion.enable": true,
-	"clang.completion.completeMacros": true,
+	"clang.completion.completeMacros": false,
 	"clang.completion.triggerChars": [
 		".",
 		":",
 		">"
 	],
 	"clang.cxxflags": [
-		"-fexpensive-optimizations",
 		"-Os",
 		"-Wfatal-errors",
 		"-Wextra",
 		"-Wall",
 		"-std=c++14",
-		"-IC:\\SFML-2.4.2\\include",
 		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++",
 		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\i686-w64-mingw32",
 		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\backward",

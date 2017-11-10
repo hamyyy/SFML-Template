@@ -24,7 +24,7 @@ LIB_DEB=-lsfml-graphics-d -lsfml-audio-d -lsfml-network-d -lsfml-window-d -lsfml
 # Compiler & flags
 CC=i686-w64-mingw32-g++.exe
 RC=windres.exe
-CFLAGS=-fexpensive-optimizations -Os -Wfatal-errors -Wextra -Wall -std=c++14
+CFLAGS=-Os -Wfatal-errors -Wextra -Wall -std=c++14
 
 # Scripts
 ODIR=src\obj\$(BUILD)
