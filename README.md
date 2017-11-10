@@ -60,7 +60,7 @@ If you need to add additional external libraries, these are a couple different p
 * **.vscode\\c\_cpp\_properties.json** - You'll see **"includePath"** & **"browse.path"** which look very similar, but one can search directories recursively and another cannot. Both contain the default search directories for the GCC 6.1.0 MinGW compiler, along with SFML's directory. Add addtional libraries to both sections for consistency, but includePath is the only one used out of the box.
 
   * **_"includePath"_** - Used by the C/C++ extension if **"C_Cpp.intelliSenseEngine"** is set to **"Default"** in settings.json. includePath is also used by the **Include Autocomplete** extension.
-  * **_"browse.path"_** - Can be largely ignored in this config. Only used if **"C_Cpp.intelliSenseEngine"** is set to **"Tag Parser"** from what I understand. Can search directories recursively, so you can put a **\\\*** after large include directories
+  * **_"browse.path"_** - Only used if **"C_Cpp.intelliSenseEngine"** is set to **"Tag Parser"** from what I understand. Can search directories recursively, so you can put a **\\\*** after large include directories
 
 * **.vscode\\settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
 
