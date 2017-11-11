@@ -5,7 +5,7 @@
 	"tasks": [
 		{
 			"label": "Build & Run: Release",
-			"command": "\"mingw32-make BUILD=Release NAME=${workspaceRootFolderName}\";${workspaceRoot}\\bin\\Release\\${workspaceRootFolderName}.exe",
+			"command": "\"mingw32-make BUILD=Release NAME=${workspaceRootFolderName}\"; if($?) {${workspaceRoot}\\bin\\Release\\${workspaceRootFolderName}.exe}",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -81,7 +81,7 @@
 		},
 		{
 			"label": "Build & Run: Debug",
-			"command": "\"mingw32-make BUILD=Debug NAME=${workspaceRootFolderName}\";cls;${workspaceRoot}\\bin\\Debug\\${workspaceRootFolderName}.exe",
+			"command": "\"mingw32-make BUILD=Debug NAME=${workspaceRootFolderName}\"; if($?) {cls;${workspaceRoot}\\bin\\Debug\\${workspaceRootFolderName}.exe}",
 			"type": "shell",
 			"group": {
 				"kind": "build",
