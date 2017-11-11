@@ -5,7 +5,7 @@
 	"tasks": [
 		{
 			"label": "Build & Run: Release",
-			"command": "\"mingw32-make BUILD=Release NAME=${workspaceRootFolderName}\"; if($?) {${workspaceRoot}\\bin\\Release\\${workspaceRootFolderName}.exe}",
+			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make BUILD=Release NAME=${workspaceRootFolderName}\";if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded: Launching ${workspaceRootFolderName} ===';$host.ui.rawui.ForegroundColor='White';${workspaceRoot}\\bin\\Release\\${workspaceRootFolderName}.exe}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -24,7 +24,7 @@
 		},
 		{
 			"label": "Build: Release",
-			"command": "\"mingw32-make BUILD=Release NAME=${workspaceRootFolderName}\"",
+			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make BUILD=Release NAME=${workspaceRootFolderName}\";if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded ==='}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -62,7 +62,7 @@
 		},
 		{
 			"label": "Rebuild: Release",
-			"command": "\"mingw32-make rebuild BUILD=Release NAME=${workspaceRootFolderName}\"",
+			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make rebuild BUILD=Release NAME=${workspaceRootFolderName}\";if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded ==='}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -81,7 +81,7 @@
 		},
 		{
 			"label": "Build & Run: Debug",
-			"command": "\"mingw32-make BUILD=Debug NAME=${workspaceRootFolderName}\"; if($?) {cls;${workspaceRoot}\\bin\\Debug\\${workspaceRootFolderName}.exe}",
+			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make BUILD=Debug NAME=${workspaceRootFolderName}\"; if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded: Launching ${workspaceRootFolderName} ===';$host.ui.rawui.ForegroundColor='White';${workspaceRoot}\\bin\\Debug\\${workspaceRootFolderName}.exe}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -100,7 +100,7 @@
 		},
 		{
 			"label": "Build: Debug",
-			"command": "\"mingw32-make BUILD=Debug NAME=${workspaceRootFolderName}\"",
+			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make BUILD=Debug NAME=${workspaceRootFolderName}\"; if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded ==='}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -138,7 +138,7 @@
 		},
 		{
 			"label": "Rebuild: Debug",
-			"command": "\"mingw32-make rebuild BUILD=Debug NAME=${workspaceRootFolderName}\"",
+			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make rebuild BUILD=Debug NAME=${workspaceRootFolderName}\";if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded ==='}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
 			"type": "shell",
 			"group": {
 				"kind": "build",

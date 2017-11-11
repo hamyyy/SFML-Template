@@ -9,7 +9,10 @@
 		"statusBar.background": "#8ac242",
 		"statusBar.foreground": "#ffffff",
 		"statusBar.debuggingBackground": "#5e9517",
-		"statusBar.debuggingForeground": "#ffffff"
+		"statusBar.debuggingForeground": "#ffffff",
+		"terminal.ansiBrightRed": "#ee3355",
+		"terminal.ansiBrightGreen": "#a5ea4f",
+		"terminal.ansiBrightBlue": "#5599ff"
 	},
 
 	"files.encoding": "windows1252",
