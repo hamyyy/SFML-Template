@@ -15,7 +15,7 @@
 				"cwd": "${workspaceRoot}"
 			},
 			"presentation": {
-				"echo": true,
+				"echo": false,
 				"reveal": "always",
 				"focus": true,
 				"panel": "shared"
@@ -34,7 +34,7 @@
 				"cwd": "${workspaceRoot}"
 			},
 			"presentation": {
-				"echo": true,
+				"echo": false,
 				"reveal": "always",
 				"focus": true,
 				"panel": "shared"
@@ -72,7 +72,7 @@
 				"cwd": "${workspaceRoot}"
 			},
 			"presentation": {
-				"echo": true,
+				"echo": false,
 				"reveal": "always",
 				"focus": true,
 				"panel": "shared"
@@ -91,7 +91,7 @@
 				"cwd": "${workspaceRoot}"
 			},
 			"presentation": {
-				"echo": true,
+				"echo": false,
 				"reveal": "always",
 				"focus": true,
 				"panel": "shared"
@@ -110,7 +110,7 @@
 				"cwd": "${workspaceRoot}"
 			},
 			"presentation": {
-				"echo": true,
+				"echo": false,
 				"reveal": "always",
 				"focus": true,
 				"panel": "shared"
@@ -148,7 +148,7 @@
 				"cwd": "${workspaceRoot}"
 			},
 			"presentation": {
-				"echo": true,
+				"echo": false,
 				"reveal": "always",
 				"focus": true,
 				"panel": "shared"
