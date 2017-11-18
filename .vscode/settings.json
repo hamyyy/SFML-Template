@@ -79,6 +79,7 @@
 		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include",
 		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include-fixed",
 		"-IC:\\mingw-w64\\i686-w64-mingw32\\include",
-		"-IC:\\mingw-w64\\include"
+		"-IC:\\mingw-w64\\include",
+		"-IC:\\SFML-2.4.2\\include"
 	]
 }
