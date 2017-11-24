@@ -27,6 +27,7 @@
 	"files.associations": {
 		"array": "cpp",
 		"*.tcc": "cpp",
+		"*.rc": "cpp",
 		"cctype": "cpp",
 		"clocale": "cpp",
 		"cmath": "cpp",
