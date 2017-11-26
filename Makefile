@@ -37,10 +37,16 @@ all: build
 
 rebuild: clean build
 
-$(ODIR)\\%.o: src\%.cpp | $(ODIR) $(SUBDIRS)
+$(ODIR)\\%.o: src\%.cpp src\%.hpp | $(ODIR) $(SUBDIRS)
 	$(CC) -g $(CFLAGS) -I$(INC) -o $@ -c $<
 
-$(ODIR)\\%.res: src\%.rc | $(ODIR) $(SUBDIRS)
+$(ODIR)\\%.o: src\%.cpp src\%.h | $(ODIR) $(SUBDIRS)
+	$(CC) -g $(CFLAGS) -I$(INC) -o $@ -c $<
+
+$(ODIR)\\%.o: src\%.c src\%.h | $(ODIR) $(SUBDIRS)
+	$(CC) -g $(CFLAGS) -I$(INC) -o $@ -c $<
+
+$(ODIR)\\%.res: src\%.rc src\%.h | $(ODIR) $(SUBDIRS)
 	$(RC) -J rc -O coff -i $< -o $@
 
 build: $(OBJS) | bin\$(BUILD)
