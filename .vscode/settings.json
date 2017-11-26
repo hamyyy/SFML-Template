@@ -55,32 +55,28 @@
 		"utility": "cpp"
 	},
 
-	"C_Cpp.autocomplete": "Disabled",
+	"C_Cpp.autocomplete": "Default",
 	"C_Cpp.errorSquiggles": "Disabled",
 
-	"clang.executable": "C:\\Program Files\\LLVM\\bin\\clang.exe",
-	"clang.completion.enable": true,
-	"clang.completion.completeMacros": false,
-	"clang.completion.triggerChars": [
-		".",
-		":",
-		">"
-	],
-	"clang.cxxflags": [
-		"-Os",
-		"-Wfatal-errors",
-		"-Wextra",
-		"-Wall",
-		"-std=c++14",
-		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++",
-		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\i686-w64-mingw32",
-		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\backward",
-		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\tr1",
-		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\tr2",
-		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include",
-		"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include-fixed",
-		"-IC:\\mingw-w64\\i686-w64-mingw32\\include",
-		"-IC:\\mingw-w64\\include",
-		"-IC:\\SFML-2.4.2\\include"
-	]
+	//"clang.executable": "C:\\Program Files\\LLVM\\bin\\clang.exe",
+    //"clang.completion.enable": true,
+    //"clang.completion.completeMacros": true,
+    //"clang.completion.triggerChars": [".", ":", ">"],
+	//"clang.cxxflags": [
+	//	"-Os",
+	//	"-Wfatal-errors",
+	//	"-Wextra",
+	//	"-Wall",
+	//	"-std=c++14",
+	//	"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++",
+	//	"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\i686-w64-mingw32",
+	//	"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\backward",
+	//	"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\tr1",
+	//	"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\tr2",
+	//	"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include",
+	//	"-IC:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include-fixed",
+	//	"-IC:\\mingw-w64\\i686-w64-mingw32\\include",
+	//	"-IC:\\mingw-w64\\include",
+	//	"-IC:\\SFML-2.4.2\\include"
+	//]
 }

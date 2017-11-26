@@ -5,22 +5,18 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
 
 * [SFML 2.4.2 - GCC 6.1.0 MinGW (DW2) 32-bit](https://www.sfml-dev.org/files/SFML-2.4.2-windows-gcc-6.1.0-mingw-32-bit.zip)
 * [GCC 6.1.0 MinGW (DW2)](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/6.1.0/threads-posix/dwarf/i686-6.1.0-release-posix-dwarf-rt_v5-rev0.7z/download)
-* [Clang - From LLVM 5.0.0 package](http://releases.llvm.org/5.0.0/LLVM-5.0.0-win64.exe)
 * [Visual Studio Code (Windows version)](https://code.visualstudio.com/download)
   * [Official C/C++ Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
-  * [C/C++ Clang Command Adapter Extension](https://marketplace.visualstudio.com/items?itemName=mitaki28.vscode-clang)
   * [Include Autocomplete Extension](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
 
 ## Installation
 
 1. Download & Extract SFML to **C:\\SFML-2.4.2\\** where the bin/lib/include folders are contained within
 2. Download & Extract MinGW to **C:\\mingw-w64\\** where the bin/lib/include folders are contained within
-3. Download & Install LLVM (64-bit version) to the default directory (**C:\\Program Files\\LLVM\\**). clang.exe will be referenced from the bin folder within later on.
-4. Go into your environment variables (**Start/Win Key** > type **environment variables** and select **edit the system environment variables** followed by the **Environment Variables...** button in the window that comes up. In the next window, under **System Variables**, double-click on **PATH** and add **C:\mingw-w64\bin**. Then, take out any other compiler variations you might have (**TDM-GCC-32\bin**, **CodeBlocks\MinGW\bin**) so that there are no conflicts. Obviously, if you still want to use these other compilers, you'll need to figure out your own solution.
-5. Download & Install Visual Studio Code if you don't already have it.
-6. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
-7. Install the **C/C++ Clang Command Adapter** extension. This will replace the default auto-complete functionality from the C/C++ Extension (it's buggy/slow).
-8. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality for #include
+3. Go into your environment variables (**Start/Win Key** > type **environment variables** and select **edit the system environment variables** followed by the **Environment Variables...** button in the window that comes up. In the next window, under **System Variables**, double-click on **PATH** and add **C:\mingw-w64\bin**. Then, take out any other compiler variations you might have (**TDM-GCC-32\bin**, **CodeBlocks\MinGW\bin**) so that there are no conflicts. Obviously, if you still want to use these other compilers, you'll need to figure out your own solution.
+4. Download & Install Visual Studio Code if you don't already have it.
+5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
+6. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality for #include
 
 ## Configuration
 
@@ -64,7 +60,6 @@ If you need to add additional external libraries, these are a couple different p
 
 * **.vscode\\settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
 
-  * **_"clang.cxxflags"_** - Contain the search directories for the Clang extension's auto-complete. Any time you add a directory to "includePath", add it here too, but with **-I** in front of it, surrounded by quotes, separated by commas (VS Code will let you know if there's a general .json syntax error if you're not familiar).
   * **_"files.exclude"_** - Add any filetypes you want to exclude from the folder panel.
   * **_"files.encoding"_** - This uses the same encoding as CodeBlocks (**windows1252**), but feel free to change it to suit your needs.
   * **_"editor.fontFamily"_** - I set this to Courier by default to that CodeBlocks feel. Change/remove this line if you want to stick to VS Code's default (Consolas), or your own preference. Same with **"editor.fontSize"** & **"editor.lineHeight"**.
@@ -76,7 +71,7 @@ If you need to add additional external libraries, these are a couple different p
 ## Notes
 
 * This configuration assumes all source files are contained within the **src** folder, but uses the **root** as the working directory for assets & things referenced in your project.
-* By default, this configuration uses the C++14 standard. If you want to use 11, you can change it in the **Makefile** & **"clang.cxxflags"** in settings.json.
+* By default, this configuration uses the C++14 standard. If you want to use 11, you can change it in the **Makefile** in settings.json.
 * If for some reason after an update, the build scripts don't work, reinstall the C/C++ extension and it should work again.
 * Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 * This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well.
