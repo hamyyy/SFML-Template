@@ -1,6 +1,4 @@
-
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include "Main.h"
 
 int main()
 {
