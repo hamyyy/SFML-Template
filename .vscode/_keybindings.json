@@ -1,4 +1,4 @@
-// Place your key bindings in this file to overwrite the defaults. The first 4 eliminate the defaults for F8/F9
+// Place your key bindings in this file to overwrite the defaults
 [
 	{
 		"key": "f8",
@@ -11,6 +11,11 @@
 		"when": "editorTextFocus"
 	},
 	{
+		"key": "f10",
+		"command": "-workbench.action.debug.stepOver",
+		"when": "inDebugMode"
+	},
+	{
 		"key": "shift+f8",
 		"command": "-editor.action.marker.prev",
 		"when": "editorFocus && !editorReadonly"
@@ -18,6 +23,11 @@
 	{
 		"key": "shift+f9",
 		"command": "-editor.debug.action.toggleColumnBreakpoint",
+		"when": "editorTextFocus"
+	},
+	{
+		"key": "shift+f10",
+		"command": "-editor.action.showContextMenu",
 		"when": "editorTextFocus"
 	},
 	{
@@ -32,6 +42,16 @@
 	{
 		"key": "shift+f9",
 		"command": "workbench.action.tasks.runTask",
+		"args": "Run: Release"
+	},
+	{
+		"key": "f10",
+		"command": "workbench.action.tasks.runTask",
 		"args": "Build & Run: Debug"
-	}
+	},
+	{
+		"key": "shift+f10",
+		"command": "workbench.action.tasks.runTask",
+		"args": "Run: Debug"
+	},
 ]
