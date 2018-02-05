@@ -46,7 +46,7 @@ SUBDIRS=$(patsubst %,$(ODIR)/%,$(_SUBDIRS))
 DEPDIR=src/dep/$(BUILD)
 DEPSUBDIRS=$(patsubst %,$(DEPDIR)/%,$(_SUBDIRS))
 _DEPS=$(_SRCS:.cpp=.d)
-DEPS=$(patsubst %,$(ODIR)/%,$(_DEPS))
+DEPS=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
