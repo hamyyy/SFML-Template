@@ -6,7 +6,10 @@
 		"cwd": "${workspaceRoot}",
 		"env": {
 			"_SRCS": "Main.cpp",
-			"_SUBDIRS": ""
+			"_SUBDIRS": "",
+			"_LIB": "",
+			"_INC": "",
+			"_LLS": ""
 		}
 	},
 	"windows": {
