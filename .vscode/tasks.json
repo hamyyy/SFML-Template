@@ -3,7 +3,11 @@
 	// for the documentation about the tasks.json format
 	"version": "2.0.0",
 	"options": {
-		"cwd": "${workspaceRoot}"
+		"cwd": "${workspaceRoot}",
+		"env": {
+			"_SRCS": "Main.cpp",
+			"_SUBDIRS": ""
+		}
 	},
 	"windows": {
 		"options": {
@@ -21,11 +25,11 @@
 	"linux": {
 		"options": {
 			"env": {
-				"SFMLDIR": "~/SFML-2.4.2",
+				"SFMLDIR": "/usr/local",
 				"NAME": "${workspaceRootFolderName}",
 				"CC": "g++",
 				"MAKE_EXEC": "make",
-				"GCC_VERSION": "6"
+				"GCC_VERSION": "6.3.0"
 			}
 		}
 	},

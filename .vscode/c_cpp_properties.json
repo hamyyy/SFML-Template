@@ -36,27 +36,24 @@
 			}
 		},
 		{
-			"name": "Linux",
+			"name": "Linux/MacOS",
 			"intelliSenseMode": "clang-x64",
 			"includePath": [
 				"${workspaceRoot}",
 				"${workspaceRoot}/src",
-				"~/SFML-2.4.2/include",
-				"/usr/include/c++/6",
-				"/usr/include/x86_64-linux-gnu/c++/6",
-				"/usr/include/c++/6/backward",
-				"/usr/lib/gcc/x86_64-linux-gnu/6/include",
-				"/usr/local/include",
-				"/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed",
-				"/usr/include"
+                "/usr/include/x86_64-linux-gnu/c++/6.3.0",
+                "/usr/include/c++/6.3.0/backward",
+                "/usr/include/c++/6.3.0",
+                "/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include",
+                "/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include-fixed",
+                "/usr/local/include",
+                "/usr/include"
 			],
 			"defines": [],
 			"browse": {
 				"path": [
-					"~/SFML-2.4.2/include",
-					"/usr/include/*",
-					"/usr/local/include/*",
-					"/usr/lib/gcc/*"
+					"/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include/*",
+                    "/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include-fixed"
 				],
 				"limitSymbolsToIncludedHeaders": true,
 				"databaseFilename": ""

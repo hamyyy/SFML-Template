@@ -1,31 +1,29 @@
 #==============================================================================
 # Project .cpp or .rc files (relative to src directory)
-_SRCS=Main.cpp
-# Subdirectories within src\ that contain source files
-_SUBDIRS=
-
+_SRCS?=
+# Subdirectories within src/ that contain source files
+_SUBDIRS?=
 # Library directories (separated by spaces)
-_LIB=
-_INC=
+_LIB?=
+_INC?=
 # Link libraries (separated by spaces)
-_LLS=
+_LLS?=
 
-#==============================================================================
-# NAME should always be passed as an argument from tasks.json as the root folder name, but uses a fallback of "game"
+# NAME should always be passed as an argument from tasks.json as the root folder name, but uses a fallback of "game.exe"
 # This is used for the output filename (game.exe)
-NAME?=game
+NAME?=game.exe
 # Makefile primarily supports just "Release" & "Debug" BUILD names right now, but additional ones can be passed as an argument from tasks.json
 BUILD?=Release
 # In case you want to try an alternate version of SFML, the directory can be passed as an argument from tasks.json as well
-SFMLDIR?=~/SFML
+SFMLDIR?=/usr/local
+FLAGS_REL?=
+FLAGS_DEB?=
 
 _LIB_PRE=$(patsubst %,-L%,$(_LIB))
 _INC_PRE=$(patsubst %,-I%,$(_INC))
 _LLS_PRE=$(patsubst %,-l%,$(_LLS))
 
 # SFML-related
-FLAGS_REL?=
-FLAGS_DEB?=
 LIB=-L$(SFMLDIR)/lib $(_LIB_PRE)
 INC=-I$(SFMLDIR)/include $(_INC_PRE)
 LIB_REL=-lsfml-graphics -lsfml-audio -lsfml-network -lsfml-window -lsfml-system $(_LLS_PRE) $(FLAGS_REL)
