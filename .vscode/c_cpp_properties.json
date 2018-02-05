@@ -1,21 +1,21 @@
 {
 	"configurations": [
 		{
-			"name": "Win32",
+			"name": "Windows",
 			"intelliSenseMode": "clang-x64",
 			"includePath": [
 				"${workspaceRoot}",
-				"${workspaceRoot}\\src",
-				"C:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++",
-				"C:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\i686-w64-mingw32",
-				"C:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\backward",
-				"C:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\tr1",
-				"C:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\c++\\tr2",
-				"C:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include",
-				"C:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include-fixed",
-				"C:\\mingw-w64\\i686-w64-mingw32\\include",
-				"C:\\mingw-w64\\include",
-				"C:\\SFML-2.4.2\\include"
+				"${workspaceRoot}/src",
+				"C:/mingw-w64/lib/gcc/i686-w64-mingw32/6.1.0/include/c++",
+				"C:/mingw-w64/lib/gcc/i686-w64-mingw32/6.1.0/include/c++/i686-w64-mingw32",
+				"C:/mingw-w64/lib/gcc/i686-w64-mingw32/6.1.0/include/c++/backward",
+				"C:/mingw-w64/lib/gcc/i686-w64-mingw32/6.1.0/include/c++/tr1",
+				"C:/mingw-w64/lib/gcc/i686-w64-mingw32/6.1.0/include/c++/tr2",
+				"C:/mingw-w64/lib/gcc/i686-w64-mingw32/6.1.0/include",
+				"C:/mingw-w64/lib/gcc/i686-w64-mingw32/6.1.0/include-fixed",
+				"C:/mingw-w64/i686-w64-mingw32/include",
+				"C:/mingw-w64/include",
+				"C:/SFML-2.4.2/include"
 			],
 			"defines": [
 				"_DEBUG",
@@ -25,11 +25,38 @@
 			],
 			"browse": {
 				"path": [
-					"C:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include\\*",
-					"C:\\mingw-w64\\lib\\gcc\\i686-w64-mingw32\\6.1.0\\include-fixed",
-					"C:\\mingw-w64\\i686-w64-mingw32\\include",
-					"C:\\mingw-w64\\include\\*",
-					"C:\\SFML-2.4.2\\include"
+					"C:/mingw-w64/lib/gcc/i686-w64-mingw32/6.1.0/include/*",
+					"C:/mingw-w64/lib/gcc/i686-w64-mingw32/6.1.0/include-fixed",
+					"C:/mingw-w64/i686-w64-mingw32/include",
+					"C:/mingw-w64/include/*",
+					"C:/SFML-2.4.2/include/*"
+				],
+				"limitSymbolsToIncludedHeaders": true,
+				"databaseFilename": ""
+			}
+		},
+		{
+			"name": "Linux",
+			"intelliSenseMode": "clang-x64",
+			"includePath": [
+				"${workspaceRoot}",
+				"${workspaceRoot}/src",
+				"~/SFML-2.4.2/include",
+				"/usr/include/c++/6",
+				"/usr/include/x86_64-linux-gnu/c++/6",
+				"/usr/include/c++/6/backward",
+				"/usr/lib/gcc/x86_64-linux-gnu/6/include",
+				"/usr/local/include",
+				"/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed",
+				"/usr/include"
+			],
+			"defines": [],
+			"browse": {
+				"path": [
+					"~/SFML-2.4.2/include",
+					"/usr/include/*",
+					"/usr/local/include/*",
+					"/usr/lib/gcc/*"
 				],
 				"limitSymbolsToIncludedHeaders": true,
 				"databaseFilename": ""

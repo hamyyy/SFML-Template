@@ -2,156 +2,117 @@
 	// See https://go.microsoft.com/fwlink/?LinkId=733558
 	// for the documentation about the tasks.json format
 	"version": "2.0.0",
+	"options": {
+		"cwd": "${workspaceRoot}"
+	},
+	"windows": {
+		"options": {
+			"env": {
+				"SFMLDIR": "C:/SFML-2.4.2",
+				"NAME": "${workspaceRootFolderName}.exe",
+				"CC": "i686-w64-mingw32-g++.exe",
+				"RC": "windres.exe",
+				"MAKE_EXEC": "mingw32-make",
+				"FLAGS_REL": "-mwindows",
+				"GCC_VERSION": "6.1.0"
+			}
+		}
+	},
+	"linux": {
+		"options": {
+			"env": {
+				"SFMLDIR": "~/SFML-2.4.2",
+				"NAME": "${workspaceRootFolderName}",
+				"CC": "g++",
+				"MAKE_EXEC": "make",
+				"GCC_VERSION": "6"
+			}
+		}
+	},
+	"presentation": {
+		"echo": false,
+		"reveal": "always",
+		"focus": true,
+		"panel": "shared"
+	},
 	"tasks": [
 		{
 			"label": "Build & Run: Release",
-			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make BUILD=Release NAME=${workspaceRootFolderName}\";if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded: Launching ${workspaceRootFolderName} ===';$host.ui.rawui.ForegroundColor='White';${workspaceRoot}\\bin\\Release\\${workspaceRootFolderName}.exe}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
+			"command": "tput setaf 4; if ${MAKE_EXEC}; then (tput setaf 2; tput bold; echo \"=== Build Succeeded: Launching ${NAME} ===\"; tput sgr0; bin/Release/${NAME}) else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\"; tput sgr0) fi",
 			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
-			"options": {
-				"cwd": "${workspaceRoot}"
-			},
-			"presentation": {
-				"echo": false,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared"
-			},
-			"problemMatcher": []
+			"problemMatcher": [],
 		},
 		{
 			"label": "Build: Release",
-			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make BUILD=Release NAME=${workspaceRootFolderName}\";if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded ==='}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
+			"command": "tput setaf 4; if ${MAKE_EXEC}; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
 			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"options": {
-				"cwd": "${workspaceRoot}"
-			},
-			"presentation": {
-				"echo": false,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared"
 			},
 			"problemMatcher": []
 		},
 		{
 			"label": "Run: Release",
-			"command": "${workspaceRoot}\\bin\\Release\\${workspaceRootFolderName}.exe",
+			"command": "bin/Release/${NAME}",
 			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"options": {
-				"cwd": "${workspaceRoot}"
-			},
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared"
 			},
 			"problemMatcher": []
 		},
 		{
 			"label": "Rebuild: Release",
-			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make rebuild BUILD=Release NAME=${workspaceRootFolderName}\";if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded ==='}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
+			"command": "tput setaf 4; if ${MAKE_EXEC} rebuild; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
 			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"options": {
-				"cwd": "${workspaceRoot}"
-			},
-			"presentation": {
-				"echo": false,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared"
 			},
 			"problemMatcher": []
 		},
 		{
 			"label": "Build & Run: Debug",
-			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make BUILD=Debug NAME=${workspaceRootFolderName}\"; if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded: Launching ${workspaceRootFolderName} ===';$host.ui.rawui.ForegroundColor='White';${workspaceRoot}\\bin\\Debug\\${workspaceRootFolderName}.exe}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
+			"command": "tput setaf 4; if ${MAKE_EXEC} BUILD=Debug; then (tput setaf 2; tput bold; echo \"=== Build Succeeded: Launching ${NAME} ===\"; tput sgr0; bin/Debug/${NAME}) else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\"; tput sgr0) fi",
 			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"options": {
-				"cwd": "${workspaceRoot}"
-			},
-			"presentation": {
-				"echo": false,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared"
 			},
 			"problemMatcher": []
 		},
 		{
 			"label": "Build: Debug",
-			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make BUILD=Debug NAME=${workspaceRootFolderName}\"; if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded ==='}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
+			"command": "tput setaf 4; if ${MAKE_EXEC} BUILD=Debug; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
 			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"options": {
-				"cwd": "${workspaceRoot}"
-			},
-			"presentation": {
-				"echo": false,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared"
 			},
 			"problemMatcher": []
 		},
 		{
 			"label": "Run: Debug",
-			"command": "${workspaceRoot}\\bin\\Debug\\${workspaceRootFolderName}.exe",
+			"command": "bin/Debug/${NAME}",
 			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"options": {
-				"cwd": "${workspaceRoot}"
-			},
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared"
 			},
 			"problemMatcher": []
 		},
 		{
 			"label": "Rebuild: Debug",
-			"command": "$host.ui.rawui.ForegroundColor='Blue';\"mingw32-make rebuild BUILD=Debug NAME=${workspaceRootFolderName}\";if($?){$host.ui.rawui.ForegroundColor='Green';'=== Build Succeeded ==='}else{$host.ui.rawui.ForegroundColor='Red';'=== Build Failed: Review the compile errors above ==='}",
+			"command": "tput setaf 4; if ${MAKE_EXEC} rebuild BUILD=Debug; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
 			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"options": {
-				"cwd": "${workspaceRoot}"
-			},
-			"presentation": {
-				"echo": false,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared"
 			},
 			"problemMatcher": []
 		}

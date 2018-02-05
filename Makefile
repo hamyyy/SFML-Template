@@ -7,7 +7,7 @@ _SUBDIRS=
 # Library directories (separated by spaces)
 _LIB=
 _INC=
-# Link libraries (prefixed with -l)
+# Link libraries (separated by spaces)
 _LLS=
 
 #==============================================================================
@@ -17,59 +17,77 @@ NAME?=game
 # Makefile primarily supports just "Release" & "Debug" BUILD names right now, but additional ones can be passed as an argument from tasks.json
 BUILD?=Release
 # In case you want to try an alternate version of SFML, the directory can be passed as an argument from tasks.json as well
-SFMLDIR?=C:\SFML-2.4.2
+SFMLDIR?=~/SFML
 
 _LIB_PRE=$(patsubst %,-L%,$(_LIB))
 _INC_PRE=$(patsubst %,-I%,$(_INC))
 _LLS_PRE=$(patsubst %,-l%,$(_LLS))
 
 # SFML-related
-LIB=-L$(SFMLDIR)\lib $(_LIB_PRE)
-INC=-I$(SFMLDIR)\include $(_INC_PRE)
-LIB_REL=-lsfml-graphics -lsfml-audio -lsfml-network -lsfml-window -lsfml-system $(_LLS_PRE) -mwindows
-LIB_DEB=-lsfml-graphics-d -lsfml-audio-d -lsfml-network-d -lsfml-window-d -lsfml-system-d $(_LLS_PRE)
+FLAGS_REL?=
+FLAGS_DEB?=
+LIB=-L$(SFMLDIR)/lib $(_LIB_PRE)
+INC=-I$(SFMLDIR)/include $(_INC_PRE)
+LIB_REL=-lsfml-graphics -lsfml-audio -lsfml-network -lsfml-window -lsfml-system $(_LLS_PRE) $(FLAGS_REL)
+LIB_DEB=-lsfml-graphics-d -lsfml-audio-d -lsfml-network-d -lsfml-window-d -lsfml-system-d $(_LLS_PRE) $(FLAGS_DEB)
 
 # Compiler & flags
-CC=i686-w64-mingw32-g++.exe
+CC?=g++
 RC=windres.exe
 CFLAGS=-Os -Wfatal-errors -Wextra -Wall -std=c++14
 
 # Scripts
-ODIR=src\obj\$(BUILD)
+ODIR=src/obj/$(BUILD)
 _RESS=$(_SRCS:.rc=.res)
 _OBJS=$(_RESS:.cpp=.o)
-OBJS=$(patsubst %,$(ODIR)\\%,$(_OBJS))
-SUBDIRS=$(patsubst %,$(ODIR)\\%,$(_SUBDIRS))
+OBJS=$(patsubst %,$(ODIR)/%,$(_OBJS))
+SUBDIRS=$(patsubst %,$(ODIR)/%,$(_SUBDIRS))
+
+DEPDIR=src/dep/$(BUILD)
+DEPSUBDIRS=$(patsubst %,$(DEPDIR)/%,$(_SUBDIRS))
+_DEPS=$(_SRCS:.cpp=.d)
+DEPS=$(patsubst %,$(ODIR)/%,$(_DEPS))
+$(shell mkdir -p $(DEPDIR) >/dev/null)
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
 all: build
 
 rebuild: clean build
 
-$(ODIR)\\%.o: src\%.cpp src\%.hpp | $(ODIR) $(SUBDIRS)
-	$(CC) -g $(CFLAGS) $(INC) -o $@ -c $<
+$(ODIR)/%.o: src/%.cpp
+$(ODIR)/%.o: src/%.cpp $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
+	$(CC) $(DEPFLAGS) -g $(CFLAGS) $(INC) -o $@ -c $<
+	$(POSTCOMPILE)
 
-$(ODIR)\\%.o: src\%.cpp src\%.h | $(ODIR) $(SUBDIRS)
-	$(CC) -g $(CFLAGS) $(INC) -o $@ -c $<
+$(ODIR)/%.o: src/%.c
+$(ODIR)/%.o: src/%.c $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
+	$(CC) $(DEPFLAGS) -g $(CFLAGS) $(INC) -o $@ -c $<
+	$(POSTCOMPILE)
 
-$(ODIR)\\%.o: src\%.c src\%.h | $(ODIR) $(SUBDIRS)
-	$(CC) -g $(CFLAGS) $(INC) -o $@ -c $<
-
-$(ODIR)\\%.res: src\%.rc src\%.h | $(ODIR) $(SUBDIRS)
+$(ODIR)/%.res: src/%.rc
+$(ODIR)/%.res: src/%.rc src/%.h | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
 	$(RC) -J rc -O coff -i $< -o $@
 
-build: $(OBJS) | bin\$(BUILD)
+build: $(OBJS) | bin/$(BUILD)
 ifeq ($(BUILD),Release)
-	$(CC) $(LIB) -o bin\$(BUILD)\$(NAME).exe $(OBJS) $(LIB_REL)
+	$(CC) $(LIB) -o bin/$(BUILD)/$(NAME) $(OBJS) $(LIB_REL)
 else
-	$(CC) $(LIB) -o bin\$(BUILD)\$(NAME).exe $(OBJS) $(LIB_DEB)
+	$(CC) $(LIB) -o bin/$(BUILD)/$(NAME) $(OBJS) $(LIB_DEB)
 endif
 
-$(ODIR) $(SUBDIRS):
-	mkdir $@
+$(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS):
+	mkdir -p $@
 
-bin\$(BUILD):
-	mkdir $@
+bin/$(BUILD):
+	mkdir -p $@
 
 .PHONY: clean
 clean:
-	if exist $(ODIR) del $(ODIR) /F /Q
+	$(RM) $(DEPS)
+	$(RM) $(OBJS)
+
+$(DEPDIR)/%.d: ;
+.PRECIOUS: $(DEPDIR)/%.d
+
+include $(wildcard $(DEPS))

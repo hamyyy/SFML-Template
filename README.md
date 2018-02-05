@@ -8,6 +8,7 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
 * [Visual Studio Code (Windows version)](https://code.visualstudio.com/download)
   * [Official C/C++ Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
   * [Include Autocomplete Extension](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
+* [Git Bash (for Windows) ](https://git-scm.com/downloads)
 
 ## Installation
 
@@ -17,6 +18,7 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
 4. Download & Install Visual Studio Code if you don't already have it.
 5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
 6. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality for #include
+7. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location. We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux (although Mac configuration is untested thus far)
 
 ## Configuration
 
