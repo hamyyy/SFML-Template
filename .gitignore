@@ -4,6 +4,6 @@ src/obj/**
 src/dep/Release/**
 src/dep/Debug/**
 src/dep/**
-bin/Release/sfml-vscode-boilerplate.exe
-bin/Debug/sfml-vscode-boilerplate.exe
+bin/Release/*.exe
+bin/Debug/*.exe
 Thumbs.db
