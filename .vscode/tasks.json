@@ -18,6 +18,7 @@
 				"SFMLDIR": "C:/SFML-2.4.2",
 				"NAME": "${workspaceRootFolderName}.exe",
 				"CC": "i686-w64-mingw32-g++.exe",
+				"CFLAGS": "-Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++14",
 				"RC": "windres.exe",
 				"MAKE_EXEC": "mingw32-make",
 				"FLAGS_REL": "-mwindows",
