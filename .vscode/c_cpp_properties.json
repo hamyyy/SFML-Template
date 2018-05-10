@@ -3,16 +3,16 @@
         {
             "name": "Windows",
             "intelliSenseMode": "clang-x64",
-            "compilerPath": "C:/mingw-w64/bin/gcc.exe",
+            "compilerPath": "C:/mingw32/bin/gcc.exe",
             "includePath": [
                 "${workspaceFolder}/src/**",
-                "C:/SFML-2.4.2/include/**"
+                "C:/SFML-2.5.0/include/**"
             ],
             "defines": [],
             "browse": {
                 "path": [
                     "${workspaceFolder}/src/*",
-                    "C:/SFML-2.4.2/include/*"
+                    "C:/SFML-2.5.0/include/*"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

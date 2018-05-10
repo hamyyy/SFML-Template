@@ -1,10 +1,10 @@
 # sfml-vscode-boilerplate
-An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
+An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
 
 ## Prerequisites
 
-* [SFML 2.4.2 - GCC 6.1.0 MinGW (DW2) 32-bit](https://www.sfml-dev.org/files/SFML-2.4.2-windows-gcc-6.1.0-mingw-32-bit.zip)
-* [GCC 6.1.0 MinGW (DW2)](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/6.1.0/threads-posix/dwarf/i686-6.1.0-release-posix-dwarf-rt_v5-rev0.7z/download)
+* [SFML 2.4.2 - MinGW (GCC) 7.3.0 DW2 32-bit](https://www.sfml-dev.org/files/SFML-2.5.0-windows-gcc-7.3.0-mingw-32-bit.zip)
+* [MinGW (GCC) 7.3.0 DW2 32-bit](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.3.0/threads-posix/dwarf/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z/download)
 * [Visual Studio Code (Windows version)](https://code.visualstudio.com/download)
   * [Official C/C++ Extension (0.17.0+)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
   * [Include Autocomplete Extension](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
@@ -12,9 +12,9 @@ An SFML 2.4.2 C++14 configuration for Visual Studio Code (on Windows)
 
 ## Installation
 
-1. Download & Extract SFML to **C:\\SFML-2.4.2\\** where the bin/lib/include folders are contained within
-2. Download & Extract MinGW to **C:\\mingw-w64\\** where the bin/lib/include folders are contained within
-3. Go into your environment variables (**Start/Win Key** > type **environment variables** and select **edit the system environment variables** followed by the **Environment Variables...** button in the window that comes up. In the next window, under **System Variables**, double-click on **PATH** and add **C:\mingw-w64\bin**. Then, take out any other compiler variations you might have (TDM-GCC-32\bin, CodeBlocks\MinGW\bin) so that there are no conflicts. Obviously, if you still want to use these other compilers, you'll need to figure out your own solution.
+1. Download & Extract SFML to **C:\\SFML-2.5.0\\** where the bin/lib/include folders are contained within
+2. Download & Extract MinGW to **C:\\mingw32\\** where the bin/lib/include folders are contained within
+3. Go into your environment variables (**Start/Win Key** > type **environment variables** and select **edit the system environment variables** followed by the **Environment Variables...** button in the window that comes up. In the next window, under **System Variables**, double-click on **PATH** and add **C:\mingw32\bin**. Then, take out any other compiler variations you might have (TDM-GCC-32\bin, CodeBlocks\MinGW\bin) so that there are no conflicts. Obviously, if you still want to use these other compilers, you'll need to figure out your own solution.
 4. Download & Install Visual Studio Code if you don't already have it.
 5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
 6. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality when writing "#include ..."
