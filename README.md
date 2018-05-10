@@ -12,9 +12,9 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
 
 ## Installation
 
-1. Download & Extract SFML to **C:\\SFML-2.5.0\\** where the bin/lib/include folders are contained within
-2. Download & Extract MinGW to **C:\\mingw32\\** where the bin/lib/include folders are contained within
-3. Go into your environment variables (**Start/Win Key** > type **environment variables** and select **edit the system environment variables** followed by the **Environment Variables...** button in the window that comes up. In the next window, under **System Variables**, double-click on **PATH** and add **C:\\mingw-w64\\bin**. Then, take out any other compiler variations you might have (TDM-GCC-32\bin, CodeBlocks\MinGW\bin) so that there are no conflicts. Obviously, if you still want to use these other compilers, you'll need to figure out your own solution.
+1. Download & Extract SFML to **C:\\SFML-2.5.0\\** where the bin, lib, include folders are contained within.
+2. Download & Extract MinGW to **C:\\mingw32\\** where the bin, lib, include folders are contained within.
+3. Go into your environment variables (**Start/Win Key** > type **environment variables** and select **edit the system environment variables** followed by the **Environment Variables...** button in the window that comes up. In the next window, under **System Variables**, double-click on **PATH** and add **C:\\mingw32\\bin**. Then, take out any other compiler variations you might have (TDM-GCC-32\bin, CodeBlocks\MinGW\bin) so that there are no conflicts. Obviously, if you still want to use these other compilers, you'll need to figure out your own solution.
 4. Download & Install Visual Studio Code if you don't already have it.
 5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
 6. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality when writing "#include ..."
@@ -25,15 +25,18 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
 At this point, everything you need is installed
 
 1. Open the **sfml-vscode-boilerplate** folder in VS Code. You should see an lime-green status bar at the bottom (color-picked from the SFML logo).
-2. At this point you should be able to run a build task (**Ctrl+Shift+B** > **Build & Run**), but it'll be nicer to add keybindings for these tasks so you can build with 1 keypress.
+2. You should be able to run a build task (**Ctrl+Shift+B** > **Build & Run**), but it'll be nicer to add keybindings for these so you can build with 1 keypress.
 3. Open the .vscode folder and click on the **\_keybindings.json** file. This is not an officially recognized file, but just contains the keybindings you can copy into the actual keybindings.json file.
 4. Go into **File** > **Preferences** > **Keyboard Shortcuts** & click on the keybindings.json link at the top.
 5. Copy the keybindings into this file. Feel free to change them if you don't like them later.
-6. Hit the **F9** key to run the **Build & Run: Release** task. It should run the Makefile, find the compiler, build the Main.cpp into Main.o, and launch the green circle hello world that you should recognize from the official SFML guide. **Shift+F9** will launch the basic Debug build, and F8 will launch the actual Debugger along with the Debug build.
+6. The **F9** key will run the **Build & Run: Release** task. It should run the Makefile, find the compiler, build the Main.cpp into Main.o (as well as create a dependency file), and launch the green circle hello world that you should recognize from the official SFML guide. **Shift+F9** will launch **Run: Release**.
+7. Similarly, **F10** will launch **Build & Run: Debug**. and any logging will be outputted into the integrated terminal instead of a separate console window.
+8. **F8** will launch the actual Debugger, which first runs **Build & Run: Debug**.
+9. If needed, you can rebuild either with **Ctrl+Shift+B** > **Rebuild: Release/Debug**. This is useful if you're changing compilers, SFML versions, or just want to make sure the build is fresh.
 
-## Adding source files & libraries to the Makefile
+## Adding source files & libraries
 
-If you're moving to this from CodeBlocks, think of this as adding files to your project. The src files might already exist somewhere, but you need to tell the compiler to include them. You do not need to add SFML to any of these variables, since it's already in the Makefile.
+If you're moving to this from CodeBlocks, think of this part as defining what's in your project. The src files might already exist somewhere, but you need to tell the compiler to include them. 
 
 Open **tasks.json**. In **options > env**, you'll see 7 environment variables that will require settings specific to your projects. Each one is outlined below:
 
@@ -42,37 +45,41 @@ Open **tasks.json**. In **options > env**, you'll see 7 environment variables th
 "SOURCE_FILES": "Main.cpp WindowManager.cpp Game/Character.cpp Graphics/ParticleSystem.cpp Utility/Geometry.cpp SceneManager/SceneManager.cpp SceneManager/Scene.cpp SceneManager/Scenes/SceneTitle.cpp"
 ```
 
-**PROJECT_DIRS**: Add any subfolders you're using with the **src/** directory, separated by a space character.
+**PROJECT_DIRS**: Add any subfolders you're using within the **src/** directory, separated by a space.
 ```
 "PROJECT_DIRS": "Game Graphics Utility SceneManager SceneManager/Scenes"
 ```
 
-**LIB_DIRS**: Add any additional lib directories (full path), separated by a space character.
+**LIB_DIRS**: Add any additional lib directories (full path), separated by a space.
 ```
 "LIB_DIRS": "C:/sfeMovie/lib C:/myLibraries/lib"
 ```
 
-**INCLUDE_DIRS**: Add any additional include directories (full path), separated by a space character.
+**INCLUDE_DIRS**: Add any additional include directories (full path), separated by a space.
 ```
 "INCLUDE_DIRS": "C:/sfeMovie/include C:/myLibraries/include"
 ```
 
-**LINK_LIBRARIES**: Add any additional link libraries, separated by a space character.
+**LINK_LIBRARIES**: Add any additional link libraries, separated by a space.
 ```
-"LINK_LIBRARIES": "XInput user32 something"
+"LINK_LIBRARIES": "XInput user32"
 ```
 
-**FLAGS_RELEASE**: Additional compiler flags for the Release build (including prefix)
+**FLAGS_RELEASE**: Additional compiler flags for the Release build (including prefix), separated by a space.
 ```
 "FLAGS_RELEASE": "-mwindows"
 ```
 
-**FLAGS_DEBUG**: Additional compiler flags for the Debug build (including prefix)
+**FLAGS_DEBUG**: Additional compiler flags for the Debug build (including prefix), separated by a space.
 ```
 "FLAGS_DEBUG": "-fdiagnostics-color=auto"
 ```
 
-Note: You can add any of those variables in **(platform) > options > env** for platform specific libraries, etc.
+Note: You do not need to add SFML to any of these variables, since it's already included in the Makefile. In fact, you shouldn't have to edit the Makefile (unless you want to add new recipes to it of course).
+
+Note 2: You can add any of these variables to **(platform) > options > env** for platform specific libraries, etc.
+
+Note 3: Even though this is primarily a Windows environment, all file paths will use forward slashes since we're using bash instead of powershell. This makes for less headaches if/when you decide to go cross-platform.
 
 ## Include directories & .vscode folder
 
@@ -83,7 +90,7 @@ If you need to add additional external libraries, these are a couple different p
   * _"includePath"_ - Used by the C/C++ extension if **"C_Cpp.intelliSenseEngine"** is set to **"Default"** in settings.json. includePath is also used by the **Include Autocomplete** extension. Add directories recursively with **\\****
   * _"browse.path"_ - Only used if **"C_Cpp.intelliSenseEngine"** is set to **"Tag Parser"** from what I understand. Add directories recursively with **\\***
 
-* **.vscode\\settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
+* **.vscode\\settings.json** - Contains all of your **Workspace Settings** & overrides the main **User Settings**. Here are some of interest:
 
   * _"files.exclude"_ - Add any filetypes you want to exclude from the folder panel.
   * _"files.encoding"_ - This uses the same encoding as CodeBlocks (**windows1252**), but feel free to change it to suit your needs.
@@ -91,13 +98,12 @@ If you need to add additional external libraries, these are a couple different p
 
 * **.vscode\\launch.json** - Used to store the configuration to launch the debugger.
 * **.vscode\\tasks.json** - Used to store the task definitions (Build & Run commands, etc.).
-* **.vscode\\_keybindings.json** - As mentioned before, this is used purely to store handy keybindings that one can add themselves, and not recognized by VS Code.
+* **.vscode\\_keybindings.json** - As mentioned before, this file is used purely to store handy keybindings that one can add themselves, and not actually recognized by VS Code.
 
 ## Notes
 
 * This configuration assumes all source files are contained within the **src** folder, but uses the **root** as the working directory for assets & things referenced in your project.
 * By default, this configuration uses C++14. You can change the compiler flags in **tasks.json** under **CFLAGS**.
-* If for some reason after an update, the build scripts don't work, reinstall the C/C++ extension and it should work again (this was an issue in an older version of the extension anyway).
 * Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 * This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well.
 
