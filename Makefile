@@ -1,13 +1,13 @@
 #==============================================================================
 # Project .cpp or .rc files (relative to src directory)
-_SRCS?=
-# Subdirectories within src/ that contain source files
-_SUBDIRS?=
+SOURCE_FILES?=
+# Project subdirectories within src/ that contain source files
+PROJECT_DIRS?=
 # Library directories (separated by spaces)
-_LIB?=
-_INC?=
+LIB_DIRS?=
+INCLUDE_DIRS?=
 # Link libraries (separated by spaces)
-_LLS?=
+LINK_LIBRARIES?=
 
 # NAME should always be passed as an argument from tasks.json as the root folder name, but uses a fallback of "game.exe"
 # This is used for the output filename (game.exe)
@@ -15,19 +15,19 @@ NAME?=game.exe
 # Makefile primarily supports just "Release" & "Debug" BUILD names right now, but additional ones can be passed as an argument from tasks.json
 BUILD?=Release
 # In case you want to try an alternate version of SFML, the directory can be passed as an argument from tasks.json as well
-SFMLDIR?=/usr/local
-FLAGS_REL?=
-FLAGS_DEB?=
+SFML_DIR?=/usr/local
+FLAGS_RELEASE?=
+FLAGS_DEBUG?=
 
-_LIB_PRE=$(patsubst %,-L%,$(_LIB))
-_INC_PRE=$(patsubst %,-I%,$(_INC))
-_LLS_PRE=$(patsubst %,-l%,$(_LLS))
+_LIB_PRE=$(patsubst %,-L%,$(LIB_DIRS))
+_INC_PRE=$(patsubst %,-I%,$(INCLUDE_DIRS))
+_LLS_PRE=$(patsubst %,-l%,$(LINK_LIBRARIES))
 
 # SFML-related
-LIB=-L$(SFMLDIR)/lib $(_LIB_PRE)
-INC=-I$(SFMLDIR)/include $(_INC_PRE)
-LIB_REL=-lsfml-graphics -lsfml-audio -lsfml-network -lsfml-window -lsfml-system $(_LLS_PRE) $(FLAGS_REL)
-LIB_DEB=-lsfml-graphics-d -lsfml-audio-d -lsfml-network-d -lsfml-window-d -lsfml-system-d $(_LLS_PRE) $(FLAGS_DEB)
+LIB=-L$(SFML_DIR)/lib $(_LIB_PRE)
+INC=-I$(SFML_DIR)/include $(_INC_PRE)
+LIB_RELEASE=-lsfml-graphics -lsfml-audio -lsfml-network -lsfml-window -lsfml-system $(_LLS_PRE) $(FLAGS_RELEASE)
+LIB_DEBUG=-lsfml-graphics-d -lsfml-audio-d -lsfml-network-d -lsfml-window-d -lsfml-system-d $(_LLS_PRE) $(FLAGS_DEBUG)
 
 # Compiler & flags
 CC?=g++
@@ -36,14 +36,14 @@ CFLAGS?=-Os -Wfatal-errors -Wextra -Wall -std=c++14 -fdiagnostics-color=never
 
 # Scripts
 ODIR=src/obj/$(BUILD)
-_RESS=$(_SRCS:.rc=.res)
+_RESS=$(SOURCE_FILES:.rc=.res)
 _OBJS=$(_RESS:.cpp=.o)
 OBJS=$(patsubst %,$(ODIR)/%,$(_OBJS))
-SUBDIRS=$(patsubst %,$(ODIR)/%,$(_SUBDIRS))
+SUBDIRS=$(patsubst %,$(ODIR)/%,$(PROJECT_DIRS))
 
 DEPDIR=src/dep/$(BUILD)
-DEPSUBDIRS=$(patsubst %,$(DEPDIR)/%,$(_SUBDIRS))
-_DEPS=$(_SRCS:.cpp=.d)
+DEPSUBDIRS=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
+_DEPS=$(SOURCE_FILES:.cpp=.d)
 DEPS=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
@@ -69,9 +69,9 @@ $(ODIR)/%.res: src/%.rc src/%.h | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
 
 build: $(OBJS) | bin/$(BUILD)
 ifeq ($(BUILD),Release)
-	$(CC) $(LIB) -o bin/$(BUILD)/$(NAME) $(OBJS) $(LIB_REL)
+	$(CC) $(LIB) -o bin/$(BUILD)/$(NAME) $(OBJS) $(LIB_RELEASE)
 else
-	$(CC) $(LIB) -o bin/$(BUILD)/$(NAME) $(OBJS) $(LIB_DEB)
+	$(CC) $(LIB) -o bin/$(BUILD)/$(NAME) $(OBJS) $(LIB_DEBUG)
 endif
 
 $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS):

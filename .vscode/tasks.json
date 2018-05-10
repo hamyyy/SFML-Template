@@ -5,35 +5,37 @@
 	"options": {
 		"cwd": "${workspaceRoot}",
 		"env": {
-			"_SRCS": "Main.cpp",
-			"_SUBDIRS": "",
-			"_LIB": "",
-			"_INC": "",
-			"_LLS": ""
+			"SOURCE_FILES": "Main.cpp",
+			"PROJECT_DIRS": "",
+			"LIB_DIRS": "",
+			"INCLUDE_DIRS": "",
+			"LINK_LIBRARIES": "",
+			"FLAGS_RELEASE": "",
+			"FLAGS_DEBUG": ""
 		}
 	},
 	"windows": {
 		"options": {
 			"env": {
-				"SFMLDIR": "C:/SFML-2.5.0",
+				"GCC_VERSION": "7.3.0",
+				"SFML_DIR": "C:/SFML-2.5.0",
 				"NAME": "${workspaceRootFolderName}.exe",
 				"CC": "i686-w64-mingw32-g++.exe",
 				"CFLAGS": "-Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++14 -fdiagnostics-color=never",
 				"RC": "windres.exe",
 				"MAKE_EXEC": "mingw32-make",
-				"FLAGS_REL": "-mwindows",
-				"GCC_VERSION": "7.3.0"
+				"FLAGS_RELEASE": "-mwindows"
 			}
 		}
 	},
 	"linux": {
 		"options": {
 			"env": {
-				"SFMLDIR": "/usr/local",
+				"GCC_VERSION": "7.3.0",
+				"SFML_DIR": "/usr/local",
 				"NAME": "${workspaceRootFolderName}",
 				"CC": "g++",
-				"MAKE_EXEC": "make",
-				"GCC_VERSION": "7.3.0"
+				"MAKE_EXEC": "make"
 			}
 		}
 	},
