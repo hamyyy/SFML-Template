@@ -14,11 +14,12 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
 
 1. Download & Extract SFML to **C:\\SFML-2.5.0\\** where the bin/lib/include folders are contained within
 2. Download & Extract MinGW to **C:\\mingw32\\** where the bin/lib/include folders are contained within
-3. Download & Install Visual Studio Code if you don't already have it.
-4. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
-5. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality when writing "#include ..."
-6. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location. We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux (although Mac configuration is untested thus far)
-7. Ensure **"Path"** in the **"terminal.integrated.env.windows"** array is set to the correct location of mingw32
+3. Go into your environment variables (**Start/Win Key** > type **environment variables** and select **edit the system environment variables** followed by the **Environment Variables...** button in the window that comes up. In the next window, under **System Variables**, double-click on **PATH** and add **C:\\mingw-w64\\bin**. Then, take out any other compiler variations you might have (TDM-GCC-32\bin, CodeBlocks\MinGW\bin) so that there are no conflicts. Obviously, if you still want to use these other compilers, you'll need to figure out your own solution.
+4. Download & Install Visual Studio Code if you don't already have it.
+5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
+6. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality when writing "#include ..."
+7. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location. We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux (although Mac configuration is untested thus far)
+8. Ensure **"Path"** in the **"terminal.integrated.env.windows"** array is set to the correct location of mingw32
 
 ## Configuration
 
