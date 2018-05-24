@@ -63,5 +63,9 @@
 	},
 
 	"C_Cpp.autocomplete": "Default",
-	"C_Cpp.errorSquiggles": "Disabled",
+	"C_Cpp.intelliSenseEngine": "Default",
+	"C_Cpp.dimInactiveRegions": false,
+	"C_Cpp.preferredPathSeparator": "Forward Slash",
+	"C_Cpp.loggingLevel": "Warning",
+	"C_Cpp.workspaceParsingPriority": "highest",
 }
