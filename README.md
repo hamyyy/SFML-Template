@@ -6,7 +6,7 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
 * [SFML 2.5.0 - MinGW (GCC) 7.3.0 DW2 32-bit](https://www.sfml-dev.org/files/SFML-2.5.0-windows-gcc-7.3.0-mingw-32-bit.zip)
 * [MinGW (GCC) 7.3.0 DW2 32-bit](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.3.0/threads-posix/dwarf/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z/download)
 * [Visual Studio Code (Windows version)](https://code.visualstudio.com/download)
-  * [Official C/C++ Extension (0.17.0+)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+  * [Official C/C++ Extension (0.17.4+)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
   * [Include Autocomplete Extension](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
 * [Git Bash (for Windows) ](https://git-scm.com/downloads)
 
@@ -14,7 +14,7 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
 
 1. Download & Extract SFML to **C:\\SFML-2.5.0\\** where the bin/lib/include folders are contained within
 2. Download & Extract MinGW to **C:\\mingw32\\** where the bin/lib/include folders are contained within
-3. Go into your environment variables (**Start/Win Key** > type **environment variables** and select **edit the system environment variables** followed by the **Environment Variables...** button in the window that comes up. In the next window, under **System Variables**, double-click on **PATH** and add **C:\\mingw-w64\\bin**. Then, take out any other compiler variations you might have (TDM-GCC-32\bin, CodeBlocks\MinGW\bin) so that there are no conflicts. Obviously, if you still want to use these other compilers, you'll need to figure out your own solution.
+3. In previous versions, the "Path" environment variable had to be set within Windows, but as of version 0.17.4 of the C++ plugin, you can safely take out **C:\\mingw32\\bin** from there, and set it from the Workspace Settings under **terminal.integrated.env.windows**. This way, multiple projects can use different compilers, as well as a sandboxed environment. This is setup by default, so you shouldn't have to worry about it right away.
 4. Download & Install Visual Studio Code if you don't already have it.
 5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
 6. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality when writing "#include ..."
