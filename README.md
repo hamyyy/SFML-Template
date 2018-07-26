@@ -14,12 +14,13 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
 
 1. Download & Extract SFML to **C:\\SFML-2.5.0\\** where the bin/lib/include folders are contained within
 2. Download & Extract MinGW to **C:\\mingw32\\** where the bin/lib/include folders are contained within
-8. Ensure **Path** in the **"terminal.integrated.env.windows"** array is set to the correct location of mingw32
-3. In previous versions, the "Path" environment variable had to be set within Windows, but as of version 0.17.4 of the C++ plugin, you can safely take out **C:\\mingw32\\bin** from there, and set it from the Workspace Settings under **terminal.integrated.env.windows**. This way, multiple projects can use different compilers, as well as a sandboxed environment. This is setup by default, so you shouldn't have to worry about it right away.
 4. Download & Install Visual Studio Code if you don't already have it.
 5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
 6. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality when writing "#include ..."
 7. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location. We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux (although Mac configuration is untested thus far)
+8. Also in **settings.json** Ensure **Path** in the **"terminal.integrated.env.windows"** array is set to the correct location of mingw32. 
+
+**Note:** In previous versions of VS Code, the "Path" environment variable had to be set within Windows, but as of version 0.17.4 of the C++ plugin, you can safely take out **C:\\mingw32\\bin** from there, and set it from the Workspace Settings under **terminal.integrated.env.windows**. This way, multiple projects can use different compilers, as well as a sandboxed environment. This is setup by default, so you shouldn't have to worry about it right away. It also allows you to keep your environment contained.
 
 ## Configuration
 

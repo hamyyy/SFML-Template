@@ -9,14 +9,6 @@
                 "C:/SFML-2.5.0/include/**"
             ],
             "defines": [],
-            "browse": {
-                "path": [
-                    "${workspaceFolder}/src/*",
-                    "C:/SFML-2.5.0/include/*"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
             "cStandard": "c11",
             "cppStandard": "c++17"
         },
@@ -34,14 +26,8 @@
                 "/usr/include"
             ],
             "defines": [],
-            "browse": {
-                "path": [
-                    "/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include/*",
-                    "/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include-fixed"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            }
+            "cStandard": "c11",
+            "cppStandard": "c++17"
         }
     ],
     "version": 4
