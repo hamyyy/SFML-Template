@@ -12,8 +12,8 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows, mostly)
 
 ## Installation
 
-1. Download & Extract SFML to **C:\\SFML-2.5.0\\** where the bin/lib/include folders are contained within
-2. Download & Extract MinGW to **C:\\mingw32\\** where the bin/lib/include folders are contained within
+1. Download & Extract SFML to **C:/SFML-2.5.0/** where the bin/lib/include folders are contained within
+2. Download & Extract MinGW to **C:/mingw32/** where the bin/lib/include folders are contained within
 4. Download & Install Visual Studio Code if you don't already have it.
 5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
 6. _(Optional)_ Install the **Include Autocomplete** extension. The C++ extension has decent include functionality already, but this one is a little better about headers contained in sub-folders. Note: It leverages the **"includePath"** array in **c\_cpp\_properties.json**
@@ -80,21 +80,21 @@ Note: You can add any of those variables in **(platform) > options > env** for p
 
 If you need to add additional external libraries, these are a couple different places to keep in mind.
 
-* **.vscode\\c\_cpp\_properties.json** - You'll see **compilerPath** & **includePath**. The compilerPath includes all the compiler's directories so, the includePath only needs the root project directory and any additional libraries you want to include. SFML is included as well in this boilerplate. See details below.
+* **.vscode/c\_cpp\_properties.json** - You'll see **compilerPath** & **includePath**. The compilerPath includes all the compiler's directories so, the includePath only needs the root project directory and any additional libraries you want to include. SFML is included as well in this boilerplate. See details below.
 
   * _"compilerPath"_ - Path to the compiler's binary to use (in our case, it's MinGW GCC.
   * _"includePath"_ - Used by the C/C++ extension for additional include directories. We include the relative project directoy by default. You can also add directories recursively with **/****
 
-* **.vscode\\settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
+* **.vscode/settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
 
   * _"files.exclude"_ - Add any filetypes you want to exclude from the folder panel.
   * _"files.encoding"_ - This uses the same encoding as CodeBlocks (**windows1252**), but feel free to change it to suit your needs.
   * _"editor.fontFamily"_ - I set this to Courier by default to that CodeBlocks feel. Change/remove this line if you want to stick to VS Code's default (Consolas), or your own preference. Same with _"editor.fontSize"_ & _"editor.lineHeight"_.
   * _"terminal.integrated.env.****"_ - Environment variables for use when the terminal runs. Note: These override the OS defaults.
 
-* **.vscode\\launch.json** - Used to store the configuration to launch the debugger.
-* **.vscode\\tasks.json** - Used to store the task definitions (Build & Run commands, etc.).
-* **.vscode\\_keybindings.json** - As mentioned before, this is used purely to store handy keybindings that one can add themselves, and not recognized by VS Code.
+* **.vscode/launch.json** - Used to store the configuration to launch the debugger.
+* **.vscode/tasks.json** - Used to store the task definitions (Build & Run commands, etc.).
+* **.vscode/_keybindings.json** - As mentioned before, this is used purely to store handy keybindings that one can add themselves, and not recognized by VS Code.
 
 ## Notes
 
