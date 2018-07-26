@@ -1,5 +1,5 @@
 # sfml-vscode-boilerplate
-An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
+An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows, mostly)
 
 ## Prerequisites
 
@@ -7,7 +7,7 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
 * [MinGW (GCC) 7.3.0 DW2 32-bit](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.3.0/threads-posix/dwarf/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z/download)
 * [Visual Studio Code (Windows version)](https://code.visualstudio.com/download)
   * [Official C/C++ Extension (0.17.4+)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
-  * [Include Autocomplete Extension](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
+  * [Include Autocomplete Extension (Optional)](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
 * [Git Bash (for Windows) ](https://git-scm.com/downloads)
 
 ## Installation
@@ -16,11 +16,11 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows)
 2. Download & Extract MinGW to **C:\\mingw32\\** where the bin/lib/include folders are contained within
 4. Download & Install Visual Studio Code if you don't already have it.
 5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
-6. Install the **Include Autocomplete** extension. This leverages the **"includePath"** array in **c\_cpp\_properties.json** for additional auto-complete functionality when writing "#include ..."
-7. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location. We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux (although Mac configuration is untested thus far)
+6. _(Optional)_ Install the **Include Autocomplete** extension. The C++ extension has decent include functionality already, but this one is a little better about headers contained in sub-folders. Note: It leverages the **"includePath"** array in **c\_cpp\_properties.json**
+7. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location (default: C:/Program Files/Git/bin/bash.exe). We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux (although Mac configuration is untested thus far)
 8. Also in **settings.json** Ensure **Path** in the **"terminal.integrated.env.windows"** array is set to the correct location of mingw32. 
 
-**Note:** In previous versions of VS Code, the "Path" environment variable had to be set within Windows, but as of version 0.17.4 of the C++ plugin, you can safely take out **C:\\mingw32\\bin** from there, and set it from the Workspace Settings under **terminal.integrated.env.windows**. This way, multiple projects can use different compilers, as well as a sandboxed environment. This is setup by default, so you shouldn't have to worry about it right away. It also allows you to keep your environment contained.
+**Note:** In previous versions of VS Code, the "Path" environment variable had to be set within Windows, but as of version 0.17.4 of the C++ plugin, you can safely take out **C:\\mingw32\\bin** from there, and set it from the Workspace Settings under **terminal.integrated.env.windows**. This way, multiple projects can use different compilers, as well as a sandboxed environment. This configuration overrides Path anyway, so you shouldn't have to worry about it right away. It also allows you to keep your environment contained/defined in VS Code.
 
 ## Configuration
 
@@ -80,16 +80,17 @@ Note: You can add any of those variables in **(platform) > options > env** for p
 
 If you need to add additional external libraries, these are a couple different places to keep in mind.
 
-* **.vscode\\c\_cpp\_properties.json** - You'll see **"includePath"** & **"browse.path"**. Both already include the default search directories for the MinGW compiler via the **compilerPath** property, so the includePath can just contain SFML and project-related paths. Add addtional libraries to both sections for consistency, but includePath is the only one used out of the box. See details below.
+* **.vscode\\c\_cpp\_properties.json** - You'll see **compilerPath** & **includePath**. The compilerPath includes all the compiler's directories so, the includePath only needs the root project directory and any additional libraries you want to include. SFML is included as well in this boilerplate. See details below.
 
-  * _"includePath"_ - Used by the C/C++ extension if **"C_Cpp.intelliSenseEngine"** is set to **"Default"** in settings.json. includePath is also used by the **Include Autocomplete** extension. Add directories recursively with **\\****
-  * _"browse.path"_ - Only used if **"C_Cpp.intelliSenseEngine"** is set to **"Tag Parser"** from what I understand. Add directories recursively with **\\***
+  * _"compilerPath"_ - Path to the compiler's binary to use (in our case, it's MinGW GCC.
+  * _"includePath"_ - Used by the C/C++ extension for additional include directories. We include the relative project directoy by default. You can also add directories recursively with **/****
 
 * **.vscode\\settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
 
   * _"files.exclude"_ - Add any filetypes you want to exclude from the folder panel.
   * _"files.encoding"_ - This uses the same encoding as CodeBlocks (**windows1252**), but feel free to change it to suit your needs.
   * _"editor.fontFamily"_ - I set this to Courier by default to that CodeBlocks feel. Change/remove this line if you want to stick to VS Code's default (Consolas), or your own preference. Same with _"editor.fontSize"_ & _"editor.lineHeight"_.
+  * _"terminal.integrated.env.****"_ - Environment variables for use when the terminal runs. Note: These override the OS defaults.
 
 * **.vscode\\launch.json** - Used to store the configuration to launch the debugger.
 * **.vscode\\tasks.json** - Used to store the task definitions (Build & Run commands, etc.).
