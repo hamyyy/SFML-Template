@@ -1,5 +1,5 @@
 # sfml-vscode-boilerplate
-An SFML 2.5.0 C++14 configuration for Visual Studio Code (on Windows, mostly)
+An SFML 2.5.0 C++14 configuration for Visual Studio Code
 
 ## Prerequisites
 
