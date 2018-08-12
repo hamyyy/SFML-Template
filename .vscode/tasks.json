@@ -11,7 +11,8 @@
 			"INCLUDE_DIRS": "",
 			"LINK_LIBRARIES": "",
 			"FLAGS_RELEASE": "",
-			"FLAGS_DEBUG": ""
+			"FLAGS_DEBUG": "",
+			"MACROS_DEBUG": "_DEBUG"
 		}
 	},
 	"windows": {

@@ -96,6 +96,18 @@ If you need to add additional external libraries, these are a couple different p
 * **.vscode/tasks.json** - Used to store the task definitions (Build & Run commands, etc.).
 * **.vscode/_keybindings.json** - As mentioned before, this is used purely to store handy keybindings that one can add themselves, and not recognized by VS Code.
 
+## Multiple Projects
+
+Recently, I wanted to avoid duplicate Makefiles in my various projects, so I found a nice little solution to do this.
+
+1. Start by creating a folder structure where something like **SFML** is your root folder for SFML projects, and the **sfml-vscode-boilerplate** is contained within. We'll rename it to **sfml-project1**.
+2. Copy the Makefile from **sfml-project1** to the root **SFML** directory
+3. Edit the Makefile in **sfml-project1**, replace the entire contents to simply have:
+  ```
+  include ../Makefile
+  ```
+4. Open the project in vscode, and it should compile! Voila! You can now use a shared Makefile between projects this way
+
 ## Notes
 
 * This configuration assumes all source files are contained within the **src** folder, but uses the **root** as the working directory for assets & things referenced in your project.

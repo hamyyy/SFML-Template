@@ -19,6 +19,9 @@ SFML_DIR?=/usr/local
 FLAGS_RELEASE?=
 FLAGS_DEBUG?=
 
+MACROS_RELEASE?=
+MACROS_DEBUG?=_DEBUG
+
 _LIB_PRE=$(patsubst %,-L%,$(LIB_DIRS))
 _INC_PRE=$(patsubst %,-I%,$(INCLUDE_DIRS))
 _LLS_PRE=$(patsubst %,-l%,$(LINK_LIBRARIES))
@@ -26,8 +29,15 @@ _LLS_PRE=$(patsubst %,-l%,$(LINK_LIBRARIES))
 # SFML-related
 LIB=-L$(SFML_DIR)/lib $(_LIB_PRE)
 INC=-I$(SFML_DIR)/include $(_INC_PRE)
-LIB_RELEASE=-lsfml-graphics -lsfml-audio -lsfml-network -lsfml-window -lsfml-system $(_LLS_PRE) $(FLAGS_RELEASE)
-LIB_DEBUG=-lsfml-graphics-d -lsfml-audio-d -lsfml-network-d -lsfml-window-d -lsfml-system-d $(_LLS_PRE) $(FLAGS_DEBUG)
+
+# Debug/Release conditions
+ifeq ($(BUILD),Release)
+_MACROS=$(patsubst %,-D%,$(MACROS_RELEASE))
+_LIBS=-lsfml-graphics -lsfml-audio -lsfml-network -lsfml-window -lsfml-system $(_LLS_PRE) $(FLAGS_RELEASE)
+else
+_MACROS=$(patsubst %,-D%,$(MACROS_DEBUG))
+_LIBS=-lsfml-graphics-d -lsfml-audio-d -lsfml-network-d -lsfml-window-d -lsfml-system-d $(_LLS_PRE) $(FLAGS_DEBUG)
+endif
 
 # Compiler & flags
 CC?=g++
@@ -55,12 +65,12 @@ rebuild: clean build
 
 $(ODIR)/%.o: src/%.cpp
 $(ODIR)/%.o: src/%.cpp $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
-	$(CC) $(DEPFLAGS) -g $(CFLAGS) $(INC) -o $@ -c $<
+	$(CC) $(DEPFLAGS) $(_MACROS) -g $(CFLAGS) $(INC) -o $@ -c $<
 	$(POSTCOMPILE)
 
 $(ODIR)/%.o: src/%.c
 $(ODIR)/%.o: src/%.c $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
-	$(CC) $(DEPFLAGS) -g $(CFLAGS) $(INC) -o $@ -c $<
+	$(CC) $(DEPFLAGS) $(_MACROS) -g $(CFLAGS) $(INC) -o $@ -c $<
 	$(POSTCOMPILE)
 
 $(ODIR)/%.res: src/%.rc
@@ -68,11 +78,7 @@ $(ODIR)/%.res: src/%.rc src/%.h | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
 	$(RC) -J rc -O coff -i $< -o $@
 
 build: $(OBJS) | bin/$(BUILD)
-ifeq ($(BUILD),Release)
-	$(CC) $(LIB) -o bin/$(BUILD)/$(NAME) $(OBJS) $(LIB_RELEASE)
-else
-	$(CC) $(LIB) -o bin/$(BUILD)/$(NAME) $(OBJS) $(LIB_DEBUG)
-endif
+	$(CC) $(LIB) -o bin/$(BUILD)/$(NAME) $(OBJS) $(_LIBS)
 
 $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS):
 	mkdir -p $@

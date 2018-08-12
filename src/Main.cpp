@@ -2,7 +2,7 @@
 
 int main()
 {
-    printf("Hello World!");
+    printf("Hello World!\n");
 
     sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
     sf::CircleShape shape(100.f);
