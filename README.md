@@ -106,7 +106,8 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
   ```
   include ../Makefile
   ```
-4. Open the project in vscode, and it should compile! Voila! You can now use a shared Makefile between projects this way
+4. Make a copy of **sfml-project1** and call it **sfml-project2**
+5. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
 
 ## Notes
 
