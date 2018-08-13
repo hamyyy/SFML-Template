@@ -18,7 +18,6 @@
 	"windows": {
 		"options": {
 			"env": {
-				"GCC_VERSION": "7.3.0",
 				"SFML_DIR": "C:/SFML-2.5.0",
 				"NAME": "${workspaceRootFolderName}.exe",
 				"CC": "i686-w64-mingw32-g++.exe",
@@ -32,7 +31,6 @@
 	"linux": {
 		"options": {
 			"env": {
-				"GCC_VERSION": "7.3.0",
 				"SFML_DIR": "/usr/local",
 				"NAME": "${workspaceRootFolderName}",
 				"CC": "g++",
