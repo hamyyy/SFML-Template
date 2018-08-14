@@ -1,0 +1,4 @@
+SOURCE_FILES= \
+	Main.cpp
+
+PROJECT_DIRS=

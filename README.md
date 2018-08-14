@@ -18,7 +18,7 @@ An SFML 2.5.0 C++14 configuration for Visual Studio Code
 5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
 6. _(Optional)_ Install the **Include Autocomplete** extension. The C++ extension has decent include functionality already, but this one is a little better about headers contained in sub-folders. Note: It leverages the **"includePath"** array in **c\_cpp\_properties.json**
 7. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location (default: C:/Program Files/Git/bin/bash.exe). We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux (although Mac configuration is untested thus far)
-8. Also in **settings.json** Ensure **Path** in the **"terminal.integrated.env.windows"** array is set to the correct location of mingw32. 
+8. Also in **settings.json** Ensure **Path** in the **"terminal.integrated.env.windows"** array is set to the correct location of the compiler's executable (example: C:\\mingw32\\bin).
 
 **Note:** In previous versions of VS Code, the "Path" environment variable had to be set within Windows, but as of version 0.17.4 of the C++ plugin, you can safely take out **C:\\mingw32\\bin** from there, and set it from the Workspace Settings under **terminal.integrated.env.windows**. This way, multiple projects can use different compilers, as well as a sandboxed environment. This configuration overrides Path anyway, so you shouldn't have to worry about it right away. It also allows you to keep your environment contained/defined in VS Code.
 
@@ -33,48 +33,97 @@ At this point, everything you need is installed
 5. Copy the keybindings into this file. Feel free to change them if you don't like them later.
 6. Hit the **F9** key to run the **Build & Run: Release** task. It should run the Makefile, find the compiler, build the Main.cpp into Main.o, and launch the green circle hello world that you should recognize from the official SFML guide. **Shift+F9** will launch the basic Debug build, and F8 will launch the actual Debugger along with the Debug build.
 
-## Adding source files & libraries to the Makefile
+## Makefile Environment
 
-If you're moving to this from CodeBlocks, think of this as adding files to your project. The src files might already exist somewhere, but you need to tell the compiler to include them. You do not need to add SFML to any of these variables, since it's already in the Makefile.
+Originally, this boilerplate used tasks.json to contain all the environment variables, but I've since moved them out into separate .mk (Make) files to organize them by build type & platform, so you can customize which SFML libraries to include if you want, or pretty much anything without having to edit the tasks.json. Each .mk file is outlined below:
 
-Open **tasks.json**. In **options > env**, you'll see 7 environment variables that will require settings specific to your projects. Each one is outlined below:
+    ./env.mk: All platforms/builds
 
-**SOURCE_FILES**: Add **.cpp** or **.rc** files relative to the **src/** directory, separated by a space character.
-```
-"SOURCE_FILES": "Main.cpp WindowManager.cpp Game/Character.cpp Graphics/ParticleSystem.cpp Utility/Geometry.cpp SceneManager/SceneManager.cpp SceneManager/Scene.cpp SceneManager/Scenes/SceneTitle.cpp"
+    ./env/.debug.mk: All platforms, Debug build  
+    ./env/.release.mk: All platforms, Release build  
+    
+    ./env/windows.all.mk: Windows, All builds  
+    ./env/windows.debug.mk: Windows, Debug build  
+    ./env/windows.release.mk: Windows, Release build  
+    
+    ./env/linux.all.mk: Linux, All builds  
+    ./env/linux.debug.mk: Linux, Debug build  
+    ./env/linux.release.mk: Linux, Release build
+
+    (OSX will be added when I can test it)
+
+
+## Adding Source Files
+
+In the base boilerplate, add sources files in **SOURCE_FILES** within **./env.mk**, separated by **\\** characters. Same for **PROJECT_DIRS**. Feel free to move these from env.mk to one of the other .mk files, but be aware that out of the box, they'll override the main env.mk, so you'll need to manage them yourself.
+
+
+## Environment Variables
+
+The environment variables that can be added to each one are outlined below. If you need a line-break anywhere simply add a **"\\"** character.
+
+
+**SOURCE_FILES**: Add **.cpp** or **.rc** files relative to the **src/** directory
+```makefile
+SOURCE_FILES= \
+  Main.cpp \
+  WindowManager.cpp \
+  Game/Character.cpp \
+  Graphics/ParticleSystem.cpp \
+  Utility/Geometry.cpp \
+  SceneManager/SceneManager.cpp \
+  SceneManager/Scene.cpp \
+  SceneManager/Scenes/SceneTitle.cpp
 ```
 
-**PROJECT_DIRS**: Add any subfolders you're using with the **src/** directory, separated by a space character.
-```
-"PROJECT_DIRS": "Game Graphics Utility SceneManager SceneManager/Scenes"
-```
-
-**LIB_DIRS**: Add any additional lib directories (full path), separated by a space character.
-```
-"LIB_DIRS": "C:/sfeMovie/lib C:/myLibraries/lib"
-```
-
-**INCLUDE_DIRS**: Add any additional include directories (full path), separated by a space character.
-```
-"INCLUDE_DIRS": "C:/sfeMovie/include C:/myLibraries/include"
+**PROJECT_DIRS**:  
+Add any subfolders you're using with the **src/** directory
+```makefile
+PROJECT_DIRS= \
+  Game \
+  Graphics \
+  Utility \
+  SceneManager \
+  SceneManager/Scenes
 ```
 
-**LINK_LIBRARIES**: Add any additional link libraries, separated by a space character.
-```
-"LINK_LIBRARIES": "XInput user32 something"
-```
-
-**FLAGS_RELEASE**: Additional compiler flags for the Release build (including prefix)
-```
-"FLAGS_RELEASE": "-mwindows"
+**LIB_DIRS**:  
+Add any additional lib directories (full path)
+```makefile
+LIB_DIRS= \
+  C:/sfeMovie/lib \
+  C:/myLibraries/lib
 ```
 
-**FLAGS_DEBUG**: Additional compiler flags for the Debug build (including prefix)
-```
-"FLAGS_DEBUG": "-fdiagnostics-color=auto"
+**INCLUDE_DIRS**:  
+Add any additional include directories (full path)
+```makefile
+INCLUDE_DIRS= \
+  C:/sfeMovie/include \
+  C:/myLibraries/include
 ```
 
-Note: You can add any of those variables in **(platform) > options > env** for platform specific libraries, etc.
+**LINK_LIBRARIES**:  
+Add any additional link libraries
+```makefile
+LINK_LIBRARIES= \
+  XInput \
+  user32 \
+  something
+```
+
+**FLAGS_RELEASE**: Additional compiler flags for the particular build (including prefix)
+```makefile
+BUILD_FLAGS= \
+  -mwindows
+```
+
+**BUILD_MACROS**: Macros to include in the build
+```makefile
+BUILD_MACROS= \
+  _DEBUG
+```
+
 
 ## Include directories & .vscode folder
 

@@ -3,38 +3,23 @@
 	// for the documentation about the tasks.json format
 	"version": "2.0.0",
 	"options": {
-		"cwd": "${workspaceRoot}",
-		"env": {
-			"SOURCE_FILES": "Main.cpp",
-			"PROJECT_DIRS": "",
-			"LIB_DIRS": "",
-			"INCLUDE_DIRS": "",
-			"LINK_LIBRARIES": "",
-			"FLAGS_RELEASE": "",
-			"FLAGS_DEBUG": "",
-			"MACROS_DEBUG": "_DEBUG"
-		}
+		"cwd": "${workspaceRoot}"
 	},
 	"windows": {
 		"options": {
 			"env": {
-				"SFML_DIR": "C:/SFML-2.5.0",
 				"NAME": "${workspaceRootFolderName}.exe",
-				"CC": "i686-w64-mingw32-g++.exe",
-				"CFLAGS": "-Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++14 -fdiagnostics-color=never",
-				"RC": "windres.exe",
 				"MAKE_EXEC": "mingw32-make",
-				"FLAGS_RELEASE": "-mwindows"
+				"PLATFORM": "windows"
 			}
 		}
 	},
 	"linux": {
 		"options": {
 			"env": {
-				"SFML_DIR": "/usr/local",
 				"NAME": "${workspaceRootFolderName}",
-				"CC": "g++",
-				"MAKE_EXEC": "make"
+				"MAKE_EXEC": "make",
+				"PLATFORM": "linux"
 			}
 		}
 	},
