@@ -1,15 +1,18 @@
-# Makefile primarily supports just "Release" & "Debug" BUILD names right now, but additional ones can be passed as an argument from tasks.json
+#==============================================================================
+# Build platform
 PLATFORM?=linux
+# Build description (Primarily uses Debug/Release)
 BUILD?=Release
-_BUILDL=$(shell echo $(BUILD) | tr A-Z a-z)
+_BUILDL:=$(shell echo $(BUILD) | tr A-Z a-z)
 
+# Platform specific environment variables
 include env.mk
 -include env/.$(_BUILDL).mk
 -include env/$(PLATFORM).all.mk
 -include env/$(PLATFORM).$(_BUILDL).mk
 
 #==============================================================================
-# File/Folder dependencies for the production build recipe (buildprod)
+# File/Folder dependencies for the production build recipe (makeproduction)
 PRODUCTION_DEPENDENCIES?=
 # Extensions to exclude from production builds
 PRODUCTION_EXCLUDE?=
@@ -29,7 +32,6 @@ LINK_LIBRARIES?=
 # This is used for the output filename (game.exe)
 NAME?=game.exe
 # In case you want to try an alternate version of SFML, the directory can be passed as an argument from tasks.json as well
-SFML_DIR?=/usr/local
 BUILD_FLAGS?=
 BUILD_MACROS?=
 
