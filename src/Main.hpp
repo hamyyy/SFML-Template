@@ -4,4 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+#include <iostream>
+
 #endif // MAIN_HPP
