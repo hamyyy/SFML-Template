@@ -64,7 +64,7 @@ all: makebuild
 
 rebuild: clean makebuild
 
-buildprod: makebuild copyprod
+buildprod: makebuild makeproduction
 
 $(ODIR)/%.o: src/%.cpp
 $(ODIR)/%.o: src/%.cpp $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
@@ -94,11 +94,16 @@ clean:
 	$(RM) $(DEPS)
 	$(RM) $(OBJS)
 
-build:
+rmbuild:
+	- rm -r build
+
+mkdirbuild:
 	mkdir -p build
 
-copyprod: bin/$(BUILD) build
+releasetobuild: bin/Release
 	cp $</* build
+
+makeproduction: rmbuild mkdirbuild releasetobuild
 	$(foreach dir,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dir) build))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find build -name '$(excl)' -delete))
 
