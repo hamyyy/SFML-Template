@@ -1,7 +1,7 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef MAIN_HPP
+#define MAIN_HPP
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#endif // MAIN_H
+#endif // MAIN_HPP
