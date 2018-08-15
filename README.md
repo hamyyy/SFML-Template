@@ -1,5 +1,5 @@
 # sfml-vscode-boilerplate
-An SFML 2.5.0 C++14 configuration for Visual Studio Code
+An SFML 2.5.0 C++17 configuration for Visual Studio Code
 
 ## Prerequisites
 
@@ -183,7 +183,7 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
 ## Notes
 
 * This configuration assumes all source files are contained within the **src** folder, but uses the **root** as the working directory for assets & things referenced in your project.
-* By default, this configuration uses C++14. You can change the compiler flags in **tasks.json** under **CFLAGS**.
+* By default, this configuration uses C++17. You can change the compiler flags in **env/\<platform\>.all.mk** under **CFLAGS**.
 * If for some reason after an update, the build scripts don't work, reinstall the C/C++ extension and it should work again (this was an issue in an older version of the extension anyway).
 * Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 * This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well.
