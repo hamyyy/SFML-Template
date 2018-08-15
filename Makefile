@@ -30,26 +30,25 @@ INCLUDE_DIRS?=
 # Link libraries (separated by spaces)
 LINK_LIBRARIES?=
 
+# Build-specific preprocessor macros
+BUILD_MACROS?=
+# Build-specific compiler flags to be appended to the final build step (with prefix)
+BUILD_FLAGS?=
+
 # NAME should always be passed as an argument from tasks.json as the root folder name, but uses a fallback of "game.exe"
 # This is used for the output filename (game.exe)
 NAME?=game.exe
-# In case you want to try an alternate version of SFML, the directory can be passed as an argument from tasks.json as well
-BUILD_FLAGS?=
-BUILD_MACROS?=
 
-# SFML-related
+#==============================================================================
+# Add prefixes to the above variables
 _LIB_DIRS:=$(patsubst %,-L%,$(LIB_DIRS))
 _INCLUDE_DIRS:=$(patsubst %,-I%,$(INCLUDE_DIRS))
 
 _BUILD_MACROS:=$(patsubst %,-D%,$(BUILD_MACROS))
 _LINK_LIBRARIES:=$(patsubst %,-l%,$(LINK_LIBRARIES))
 
-# Compiler & flags
-CC?=g++
-RC?=windres.exe
-CFLAGS?=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
-
-# Scripts
+#==============================================================================
+# Directories & Dependencies
 ODIR:=src/obj/$(BUILD)
 _RESS:=$(SOURCE_FILES:.rc=.res)
 _OBJS:=$(_RESS:.cpp=.o)
@@ -61,31 +60,44 @@ DEPSUBDIRS:=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
 _DEPS:=$(SOURCE_FILES:.cpp=.d)
 DEPS:=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
 $(shell mkdir -p $(DEPDIR) >/dev/null)
-DEPFLAGS=-MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
-POSTCOMPILE=@mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
+#==============================================================================
+# Compiler & flags
+CC?=g++
+RC?=windres.exe
+CFLAGS?=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
+CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+POST_COMPILE=@mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
+
+#==============================================================================
+# Build Scripts
 all: makebuild
 
 rebuild: clean makebuild
 
 buildprod: makebuild makeproduction
 
+#==============================================================================
+# Build Recipes
 $(ODIR)/%.o: src/%.cpp
 $(ODIR)/%.o: src/%.cpp $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
-	$(CC) $(DEPFLAGS) $(_BUILD_MACROS) -g $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
-	$(POSTCOMPILE)
+	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) -g $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
+	$(POST_COMPILE)
 
 $(ODIR)/%.o: src/%.c
 $(ODIR)/%.o: src/%.c $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
-	$(CC) $(DEPFLAGS) $(_BUILD_MACROS) -g $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
-	$(POSTCOMPILE)
+	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) -g $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
+	$(POST_COMPILE)
 
 $(ODIR)/%.res: src/%.rc
 $(ODIR)/%.res: src/%.rc src/%.h | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
 	$(RC) -J rc -O coff -i $< -o $@
 
-makebuild: $(OBJS) | bin/$(BUILD)
+bin/$(BUILD)/$(NAME):
 	$(CC) $(_LIB_DIRS) -o bin/$(BUILD)/$(NAME) $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+
+makebuild: $(OBJS) | bin/$(BUILD) bin/$(BUILD)/$(NAME)
+	@echo '$(BUILD) build target is up to date. Nothing to be done.'
 
 $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS):
 	mkdir -p $@
@@ -98,6 +110,8 @@ clean:
 	$(RM) $(DEPS)
 	$(RM) $(OBJS)
 
+#==============================================================================
+# Production recipes
 rmbuild:
 	- rm -r $(PRODUCTION_FOLDER)
 
@@ -111,6 +125,8 @@ makeproduction: rmbuild mkdirbuild releasetobuild
 	$(foreach dir,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dir) $(PRODUCTION_FOLDER)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER) -name '$(excl)' -delete))
 
+#==============================================================================
+# Dependency recipes
 $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d
 
