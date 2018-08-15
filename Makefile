@@ -16,6 +16,8 @@ include env.mk
 PRODUCTION_DEPENDENCIES?=
 # Extensions to exclude from production builds
 PRODUCTION_EXCLUDE?=
+# Folder location (relative or absolute) to place the production build into
+PRODUCTION_FOLDER?=build
 
 #==============================================================================
 # Project .cpp or .rc files (relative to src directory)
@@ -97,17 +99,17 @@ clean:
 	$(RM) $(OBJS)
 
 rmbuild:
-	- rm -r build
+	- rm -r $(PRODUCTION_FOLDER)
 
 mkdirbuild:
-	mkdir -p build
+	mkdir -p $(PRODUCTION_FOLDER)
 
 releasetobuild: bin/Release
-	cp $</* build
+	cp $</* $(PRODUCTION_FOLDER)
 
 makeproduction: rmbuild mkdirbuild releasetobuild
-	$(foreach dir,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dir) build))
-	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find build -name '$(excl)' -delete))
+	$(foreach dir,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dir) $(PRODUCTION_FOLDER)))
+	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER) -name '$(excl)' -delete))
 
 $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d

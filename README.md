@@ -152,6 +152,10 @@ PRODUCTION_EXCLUDE= \
   Thumbs.db
 ```
 
+**PRODUCTION_FOLDER**: The folder the production build will go into. This can be an absolute path or a relative path. Defaults to "build" if not defined.
+```makefile
+PRODUCTION_FOLDER=build
+```
 
 ## Include directories & .vscode folder
 
