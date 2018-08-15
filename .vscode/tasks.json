@@ -109,6 +109,16 @@
 				"isDefault": true
 			},
 			"problemMatcher": []
+		},
+		{
+			"label": "Build: Production",
+			"command": "tput setaf 4; if ${MAKE_EXEC} buildprod; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
 		}
 	]
 }

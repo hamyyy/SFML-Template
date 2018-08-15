@@ -124,6 +124,28 @@ BUILD_MACROS= \
   _DEBUG
 ```
 
+## Build: Production
+
+I thought it was important to include a build task that creates a final "build" folder and copies the files in the bin/Release folder, any dependency .dlls, and any other directories into it. It's accessed via (**Ctrl+Shift+B** > **Build: Production**) and uses a couple special environment variables:
+
+**PRODUCTION_DEPENDENCIES**: Files & folders to copy into the "build" folder upon using the "Build: Production" task.
+```makefile
+PRODUCTION_DEPENDENCIES= \
+  C:/mingw32/bin/libgcc_s_dw2-1.dll \
+  C:/mingw32/bin/libstdc++-6.dll \
+  C:/mingw32/bin/libwinpthread-1.dll \
+  content
+```
+
+**PRODUCTION_EXCLUDE**: Files & extensions to exclude from the production build.
+```makefile
+PRODUCTION_EXCLUDE= \
+  *.psd \
+  *.rar \
+  *.7z \
+  Thumbs.db
+```
+
 
 ## Include directories & .vscode folder
 

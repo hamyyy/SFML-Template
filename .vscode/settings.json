@@ -25,6 +25,7 @@
 	"files.exclude": {
 		"Makefile": true,
 		"bin": true,
+		"build": true,
 		"src/dep": true,
 		"src/obj": true,
 		"**/*.7z": true,

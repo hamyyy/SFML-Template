@@ -9,6 +9,12 @@ include env.mk
 -include env/$(PLATFORM).$(_BUILDL).mk
 
 #==============================================================================
+# File/Folder dependencies for the production build recipe (buildprod)
+PRODUCTION_DEPENDENCIES?=
+# Extensions to exclude from production builds
+PRODUCTION_EXCLUDE?=
+
+#==============================================================================
 # Project .cpp or .rc files (relative to src directory)
 SOURCE_FILES?=Main.cpp
 # Project subdirectories within src/ that contain source files
@@ -54,9 +60,11 @@ $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS=-MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 POSTCOMPILE=@mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
-all: build
+all: makebuild
 
-rebuild: clean build
+rebuild: clean makebuild
+
+buildprod: makebuild copyprod
 
 $(ODIR)/%.o: src/%.cpp
 $(ODIR)/%.o: src/%.cpp $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
@@ -72,7 +80,7 @@ $(ODIR)/%.res: src/%.rc
 $(ODIR)/%.res: src/%.rc src/%.h | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
 	$(RC) -J rc -O coff -i $< -o $@
 
-build: $(OBJS) | bin/$(BUILD)
+makebuild: $(OBJS) | bin/$(BUILD)
 	$(CC) $(_LIB_DIRS) -o bin/$(BUILD)/$(NAME) $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 
 $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS):
@@ -85,6 +93,14 @@ bin/$(BUILD):
 clean:
 	$(RM) $(DEPS)
 	$(RM) $(OBJS)
+
+build:
+	mkdir -p build
+
+copyprod: bin/$(BUILD) build
+	cp $</* build
+	$(foreach dir,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dir) build))
+	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find build -name '$(excl)' -delete))
 
 $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d

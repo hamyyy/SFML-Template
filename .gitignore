@@ -6,4 +6,5 @@ src/dep/Debug/**
 src/dep/**
 bin/Release/*.exe
 bin/Debug/*.exe
+build
 Thumbs.db
