@@ -21,6 +21,7 @@
 	"files.trimTrailingWhitespace": true,
 	"files.exclude": {
 		"Makefile": true,
+		"build.sh": true,
 		"bin": true,
 		"build": true,
 		"src/dep": true,

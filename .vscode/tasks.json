@@ -35,7 +35,7 @@
 	"tasks": [
 		{
 			"label": "Build & Run: Release",
-			"command": "tput setaf 4; if ${MAKE_EXEC}; then (tput setaf 2; tput bold; echo \"=== Build Succeeded: Launching ${NAME} ===\"; tput sgr0; bin/Release/${NAME}) else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\"; tput sgr0) fi",
+			"command": "./build.sh buildrun Release",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -45,7 +45,7 @@
 		},
 		{
 			"label": "Build: Release",
-			"command": "tput setaf 4; if ${MAKE_EXEC}; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
+			"command": "./build.sh build Release",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -55,7 +55,7 @@
 		},
 		{
 			"label": "Run: Release",
-			"command": "bin/Release/${NAME}",
+			"command": "./build.sh run Release",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -65,7 +65,7 @@
 		},
 		{
 			"label": "Rebuild: Release",
-			"command": "tput setaf 4; if ${MAKE_EXEC} rebuild; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
+			"command": "./build.sh rebuild Release",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -75,7 +75,7 @@
 		},
 		{
 			"label": "Build & Run: Debug",
-			"command": "tput setaf 4; if ${MAKE_EXEC} BUILD=Debug; then (tput setaf 2; tput bold; echo \"=== Build Succeeded: Launching ${NAME} ===\"; tput sgr0; bin/Debug/${NAME}) else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\"; tput sgr0) fi",
+			"command": "./build.sh buildrun Debug",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -85,7 +85,7 @@
 		},
 		{
 			"label": "Build: Debug",
-			"command": "tput setaf 4; if ${MAKE_EXEC} BUILD=Debug; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
+			"command": "./build.sh build Debug",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -95,7 +95,7 @@
 		},
 		{
 			"label": "Run: Debug",
-			"command": "bin/Debug/${NAME}",
+			"command": "./build.sh run Debug",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -105,7 +105,7 @@
 		},
 		{
 			"label": "Rebuild: Debug",
-			"command": "tput setaf 4; if ${MAKE_EXEC} rebuild BUILD=Debug; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
+			"command": "./build.sh rebuild Debug",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -115,7 +115,7 @@
 		},
 		{
 			"label": "Build: Production",
-			"command": "tput setaf 4; if ${MAKE_EXEC} buildprod; then (tput setaf 2; tput bold; echo \"=== Build Succeeded ===\") else (tput setaf 1; tput bold; echo \"=== Build Failed: Review the compile errors above ===\") fi; tput sgr0",
+			"command": "./build.sh buildprod Release",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -125,7 +125,7 @@
 		},
 		{
 			"label": "Run: Production",
-			"command": "tput setaf 4; tput bold; echo \"=== Launching Production Build ===\"; build/${NAME}",
+			"command": "./build.sh runprod Release",
 			"type": "shell",
 			"group": {
 				"kind": "build",

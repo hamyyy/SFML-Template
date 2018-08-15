@@ -37,6 +37,8 @@ At this point, everything you need is installed
 
 Originally, this boilerplate used tasks.json to contain all the environment variables, but I've since moved them out into separate .mk (Make) files to organize them by build type & platform, so you can customize which SFML libraries to include if you want, or pretty much anything without having to edit the tasks.json. Each .mk file is outlined below:
 
+    ./build.sh: Contains the build scripts that tasks.json calls
+
     ./env.mk: All platforms/builds
 
     ./env/.debug.mk: All platforms, Debug build  
@@ -187,8 +189,13 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
   ```
   include ../Makefile
   ```
-4. Make a copy of **sfml-project1** and call it **sfml-project2**
-5. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
+4. Copy the build.sh from **sfml-project1** to the root **SFML** directory
+5. Edit the build.sh in **sfml-project1**, replace the entire contents to simply have:
+  ```
+  include ../build.sh $1 $2
+  ```
+6. Make a copy of **sfml-project1** and call it **sfml-project2**
+7. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
 
 ## Notes
 

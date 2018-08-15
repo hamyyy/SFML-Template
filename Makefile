@@ -93,11 +93,12 @@ $(ODIR)/%.res: src/%.rc
 $(ODIR)/%.res: src/%.rc src/%.h | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
 	$(RC) -J rc -O coff -i $< -o $@
 
-bin/$(BUILD)/$(NAME):
-	$(CC) $(_LIB_DIRS) -o bin/$(BUILD)/$(NAME) $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+bin/$(BUILD)/$(NAME): $(OBJS)
+	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 
-makebuild: $(OBJS) | bin/$(BUILD) bin/$(BUILD)/$(NAME)
-	@echo '$(BUILD) build target is up to date. Nothing to be done.'
+makebuild: bin/$(BUILD)/$(NAME) | bin/$(BUILD)
+	@echo '$(BUILD) build target is up to date.'
+
 
 $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS):
 	mkdir -p $@
@@ -107,6 +108,7 @@ bin/$(BUILD):
 
 .PHONY: clean
 clean:
+	$(RM) bin/$(BUILD)/$(NAME)
 	$(RM) $(DEPS)
 	$(RM) $(OBJS)
 
