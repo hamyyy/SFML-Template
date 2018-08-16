@@ -80,7 +80,7 @@ elif [ $1 == 'rebuild' ] ; then
 
 elif [ $1 == 'run' ] ; then
 	launch
-	bin/$2/$NAME
+	bin/$BUILD/$NAME
 
 elif [ $1 == 'buildprod' ] ; then
 	if $MAKE_EXEC BUILD=$BUILD buildprod; then
@@ -95,6 +95,7 @@ elif [ $1 == 'runprod' ] ; then
 
 elif [ $1 == 'profile' ] ; then
 	if [ $BUILD == 'Debug' ] ; then
+		bin/$BUILD/$NAME
 		gprof bin/Debug/$NAME gmon.out > $PROF_ANALYSIS_FILE
 		profiler_done
 	else
