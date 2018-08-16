@@ -1,6 +1,4 @@
 # Build system
-src/obj
-src/dep
 bin
 build
 gmon.out

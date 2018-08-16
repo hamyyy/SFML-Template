@@ -52,20 +52,23 @@ _LINK_LIBRARIES:=$(patsubst %,-l%,$(LINK_LIBRARIES))
 
 #==============================================================================
 # Directories & Dependencies
-ODIR:=src/obj/$(BUILD)
+BDIR:=bin/$(BUILD)
+_EXE:=$(BDIR)/$(NAME)
+
+ODIR:=$(BDIR)/obj
 _RESS:=$(SOURCE_FILES:.rc=.res)
 _OBJS:=$(_RESS:.cpp=.o)
 OBJS:=$(patsubst %,$(ODIR)/%,$(_OBJS))
 SUBDIRS:=$(patsubst %,$(ODIR)/%,$(PROJECT_DIRS))
 
-DEPDIR:=src/dep/$(BUILD)
+DEPDIR:=$(BDIR)/dep
 DEPSUBDIRS:=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
 _DEPS:=$(SOURCE_FILES:.cpp=.d)
 DEPS:=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 
-_DIRECTORIES:=$(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS) bin bin/$(BUILD)
-_BUILD_DEPENDENCIES:=$(patsubst %,bin/$(BUILD)/%,$(notdir $(BUILD_DEPENDENCIES)))
+_DIRECTORIES:=bin $(BDIR) $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
+_BUILD_DEPENDENCIES:=$(patsubst %,$(BDIR)/%,$(notdir $(BUILD_DEPENDENCIES)))
 
 #==============================================================================
 # Compiler & flags
@@ -101,16 +104,16 @@ $(ODIR)/%.res: src/%.rc
 $(ODIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
 	$(RC) -J rc -O coff -i $< -o $@
 
-bin/$(BUILD)/%.dll:
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) bin/$(BUILD)))
+$(BDIR)/%.dll:
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BDIR)))
 
-bin/$(BUILD)/%.so:
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) bin/$(BUILD)))
+$(BDIR)/%.so:
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BDIR)))
 
-bin/$(BUILD)/$(NAME): $(OBJS) bin/$(BUILD) $(_BUILD_DEPENDENCIES)
+$(_EXE): $(OBJS) $(BDIR) $(_BUILD_DEPENDENCIES)
 	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 
-makebuild: bin/$(BUILD)/$(NAME)
+makebuild: $(_EXE)
 	@echo '$(BUILD) build target is up to date.'
 
 $(_DIRECTORIES):
@@ -118,7 +121,7 @@ $(_DIRECTORIES):
 
 .PHONY: clean
 clean:
-	$(RM) bin/$(BUILD)/$(NAME)
+	$(RM) $(_EXE)
 	$(RM) $(DEPS)
 	$(RM) $(OBJS)
 
@@ -130,8 +133,8 @@ rmbuild:
 mkdirbuild:
 	mkdir -p $(PRODUCTION_FOLDER)
 
-releasetobuild: bin/Release
-	cp $</* $(PRODUCTION_FOLDER)
+releasetobuild: $(_EXE)
+	cp $(_EXE) $(PRODUCTION_FOLDER)
 
 makeproduction: rmbuild mkdirbuild releasetobuild
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER)))
