@@ -1,7 +1,11 @@
+# Build system
 src/obj
 src/dep
 bin
 build
-Thumbs.db
 gmon.out
 *.stats
+Thumbs.db
+
+# Project specific
+#
