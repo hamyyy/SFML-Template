@@ -64,6 +64,7 @@ _DEPS:=$(SOURCE_FILES:.cpp=.d)
 DEPS:=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 
+_DIRECTORIES:=$(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS) bin bin/$(BUILD)
 _BUILD_DEPENDENCIES:=$(patsubst %,bin/$(BUILD)/%,$(notdir $(BUILD_DEPENDENCIES)))
 
 #==============================================================================
@@ -87,17 +88,17 @@ buildprod: makebuild makeproduction
 #==============================================================================
 # Build Recipes
 $(ODIR)/%.o: src/%.cpp
-$(ODIR)/%.o: src/%.cpp $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
+$(ODIR)/%.o: src/%.cpp $(DEPDIR)/%.d | $(_DIRECTORIES)
 	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
 	$(POST_COMPILE)
 
 $(ODIR)/%.o: src/%.c
-$(ODIR)/%.o: src/%.c $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
+$(ODIR)/%.o: src/%.c $(DEPDIR)/%.d | $(_DIRECTORIES)
 	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
 	$(POST_COMPILE)
 
 $(ODIR)/%.res: src/%.rc
-$(ODIR)/%.res: src/%.rc src/%.h | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
+$(ODIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
 	$(RC) -J rc -O coff -i $< -o $@
 
 bin/$(BUILD)/%.dll:
@@ -112,14 +113,7 @@ bin/$(BUILD)/$(NAME): $(OBJS) bin/$(BUILD) $(_BUILD_DEPENDENCIES)
 makebuild: bin/$(BUILD)/$(NAME)
 	@echo '$(BUILD) build target is up to date.'
 
-
-$(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS):
-	mkdir -p $@
-
-bin:
-	mkdir -p $@
-
-bin/$(BUILD): bin
+$(_DIRECTORIES):
 	mkdir -p $@
 
 .PHONY: clean
@@ -131,7 +125,7 @@ clean:
 #==============================================================================
 # Production recipes
 rmbuild:
-	- rm -r $(PRODUCTION_FOLDER)
+	-rm -r $(PRODUCTION_FOLDER)
 
 mkdirbuild:
 	mkdir -p $(PRODUCTION_FOLDER)
@@ -140,7 +134,7 @@ releasetobuild: bin/Release
 	cp $</* $(PRODUCTION_FOLDER)
 
 makeproduction: rmbuild mkdirbuild releasetobuild
-	$(foreach dir,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dir) $(PRODUCTION_FOLDER)))
+	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER) -name '$(excl)' -delete))
 
 #==============================================================================
