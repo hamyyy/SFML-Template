@@ -21,22 +21,16 @@
 			"windows": {
 				"MIMode": "gdb",
 				"miDebuggerPath": "C:/mingw32/bin/gdb.exe",
-				"environment": [
-					{
-						"name": "Path",
-						"value": "C:/mingw32/bin;C:/SFML-2.5.0/bin"
-					}
-				],
+				"env": {
+					"Path": "C:/mingw32/bin;C:/SFML-2.5.0/bin"
+				}
 			},
 			"linux": {
 				"MIMode": "gdb",
 				"miDebuggerPath": "/usr/bin/gdb",
-				"environment": [
-					{
-						"name": "Path",
-						"value": "/usr/bin"
-					}
-				],
+				"env": {
+					"Path": "/usr/bin"
+				}
 			},
 			"osx": {
 				"MIMode": "lldb"
