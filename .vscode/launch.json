@@ -22,14 +22,15 @@
 				"MIMode": "gdb",
 				"miDebuggerPath": "C:/mingw32/bin/gdb.exe",
 				"env": {
-					"Path": "C:/mingw32/bin;C:/SFML-2.5.0/bin"
+					"Path": "${config:terminal.integrated.env.windows.Path}"
 				}
 			},
 			"linux": {
+				"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}",
 				"MIMode": "gdb",
 				"miDebuggerPath": "/usr/bin/gdb",
 				"env": {
-					"Path": "/usr/bin"
+					"PATH": "${config:terminal.integrated.env.linux.PATH}",
 				}
 			},
 			"osx": {

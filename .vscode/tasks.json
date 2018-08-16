@@ -5,28 +5,27 @@
 	"options": {
 		"cwd": "${workspaceRoot}",
 		"env": {
-			"Path": "C:/mingw32/bin;C:/SFML-2.5.0/bin"
+			"PROF_EXEC": "gprof",
+			"PROF_ANALYSIS_FILE": "profiler_analysis.stats"
 		}
 	},
 	"windows": {
 		"options": {
 			"env": {
+				"Path": "${config:terminal.integrated.env.windows.Path}",
 				"NAME": "${workspaceRootFolderName}.exe",
 				"MAKE_EXEC": "mingw32-make",
-				"PLATFORM": "windows",
-				"PROF_EXEC": "gprof",
-				"PROF_ANALYSIS_FILE": "profiler_analysis.stats"
+				"PLATFORM": "windows"
 			}
 		}
 	},
 	"linux": {
 		"options": {
 			"env": {
+				"PATH": "${config:terminal.integrated.env.linux.PATH}",
 				"NAME": "${workspaceRootFolderName}",
 				"MAKE_EXEC": "make",
-				"PLATFORM": "linux",
-				"PROF_EXEC": "gprof",
-				"PROF_ANALYSIS_FILE": "profiler_analysis.stats"
+				"PLATFORM": "linux"
 			}
 		}
 	},
