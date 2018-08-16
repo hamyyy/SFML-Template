@@ -64,6 +64,8 @@ In the base boilerplate, add sources files in **SOURCE_FILES** within **./env.mk
 
 The environment variables that can be added to each one are outlined below. If you need a line-break anywhere simply add a **"\\"** character.
 
+**CFLAGS_ALL**: Compiler flags to use in all builds (gets passed to CFLAGS)
+**CFLAGS**: Compiler flags to use in the specific build (Debug/Release)
 
 **SOURCE_FILES**: Add **.cpp** or **.rc** files relative to the **src/** directory
 ```makefile
@@ -158,6 +160,12 @@ PRODUCTION_EXCLUDE= \
 ```makefile
 PRODUCTION_FOLDER=build
 ```
+
+## Profile: Debug
+
+After a Debug build has been compiled & run at least once (and successfully exited), a **gmon.out** file will generate in the root directory (this is hidden in the vscode workspace). Running the **Profile: Debug** task after will generate a **profiler_analysis.stats** file from gmon.out using gcc's "gprof" profiler. You can then examine the stats file in the workspace.
+
+Note: You might see a "BFD: Dwarf Error: Could not find abbrev number ###" error in the terminal. I'm not sure what this means yet, but it doesn't seem to stop the stats from generating.
 
 ## Include directories & .vscode folder
 
