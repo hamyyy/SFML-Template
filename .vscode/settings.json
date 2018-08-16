@@ -15,6 +15,7 @@
 		"terminal.ansiBrightBlue": "#5599ff"
 	},
 
+	"debug.toolBarLocation": "docked",
 	"terminal.integrated.shell.windows": "C:/Program Files/Git/bin/bash.exe",
 
 	"files.encoding": "windows1252",
