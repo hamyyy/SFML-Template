@@ -1,5 +1,5 @@
 CC=i686-w64-mingw32-g++.exe
-CFLAGS=-Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=never
+CFLAGS_ALL=-Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=never
 RC=windres.exe
 
 LIB_DIRS= \

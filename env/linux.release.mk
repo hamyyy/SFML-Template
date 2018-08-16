@@ -1,0 +1,1 @@
+CFLAGS=-g $(CFLAGS_ALL)

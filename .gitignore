@@ -8,3 +8,5 @@ bin/Release/*.exe
 bin/Debug/*.exe
 build
 Thumbs.db
+gmon.out
+*.stats

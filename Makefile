@@ -81,12 +81,12 @@ buildprod: makebuild makeproduction
 # Build Recipes
 $(ODIR)/%.o: src/%.cpp
 $(ODIR)/%.o: src/%.cpp $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
-	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) -g $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
+	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
 	$(POST_COMPILE)
 
 $(ODIR)/%.o: src/%.c
 $(ODIR)/%.o: src/%.c $(DEPDIR)/%.d | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
-	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) -g $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
+	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
 	$(POST_COMPILE)
 
 $(ODIR)/%.res: src/%.rc

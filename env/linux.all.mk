@@ -1,4 +1,5 @@
 CC=g++
+CFLAGS_ALL=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
 
 LIB_DIRS= \
 	/usr/local/lib

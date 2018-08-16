@@ -13,7 +13,9 @@
 			"env": {
 				"NAME": "${workspaceRootFolderName}.exe",
 				"MAKE_EXEC": "mingw32-make",
-				"PLATFORM": "windows"
+				"PLATFORM": "windows",
+				"PROF_EXEC": "gprof",
+				"PROF_ANALYSIS_FILE": "profiler_analysis.stats"
 			}
 		}
 	},
@@ -22,7 +24,9 @@
 			"env": {
 				"NAME": "${workspaceRootFolderName}",
 				"MAKE_EXEC": "make",
-				"PLATFORM": "linux"
+				"PLATFORM": "linux",
+				"PROF_EXEC": "gprof",
+				"PROF_ANALYSIS_FILE": "profiler_analysis.stats"
 			}
 		}
 	},
@@ -106,6 +110,16 @@
 		{
 			"label": "Rebuild: Debug",
 			"command": "./build.sh rebuild Debug",
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Profile: Debug",
+			"command": "./build.sh profile Debug",
 			"type": "shell",
 			"group": {
 				"kind": "build",

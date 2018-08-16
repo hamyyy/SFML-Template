@@ -41,6 +41,13 @@ launch_prod() {
 	tput sgr0
 }
 
+profiler_done() {
+	tput setaf 2
+	tput bold
+	echo $dec Profiler completed. View $PROF_ANALYSIS_FILE for details $dec
+	tput sgr0
+}
+
 tput setaf 4
 if [ $1 == 'buildrun' ] ; then
 	if $MAKE_EXEC BUILD=$BUILD; then
@@ -78,6 +85,14 @@ elif [ $1 == 'buildprod' ] ; then
 elif [ $1 == 'runprod' ] ; then
 	launch_prod
 	build/$NAME
+
+elif [ $1 == 'profile' ] ; then
+	if [ $BUILD == 'Debug' ] ; then
+		gprof bin/Debug/$NAME gmon.out > $PROF_ANALYSIS_FILE
+		profiler_done
+	else
+		echo Error. Profiler must be run in Debug build.
+	fi
 
 else
 	echo Command not recognized

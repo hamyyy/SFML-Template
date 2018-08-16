@@ -22,6 +22,7 @@
 	"files.exclude": {
 		"Makefile": true,
 		"build.sh": true,
+		"gmon.out": true,
 		"bin": true,
 		"build": true,
 		"src/dep": true,
@@ -31,6 +32,7 @@
 		"**/Thumbs.db": true
 	},
 	"files.associations": {
+		"*.stats": "cpp",
 		"array": "cpp",
 		"*.tcc": "cpp",
 		"*.rc": "cpp",
