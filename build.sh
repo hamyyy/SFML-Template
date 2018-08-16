@@ -44,7 +44,14 @@ launch_prod() {
 profiler_done() {
 	tput setaf 2
 	tput bold
-	echo $dec Profiler completed. View $PROF_ANALYSIS_FILE for details $dec
+	echo $dec Profiler Completed: View $PROF_ANALYSIS_FILE for details $dec
+	tput sgr0
+}
+
+profiler_error() {
+	tput setaf 1
+	tput bold
+	echo $dec Error: Profiler must be run on Debug build. $dec
 	tput sgr0
 }
 
@@ -91,7 +98,7 @@ elif [ $1 == 'profile' ] ; then
 		gprof bin/Debug/$NAME gmon.out > $PROF_ANALYSIS_FILE
 		profiler_done
 	else
-		echo Error. Profiler must be run in Debug build.
+		profiler_error
 	fi
 
 else
