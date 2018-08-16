@@ -73,6 +73,7 @@ RC?=windres.exe
 CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
 CFLAGS?=-g $(CFLAGS_ALL)
 CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+
 POST_COMPILE=@mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
 #==============================================================================
@@ -100,10 +101,10 @@ $(ODIR)/%.res: src/%.rc src/%.h | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
 	$(RC) -J rc -O coff -i $< -o $@
 
 bin/$(BUILD)/%.dll:
-	$(foreach dir,$(BUILD_DEPENDENCIES),$(shell cp -r $(dir) bin/$(BUILD)))
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) bin/$(BUILD)))
 
 bin/$(BUILD)/%.so:
-	$(foreach dir,$(BUILD_DEPENDENCIES),$(shell cp -r $(dir) bin/$(BUILD)))
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) bin/$(BUILD)))
 
 bin/$(BUILD)/$(NAME): $(OBJS) $(_BUILD_DEPENDENCIES)
 	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
