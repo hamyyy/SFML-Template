@@ -65,7 +65,8 @@ $(shell mkdir -p $(DEPDIR) >/dev/null)
 # Compiler & flags
 CC?=g++
 RC?=windres.exe
-CFLAGS?=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
+CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
+CFLAGS?=-g $(CFLAGS_ALL)
 CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 POST_COMPILE=@mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
