@@ -95,7 +95,9 @@ elif [ $1 == 'runprod' ] ; then
 
 elif [ $1 == 'profile' ] ; then
 	if [ $BUILD == 'Debug' ] ; then
+		tput sgr0
 		bin/$BUILD/$NAME
+		tput setaf 4
 		gprof bin/Debug/$NAME gmon.out > $PROF_ANALYSIS_FILE
 		profiler_done
 	else
