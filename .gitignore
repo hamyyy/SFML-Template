@@ -1,11 +1,6 @@
-src/obj/Release/**
-src/obj/Debug/**
-src/obj/**
-src/dep/Release/**
-src/dep/Debug/**
-src/dep/**
-bin/Release/*.exe
-bin/Debug/*.exe
+src/obj
+src/dep
+bin
 build
 Thumbs.db
 gmon.out
