@@ -128,6 +128,14 @@ BUILD_MACROS= \
   _DEBUG
 ```
 
+**BUILD_DEPENDENCIES**: Dependency .dll/.so files to include in the bin/(build) folders
+```makefile
+BUILD_DEPENDENCIES= \
+	C:/SFML-2.5.0/bin/openal32.dll
+```
+
+
+
 ## Build: Production
 
 I thought it was important to include a build task that creates a final "build" folder and copies the files in the bin/Release folder, any dependency .dlls, and any other directories into it. It's accessed via (**Ctrl+Shift+B** > **Build: Production**) and uses a couple special environment variables:

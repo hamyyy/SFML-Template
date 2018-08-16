@@ -8,6 +8,9 @@ LIB_DIRS= \
 INCLUDE_DIRS= \
 	C:/SFML-2.5.0/include
 
+BUILD_DEPENDENCIES= \
+	C:/SFML-2.5.0/bin/openal32.dll
+
 PRODUCTION_DEPENDENCIES= \
 	C:/mingw32/bin/libgcc_s_dw2-1.dll \
 	C:/mingw32/bin/libstdc++-6.dll \

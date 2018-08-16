@@ -35,6 +35,9 @@ BUILD_MACROS?=
 # Build-specific compiler flags to be appended to the final build step (with prefix)
 BUILD_FLAGS?=
 
+# Build dependencies to copy into the bin/(build) folder - example: openal32.dll
+BUILD_DEPENDENCIES?=
+
 # NAME should always be passed as an argument from tasks.json as the root folder name, but uses a fallback of "game.exe"
 # This is used for the output filename (game.exe)
 NAME?=game.exe
@@ -60,6 +63,8 @@ DEPSUBDIRS:=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
 _DEPS:=$(SOURCE_FILES:.cpp=.d)
 DEPS:=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
 $(shell mkdir -p $(DEPDIR) >/dev/null)
+
+_BUILD_DEPENDENCIES:=$(patsubst %,bin/$(BUILD)/%,$(notdir $(BUILD_DEPENDENCIES)))
 
 #==============================================================================
 # Compiler & flags
@@ -94,7 +99,13 @@ $(ODIR)/%.res: src/%.rc
 $(ODIR)/%.res: src/%.rc src/%.h | $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
 	$(RC) -J rc -O coff -i $< -o $@
 
-bin/$(BUILD)/$(NAME): $(OBJS)
+bin/$(BUILD)/%.dll:
+	$(foreach dir,$(BUILD_DEPENDENCIES),$(shell cp -r $(dir) bin/$(BUILD)))
+
+bin/$(BUILD)/%.so:
+	$(foreach dir,$(BUILD_DEPENDENCIES),$(shell cp -r $(dir) bin/$(BUILD)))
+
+bin/$(BUILD)/$(NAME): $(OBJS) $(_BUILD_DEPENDENCIES)
 	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 
 makebuild: bin/$(BUILD)/$(NAME) | bin/$(BUILD)
