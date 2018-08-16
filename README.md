@@ -3,11 +3,12 @@ An SFML 2.5.0 configuration & C++17 build system for Visual Studio Code
 
 ## Features
 
-* GCC Compiler
-* Debugger
-* Profiler
+* GCC Compiler Configuration
+* Debugger support or standalone Debug build
+* Static Profiler (gprof)
 * Automated dependencies
 * Automated production build task
+* Cross-platform environments
 
 ## Prerequisites
 
