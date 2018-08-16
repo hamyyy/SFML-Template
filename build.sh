@@ -69,7 +69,7 @@ elif [ $1 == 'run' ] ; then
 	bin/$2/$NAME
 
 elif [ $1 == 'buildprod' ] ; then
-	if $MAKE_EXEC buildprod BUILD=$BUILD; then
+	if $MAKE_EXEC BUILD=$BUILD buildprod; then
 		build_success
 	else
 		build_fail
