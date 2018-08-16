@@ -8,7 +8,9 @@ An SFML 2.5.0 configuration & C++17 build system for Visual Studio Code
 * Static Profiler (gprof)
 * Automated dependencies
 * Automated production build task
-* Cross-platform environments
+* Cross-platform build environments
+* Bash terminal integration
+* Optional Keybindings (F8, F9 & F10)
 
 ## Prerequisites
 
