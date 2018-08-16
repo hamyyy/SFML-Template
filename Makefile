@@ -106,17 +106,20 @@ bin/$(BUILD)/%.dll:
 bin/$(BUILD)/%.so:
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) bin/$(BUILD)))
 
-bin/$(BUILD)/$(NAME): $(OBJS) $(_BUILD_DEPENDENCIES)
+bin/$(BUILD)/$(NAME): $(OBJS) bin/$(BUILD) $(_BUILD_DEPENDENCIES)
 	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 
-makebuild: bin/$(BUILD)/$(NAME) | bin/$(BUILD)
+makebuild: bin/$(BUILD)/$(NAME)
 	@echo '$(BUILD) build target is up to date.'
 
 
 $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS):
 	mkdir -p $@
 
-bin/$(BUILD):
+bin:
+	mkdir -p $@
+
+bin/$(BUILD): bin
 	mkdir -p $@
 
 .PHONY: clean
