@@ -137,8 +137,10 @@ releasetobuild: $(_EXE)
 	cp $(_EXE) $(PRODUCTION_FOLDER)
 
 makeproduction: rmbuild mkdirbuild releasetobuild
+	@echo -n 'Adding dynamic libraries & project dependencies...'
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER) -name '$(excl)' -delete))
+	@echo ' Done'
 
 #==============================================================================
 # Dependency recipes
