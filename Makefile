@@ -128,7 +128,7 @@ clean:
 #==============================================================================
 # Production recipes
 rmbuild:
-	-rm -r $(PRODUCTION_FOLDER)
+	-rm -f -r $(PRODUCTION_FOLDER)
 
 mkdirbuild:
 	mkdir -p $(PRODUCTION_FOLDER)
