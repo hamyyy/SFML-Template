@@ -17,3 +17,5 @@ PRODUCTION_EXCLUDE= \
 	*.rar \
 	*.7z \
 	Thumbs.db
+
+PRODUCTION_FOLDER=build

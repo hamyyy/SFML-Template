@@ -1,6 +1,7 @@
 # sfml-vscode-boilerplate
 An SFML 2.5.0 configuration & C++17 build system for Visual Studio Code
 
+
 ## Features
 
 * GCC Compiler Configuration
@@ -13,14 +14,16 @@ An SFML 2.5.0 configuration & C++17 build system for Visual Studio Code
 * Optionally auto-generate assembly from compiled objects (using objdump)
 * Optional Keybindings (F8, F9 & F10)
 
+
 ## Prerequisites
 
 * [SFML 2.5.0 - MinGW (GCC) 7.3.0 DW2 32-bit](https://www.sfml-dev.org/files/SFML-2.5.0-windows-gcc-7.3.0-mingw-32-bit.zip)
 * [MinGW (GCC) 7.3.0 DW2 32-bit](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.3.0/threads-posix/dwarf/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z/download)
 * [Visual Studio Code (Windows version)](https://code.visualstudio.com/download)
-  * [Official C/C++ Extension (0.17.4+)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+  * [Official C/C++ Extension (0.18.1+)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
   * [Include Autocomplete Extension (Optional)](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
 * [Git Bash (for Windows) ](https://git-scm.com/downloads)
+
 
 ## Installation
 
@@ -32,7 +35,8 @@ An SFML 2.5.0 configuration & C++17 build system for Visual Studio Code
 7. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location (default: C:/Program Files/Git/bin/bash.exe). We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux (although Mac configuration is untested thus far)
 8. In **settings.json** Ensure **Path** in the **terminal.integrated.env.windows** object is set to the correct location of the compiler's executable (example: C:\\mingw32\\bin) and the SFML directory is correct as well. Keep in mind Paths should be separated by a semi-colon with no spaces between.
 
-**Note:** In previous versions of VS Code, the "Path" environment variable had to be set within Windows, but as of version 0.17.4 of the C++ plugin, you can safely take out **C:\\mingw32\\bin** from there, and set it from the **settings.json** under **terminal.integrated.env.windows**. This way, multiple projects can use different compilers, as well as a sandboxed environment. This configuration overrides Path anyway, so you shouldn't have to worry about it right away. It also allows you to keep your environment contained/defined in VS Code.
+**Note:** You can manage the "Path" environment variable from Windows if you'd like, but I've found sandboxing it in VS Code is better for tracking things like .dll dependencies.
+
 
 ## Configuration
 
@@ -45,13 +49,19 @@ At this point, everything you need is installed
 5. Copy the keybindings into this file. Feel free to change them if you don't like them later.
 6. Hit the **F9** key to run the **Build & Run: Release** task. It should run the Makefile, find the compiler, build the Main.cpp into Main.o, and launch the green circle hello world that you should recognize from the official SFML guide. **Shift+F9** will launch the basic Debug build, and F8 will launch the actual Debugger along with the Debug build.
 
+
+## Adding Source Files
+
+Source files and folders are automatically detected by the Makefile. It looks for them in the "src" folder, and at the moment builds from .c, .cpp & .rc files.
+
+
 ## Makefile Environment
 
-Originally, this boilerplate used tasks.json to contain all the environment variables, but I've since moved them out into separate .mk (Make) files to organize them by build type & platform, so you can customize which SFML libraries to include if you want, or pretty much anything without having to edit the tasks.json. Each .mk file is outlined below:
+The environment variables used by the Makefile are managed from the **env** folder in separate .mk (Make) files, organized by build type & platform, so you can customize which SFML libraries to include if you want, or pretty much anything without having to edit the tasks.json. Each file is outlined below:
 
     ./build.sh: Contains the build scripts that tasks.json calls
 
-    ./env.mk: All platforms/builds (excluded by default)
+    ./env/.all.mk: All platforms/builds (excluded by default)
 
     ./env/.debug.mk: All platforms, Debug build  
     ./env/.release.mk: All platforms, Release build  
@@ -67,14 +77,9 @@ Originally, this boilerplate used tasks.json to contain all the environment vari
     (OSX will be added when I can test it)
 
 
-## Adding Source Files
-
-Source files and folders are automatically detected by the build script. It looks for them in the "src" folder, and at the moment builds .c, .cpp & .rc files.
-
-
 ## Environment Variables
 
-The environment variables that can be added to each one are outlined below. If you need a line-break anywhere simply add a **"\\"** character.
+The environment variables that can be added to each .mk file are outlined below. If you need a line-break anywhere simply add a **"\\"** character.
 
 **CFLAGS_ALL**: Compiler flags to use in all builds (gets passed to CFLAGS)
 **CFLAGS**: Compiler flags to use in the specific build (Debug/Release)
@@ -123,7 +128,6 @@ BUILD_DEPENDENCIES= \
 ```
 
 
-
 ## Build: Production
 
 I thought it was important to include a build task that creates a final "build" folder and copies the files in the bin/Release folder, any dependency .dlls, and any other directories into it. It's accessed via (**Ctrl+Shift+B** > **Build: Production**) and uses a couple special environment variables:
@@ -159,9 +163,10 @@ PRODUCTION_FOLDER=build
 
 ## Profile: Debug
 
-After a Debug build has been compiled & run at least once (and successfully exited), a **gmon.out** file will generate in the root directory (this is hidden in the vscode workspace). Running the **Profile: Debug** task after will generate a **profiler_analysis.stats** file from gmon.out using gcc's "gprof" profiler. You can then examine the stats file in the workspace.
+Running the **Profile: Debug** task will build the Debug target (if necessary) and generate a **profiler_analysis.stats** file from a **gmon.out** file using gcc's "gprof" profiler. You can then examine the stats file in the workspace.
 
 Note: You might see a "BFD: Dwarf Error: Could not find abbrev number ###" error in the terminal. I'm not sure what this means yet, but it doesn't seem to stop the stats from generating.
+
 
 ## Include directories & .vscode folder
 
@@ -170,13 +175,13 @@ If you need to add additional external libraries, these are a couple different p
 * **.vscode/c\_cpp\_properties.json** - You'll see **compilerPath** & **includePath**. The compilerPath includes all the compiler's directories so, the includePath only needs the root project directory and any additional libraries you want to include. SFML is included as well in this boilerplate. See details below.
 
   * _"compilerPath"_ - Path to the compiler's binary to use (in our case, it's MinGW GCC.
-  * _"includePath"_ - Used by the C/C++ extension for additional include directories. We include the relative project directoy by default. You can also add directories recursively with **/****
+  * _"includePath"_ - Used by the C/C++ extension for additional include directories. The relative project directoy is included by default. You can also add directories recursively with **/****
 
 * **.vscode/settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
 
   * _"files.exclude"_ - Add any filetypes you want to exclude from the folder panel.
   * _"files.encoding"_ - This uses the same encoding as CodeBlocks (**windows1252**), but feel free to change it to suit your needs.
-  * _"editor.fontFamily"_ - I set this to Courier by default to that CodeBlocks feel. Change/remove this line if you want to stick to VS Code's default (Consolas), or your own preference. Same with _"editor.fontSize"_ & _"editor.lineHeight"_.
+  * _"editor.fontFamily"_ - I set this to Courier by default. Change/remove this line if you want to stick to VS Code's default (Consolas), or your own preference. Same with _"editor.fontSize"_ & _"editor.lineHeight"_.
   * _"terminal.integrated.env.****"_ - Environment variables for use when the terminal runs. Note: These override the OS defaults.
 
 * **.vscode/launch.json** - Used to store the configuration to launch the debugger.
@@ -207,11 +212,9 @@ In **tasks.json**, if the environment variable **DUMP_ASSEMBLY" is set to "true"
 
 ## Notes
 
-* This configuration assumes all source files are contained within the **src** folder, but uses the **root** as the working directory for assets & things referenced in your project.
+* This configuration assumes all source files are contained within the **src** folder, but uses the **root** as the working directory for assets & things referenced in your project. It also includes a **content** folder if you'd like to contain those asset files further (recommended).
 * By default, this configuration uses C++17. You can change the compiler flags in **env/\<platform\>.all.mk** under **CFLAGS**.
-* If for some reason after an update, the build scripts don't work, reinstall the C/C++ extension and it should work again (this was an issue in an older version of the extension anyway).
-* Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
-* This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well.
 
+This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well. Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 
-That should be all you need to get started. Happy game making!
+That should be all you need to get started. Happy game making and/or programming!

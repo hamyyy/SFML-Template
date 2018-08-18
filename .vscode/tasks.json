@@ -136,16 +136,6 @@
 				"isDefault": true
 			},
 			"problemMatcher": []
-		},
-		{
-			"label": "Run: Production",
-			"command": "./build.sh runprod Release",
-			"type": "shell",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"problemMatcher": []
 		}
 	]
 }

@@ -16,7 +16,7 @@ build_success() {
 build_success_launch() {
 	tput setaf 2
 	tput bold
-	echo $dec Build Succeeded: Launching $NAME $dec
+	echo $dec Build Succeeded: Launching bin/$BUILD/$NAME $dec
 	tput sgr0
 }
 
@@ -30,7 +30,7 @@ build_fail() {
 launch() {
 	tput setaf 2
 	tput bold
-	echo $dec Launching $NAME $dec
+	echo $dec Launching bin/$BUILD/$NAME $dec
 	tput sgr0
 }
 
@@ -89,17 +89,18 @@ elif [ $1 == 'buildprod' ] ; then
 		build_fail
 	fi
 
-elif [ $1 == 'runprod' ] ; then
-	launch_prod
-	build/$NAME
-
 elif [ $1 == 'profile' ] ; then
 	if [ $BUILD == 'Debug' ] ; then
-		tput sgr0
-		bin/$BUILD/$NAME
-		tput setaf 4
-		gprof bin/Debug/$NAME gmon.out > $PROF_ANALYSIS_FILE
-		profiler_done
+		if $MAKE_EXEC BUILD=$BUILD; then
+			build_success_launch
+			tput sgr0
+			bin/$BUILD/$NAME
+			tput setaf 4
+			gprof bin/Debug/$NAME gmon.out > $PROF_ANALYSIS_FILE
+			profiler_done
+		else
+			build_fail
+		fi
 	else
 		profiler_error
 	fi
