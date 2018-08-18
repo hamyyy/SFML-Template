@@ -2,7 +2,7 @@
     "configurations": [
         {
             "name": "Windows",
-            "intelliSenseMode": "clang-x64",
+            "intelliSenseMode": "gcc-x64",
             "compilerPath": "C:/mingw32/bin/gcc.exe",
             "includePath": [
                 "${workspaceFolder}/src/**",
@@ -14,7 +14,7 @@
         },
         {
             "name": "Linux/MacOS",
-            "intelliSenseMode": "clang-x64",
+            "intelliSenseMode": "gcc-x64",
             "includePath": [
                 "${workspaceFolder}/src/**",
                 "/usr/include/x86_64-linux-gnu/c++/6.3.0",

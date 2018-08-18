@@ -62,12 +62,22 @@ OBJS:=$(patsubst %,$(ODIR)/%,$(_OBJS))
 SUBDIRS:=$(patsubst %,$(ODIR)/%,$(PROJECT_DIRS))
 
 DEPDIR:=$(BDIR)/dep
-DEPSUBDIRS:=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
 _DEPS:=$(SOURCE_FILES:.cpp=.d)
 DEPS:=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
-$(shell mkdir -p $(DEPDIR) >/dev/null)
+DEPSUBDIRS:=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
 
-_DIRECTORIES:=bin $(BDIR) $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS)
+ifeq ($(DUMP_ASSEMBLY),true)
+	ASMDIR:=$(BDIR)/asm
+	_ASMS:=$(_OBJS:.o=.o.asm)
+	ASMS:=$(patsubst %,$(ASMDIR)/%,$(_ASMS))
+	ASMSUBDIRS:=$(patsubst %,$(ASMDIR)/%,$(PROJECT_DIRS))
+else
+	ASMDIR:=
+	ASMS:=
+	ASMSUBDIRS:=
+endif
+
+_DIRECTORIES:=bin $(BDIR) $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS) $(ASMDIR) $(ASMSUBDIRS)
 _BUILD_DEPENDENCIES:=$(patsubst %,$(BDIR)/%,$(notdir $(BUILD_DEPENDENCIES)))
 
 #==============================================================================
@@ -104,13 +114,16 @@ $(ODIR)/%.res: src/%.rc
 $(ODIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
 	$(RC) -J rc -O coff -i $< -o $@
 
+$(ASMDIR)/%.o.asm: $(ODIR)/%.o
+	objdump -d -C -Mintel $< > $@
+
 $(BDIR)/%.dll:
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BDIR)))
 
 $(BDIR)/%.so:
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BDIR)))
 
-$(_EXE): $(OBJS) $(BDIR) $(_BUILD_DEPENDENCIES)
+$(_EXE): $(OBJS) $(ASMS) $(BDIR) $(_BUILD_DEPENDENCIES)
 	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 
 makebuild: $(_EXE)

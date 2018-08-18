@@ -6,7 +6,8 @@
 		"cwd": "${workspaceRoot}",
 		"env": {
 			"PROF_EXEC": "gprof",
-			"PROF_ANALYSIS_FILE": "profiler_analysis.stats"
+			"PROF_ANALYSIS_FILE": "profiler_analysis.stats",
+			"DUMP_ASSEMBLY": "true"
 		}
 	},
 	"windows": {

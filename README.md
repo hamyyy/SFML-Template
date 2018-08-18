@@ -10,6 +10,7 @@ An SFML 2.5.0 configuration & C++17 build system for Visual Studio Code
 * Automated production build task
 * Cross-platform build environments
 * Bash terminal integration
+* Optionally auto-generate assembly from compiled objects (using objdump)
 * Optional Keybindings (F8, F9 & F10)
 
 ## Prerequisites
@@ -223,6 +224,10 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
   ```
 6. Make a copy of **sfml-project1** and call it **sfml-project2**
 7. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
+
+## Assembly Auto-generation
+
+In **tasks.json**, if the environment variable **DUMP_ASSEMBLY" is set to "true" (with quotation marks), *.o.asm files will generate within the bin/(Build)/asm folder. The bin folder is hidden from VS Code by default, but you can open the asm folder in a seaparate instance and browse the assembly that way if you'd like to.
 
 ## Notes
 
