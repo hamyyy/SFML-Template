@@ -68,7 +68,8 @@ DEPSUBDIRS:=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
 
 ifeq ($(DUMP_ASSEMBLY),true)
 	ASMDIR:=$(BDIR)/asm
-	_ASMS:=$(_OBJS:.o=.o.asm)
+	_ASMLIST:=$(_OBJS:%.res=)
+	_ASMS:=$(_ASMLIST:.o=.o.asm)
 	ASMS:=$(patsubst %,$(ASMDIR)/%,$(_ASMS))
 	ASMSUBDIRS:=$(patsubst %,$(ASMDIR)/%,$(PROJECT_DIRS))
 else
