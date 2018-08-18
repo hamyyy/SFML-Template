@@ -65,21 +65,17 @@ SUBDIRS:=$(patsubst %,$(ODIR)/%,$(PROJECT_DIRS))
 
 DEPDIR:=$(BDIR)/dep
 _DEPS:=$(SOURCE_FILES:.rc=.res)
-_DEPS:=$(SOURCE_FILES:.c=.d)
-_DEPS:=$(SOURCE_FILES:.cpp=.d)
+_DEPS:=$(_DEPS:.c=.d)
+_DEPS:=$(_DEPS:.cpp=.d)
 DEPS:=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
 DEPSUBDIRS:=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
 
 ifeq ($(DUMP_ASSEMBLY),true)
 	ASMDIR:=$(BDIR)/asm
-	_ASMLIST:=$(_OBJS:%.res=)
-	_ASMS:=$(_ASMLIST:.o=.o.asm)
+	_ASMS:=$(_OBJS:%.res=)
+	_ASMS:=$(_ASMS:.o=.o.asm)
 	ASMS:=$(patsubst %,$(ASMDIR)/%,$(_ASMS))
 	ASMSUBDIRS:=$(patsubst %,$(ASMDIR)/%,$(PROJECT_DIRS))
-else
-	ASMDIR:=
-	ASMS:=
-	ASMSUBDIRS:=
 endif
 
 _DIRECTORIES:=bin $(BDIR) $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS) $(ASMDIR) $(ASMSUBDIRS)
