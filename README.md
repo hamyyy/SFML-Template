@@ -1,5 +1,5 @@
 # sfml-vscode-boilerplate
-An SFML 2.5.0 configuration & C++17 build system for Visual Studio Code
+An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for [Visual Studio Code](https://code.visualstudio.com/)
 
 
 ## Features
