@@ -51,7 +51,7 @@ Originally, this boilerplate used tasks.json to contain all the environment vari
 
     ./build.sh: Contains the build scripts that tasks.json calls
 
-    ./env.mk: All platforms/builds
+    ./env.mk: All platforms/builds (excluded by default)
 
     ./env/.debug.mk: All platforms, Debug build  
     ./env/.release.mk: All platforms, Release build  
@@ -69,7 +69,7 @@ Originally, this boilerplate used tasks.json to contain all the environment vari
 
 ## Adding Source Files
 
-In the base boilerplate, add sources files in **SOURCE_FILES** within **./env.mk**, separated by **\\** characters. Same for **PROJECT_DIRS**. Feel free to move these from env.mk to one of the other .mk files, but be aware that out of the box, they'll override the main env.mk, so you'll need to manage them yourself.
+Source files and folders are automatically detected by the build script. It looks for them in the "src" folder, and at the moment builds .c, .cpp & .rc files.
 
 
 ## Environment Variables
@@ -78,30 +78,6 @@ The environment variables that can be added to each one are outlined below. If y
 
 **CFLAGS_ALL**: Compiler flags to use in all builds (gets passed to CFLAGS)
 **CFLAGS**: Compiler flags to use in the specific build (Debug/Release)
-
-**SOURCE_FILES**: Add **.cpp** or **.rc** files relative to the **src/** directory
-```makefile
-SOURCE_FILES= \
-  Main.cpp \
-  WindowManager.cpp \
-  Game/Character.cpp \
-  Graphics/ParticleSystem.cpp \
-  Utility/Geometry.cpp \
-  SceneManager/SceneManager.cpp \
-  SceneManager/Scene.cpp \
-  SceneManager/Scenes/SceneTitle.cpp
-```
-
-**PROJECT_DIRS**:  
-Add any subfolders you're using with the **src/** directory
-```makefile
-PROJECT_DIRS= \
-  Game \
-  Graphics \
-  Utility \
-  SceneManager \
-  SceneManager/Scenes
-```
 
 **LIB_DIRS**:  
 Add any additional lib directories (full path)

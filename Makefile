@@ -6,7 +6,7 @@ BUILD?=Release
 _BUILDL:=$(shell echo $(BUILD) | tr A-Z a-z)
 
 # Platform specific environment variables
-include env.mk
+-include env.mk
 -include env/.$(_BUILDL).mk
 -include env/$(PLATFORM).all.mk
 -include env/$(PLATFORM).$(_BUILDL).mk
@@ -20,10 +20,6 @@ PRODUCTION_EXCLUDE?=
 PRODUCTION_FOLDER?=build
 
 #==============================================================================
-# Project .cpp or .rc files (relative to src directory)
-SOURCE_FILES?=Main.cpp
-# Project subdirectories within src/ that contain source files
-PROJECT_DIRS?=
 # Library directories (separated by spaces)
 LIB_DIRS?=
 INCLUDE_DIRS?=
@@ -43,6 +39,11 @@ BUILD_DEPENDENCIES?=
 NAME?=game.exe
 
 #==============================================================================
+# Project .cpp or .rc files (relative to src directory)
+SOURCE_FILES:=$(patsubst src/%,%,$(shell find src -name '*.cpp' -o -name '*.c' -o -name '*.rc'))
+# Project subdirectories within src/ that contain source files
+PROJECT_DIRS:=$(patsubst src/%,%,$(shell find src -mindepth 1 -maxdepth 99 -type d))
+
 # Add prefixes to the above variables
 _LIB_DIRS:=$(patsubst %,-L%,$(LIB_DIRS))
 _INCLUDE_DIRS:=$(patsubst %,-I%,$(INCLUDE_DIRS))
@@ -56,12 +57,15 @@ BDIR:=bin/$(BUILD)
 _EXE:=$(BDIR)/$(NAME)
 
 ODIR:=$(BDIR)/obj
-_RESS:=$(SOURCE_FILES:.rc=.res)
-_OBJS:=$(_RESS:.cpp=.o)
+_OBJS:=$(SOURCE_FILES:.rc=.res)
+_OBJS:=$(_OBJS:.c=.o)
+_OBJS:=$(_OBJS:.cpp=.o)
 OBJS:=$(patsubst %,$(ODIR)/%,$(_OBJS))
 SUBDIRS:=$(patsubst %,$(ODIR)/%,$(PROJECT_DIRS))
 
 DEPDIR:=$(BDIR)/dep
+_DEPS:=$(SOURCE_FILES:.rc=.res)
+_DEPS:=$(SOURCE_FILES:.c=.d)
 _DEPS:=$(SOURCE_FILES:.cpp=.d)
 DEPS:=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
 DEPSUBDIRS:=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
