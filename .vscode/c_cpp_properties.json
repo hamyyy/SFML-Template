@@ -1,18 +1,6 @@
 {
     "configurations": [
         {
-            "name": "Windows",
-            "intelliSenseMode": "gcc-x64",
-            "compilerPath": "C:/mingw32/bin/gcc.exe",
-            "includePath": [
-                "${workspaceFolder}/src/**",
-                "C:/SFML-2.5.0/include/**"
-            ],
-            "defines": [],
-            "cStandard": "c11",
-            "cppStandard": "c++17"
-        },
-        {
             "name": "Linux/MacOS",
             "intelliSenseMode": "gcc-x64",
             "includePath": [
@@ -24,6 +12,18 @@
                 "/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include-fixed",
                 "/usr/local/include",
                 "/usr/include"
+            ],
+            "defines": [],
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        },
+        {
+            "name": "Windows",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "C:/mingw32/bin/gcc.exe",
+            "includePath": [
+                "${workspaceFolder}/src/**",
+                "C:/SFML-2.5.0/include/**"
             ],
             "defines": [],
             "cStandard": "c11",
