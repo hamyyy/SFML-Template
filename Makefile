@@ -3,7 +3,7 @@
 PLATFORM?=linux
 # Build description (Primarily uses Debug/Release)
 BUILD?=Release
-_BUILDL:=$(shell echo $(BUILD) | tr A-Z a-z)
+_BUILDL := $(shell echo $(BUILD) | tr A-Z a-z)
 
 # Platform specific environment variables
 -include env/.all.mk
@@ -40,46 +40,50 @@ NAME?=game.exe
 
 #==============================================================================
 # Project .cpp or .rc files (relative to src directory)
-SOURCE_FILES:=$(patsubst src/%,%,$(shell find src -name '*.cpp' -o -name '*.c' -o -name '*.rc'))
+SOURCE_FILES := $(patsubst src/%,%,$(shell find src -name '*.cpp' -o -name '*.c' -o -name '*.rc'))
 # Project subdirectories within src/ that contain source files
-PROJECT_DIRS:=$(patsubst src/%,%,$(shell find src -mindepth 1 -maxdepth 99 -type d))
+PROJECT_DIRS := $(patsubst src/%,%,$(shell find src -mindepth 1 -maxdepth 99 -type d))
 
 # Add prefixes to the above variables
-_LIB_DIRS:=$(patsubst %,-L%,$(LIB_DIRS))
-_INCLUDE_DIRS:=$(patsubst %,-I%,$(INCLUDE_DIRS))
+_LIB_DIRS := $(patsubst %,-L%,$(LIB_DIRS))
+_INCLUDE_DIRS := $(patsubst %,-I%,$(INCLUDE_DIRS))
 
-_BUILD_MACROS:=$(patsubst %,-D%,$(BUILD_MACROS))
-_LINK_LIBRARIES:=$(patsubst %,-l%,$(LINK_LIBRARIES))
+_BUILD_MACROS := $(patsubst %,-D%,$(BUILD_MACROS))
+_LINK_LIBRARIES := $(patsubst %,-l%,$(LINK_LIBRARIES))
 
 #==============================================================================
 # Directories & Dependencies
-BDIR:=bin/$(BUILD)
-_EXE:=$(BDIR)/$(NAME)
+BDIR := bin/$(BUILD)
+BDIR := $(patsubst %/,%,$(BDIR))
+_EXE := $(BDIR)/$(NAME)
+_NAMENOEXT := $(NAME:.exe=)
+_NAMENOEXT := $(_NAMENOEXT:.dll=)
 
-ODIR:=$(BDIR)/obj
-_OBJS:=$(SOURCE_FILES:.rc=.res)
-_OBJS:=$(_OBJS:.c=.o)
-_OBJS:=$(_OBJS:.cpp=.o)
-OBJS:=$(patsubst %,$(ODIR)/%,$(_OBJS))
-SUBDIRS:=$(patsubst %,$(ODIR)/%,$(PROJECT_DIRS))
+ODIR := $(BDIR)/obj
+_OBJS := $(SOURCE_FILES:.rc=.res)
+_OBJS := $(_OBJS:.c=.o)
+_OBJS := $(_OBJS:.cpp=.o)
+OBJS := $(patsubst %,$(ODIR)/%,$(_OBJS))
+SUBDIRS := $(patsubst %,$(ODIR)/%,$(PROJECT_DIRS))
 
-DEPDIR:=$(BDIR)/dep
-_DEPS:=$(SOURCE_FILES:.rc=.res)
-_DEPS:=$(_DEPS:.c=.d)
-_DEPS:=$(_DEPS:.cpp=.d)
-DEPS:=$(patsubst %,$(DEPDIR)/%,$(_DEPS))
-DEPSUBDIRS:=$(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
+DEPDIR := $(BDIR)/dep
+_DEPS := $(SOURCE_FILES:.rc=.res)
+_DEPS := $(_DEPS:.c=.d)
+_DEPS := $(_DEPS:.cpp=.d)
+DEPS := $(patsubst %,$(DEPDIR)/%,$(_DEPS))
+DEPSUBDIRS := $(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
 
 ifeq ($(DUMP_ASSEMBLY),true)
-	ASMDIR:=$(BDIR)/asm
-	_ASMS:=$(_OBJS:%.res=)
-	_ASMS:=$(_ASMS:.o=.o.asm)
-	ASMS:=$(patsubst %,$(ASMDIR)/%,$(_ASMS))
-	ASMSUBDIRS:=$(patsubst %,$(ASMDIR)/%,$(PROJECT_DIRS))
+	ASMDIR := $(BDIR)/asm
+	_ASMS := $(_OBJS:%.res=)
+	_ASMS := $(_ASMS:.o=.o.asm)
+	ASMS := $(patsubst %,$(ASMDIR)/%,$(_ASMS))
+	ASMSUBDIRS := $(patsubst %,$(ASMDIR)/%,$(PROJECT_DIRS))
 endif
 
-_DIRECTORIES:=bin $(BDIR) $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS) $(ASMDIR) $(ASMSUBDIRS)
-_BUILD_DEPENDENCIES:=$(patsubst %,$(BDIR)/%,$(notdir $(BUILD_DEPENDENCIES)))
+_DIRECTORIES := bin $(BDIR) $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS) $(ASMDIR) $(ASMSUBDIRS)
+_DIRECTORIES := $(sort $(_DIRECTORIES))
+_BUILD_DEPENDENCIES := $(patsubst %,$(BDIR)/%,$(notdir $(BUILD_DEPENDENCIES)))
 
 #==============================================================================
 # Compiler & flags
@@ -119,13 +123,19 @@ $(ASMDIR)/%.o.asm: $(ODIR)/%.o
 	objdump -d -C -Mintel $< > $@
 
 $(BDIR)/%.dll:
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BDIR)))
+	-cp -r $@ $(BDIR)
 
 $(BDIR)/%.so:
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BDIR)))
+	-cp -r $@ $(BDIR)
 
 $(_EXE): $(OBJS) $(ASMS) $(BDIR) $(_BUILD_DEPENDENCIES)
+ifeq ($(suffix $(_EXE)),.dll)
+	-rm -f $(BDIR)/lib$(_NAMENOEXT).def
+	-rm -f $(BDIR)/lib$(_NAMENOEXT).a
+	$(CC) -shared -Wl,--output-def="$(BDIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib=$(BDIR)/lib$(_NAMENOEXT).a -Wl,--dll $(OBJS) -o $(_EXE) -s $(_LINK_LIBRARIES)
+else
 	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+endif
 
 makebuild: $(_EXE)
 	@echo '$(BUILD) build target is up to date.'
