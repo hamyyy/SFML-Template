@@ -6,6 +6,7 @@ BUILD?=Release
 _BUILDL := $(shell echo $(BUILD) | tr A-Z a-z)
 
 # Platform specific environment variables
+-include env.mk
 -include env/.all.mk
 -include env/.$(_BUILDL).mk
 -include env/$(PLATFORM).all.mk

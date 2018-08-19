@@ -61,7 +61,7 @@ The environment variables used by the Makefile are managed from the **env** fold
 
     ./build.sh: Contains the build scripts that tasks.json calls
 
-    ./env/.all.mk: All platforms/builds (excluded by default)
+    ./env/.all.mk (or ./env.mk): All platforms/builds (excluded by default)
 
     ./env/.debug.mk: All platforms, Debug build  
     ./env/.release.mk: All platforms, Release build  
