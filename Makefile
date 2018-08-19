@@ -132,7 +132,7 @@ $(_EXE): $(OBJS) $(ASMS) $(BDIR) $(_BUILD_DEPENDENCIES)
 ifeq ($(suffix $(_EXE)),.dll)
 	-rm -f $(BDIR)/lib$(_NAMENOEXT).def
 	-rm -f $(BDIR)/lib$(_NAMENOEXT).a
-	$(CC) -shared -Wl,--output-def="$(BDIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib=$(BDIR)/lib$(_NAMENOEXT).a -Wl,--dll $(OBJS) -o $(_EXE) -s $(_LINK_LIBRARIES)
+	$(CC) -shared -Wl,--output-def="$(BDIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BDIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
 	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
