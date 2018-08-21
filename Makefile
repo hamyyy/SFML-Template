@@ -47,7 +47,7 @@ PROJECT_DIRS := $(patsubst src/%,%,$(shell find src -mindepth 1 -maxdepth 99 -ty
 
 # Add prefixes to the above variables
 _LIB_DIRS := $(patsubst %,-L%,$(LIB_DIRS))
-_INCLUDE_DIRS := -Isrc/ $(patsubst %,-I%,$(INCLUDE_DIRS))
+_INCLUDE_DIRS := $(patsubst %,-I%,src/ $(INCLUDE_DIRS))
 
 _BUILD_MACROS := $(patsubst %,-D%,$(BUILD_MACROS))
 _LINK_LIBRARIES := $(patsubst %,-l%,$(LINK_LIBRARIES))
