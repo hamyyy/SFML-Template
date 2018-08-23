@@ -54,37 +54,38 @@ _LINK_LIBRARIES := $(patsubst %,-l%,$(LINK_LIBRARIES))
 
 #==============================================================================
 # Directories & Dependencies
-BDIR := bin/$(BUILD)
-BDIR := $(patsubst %/,%,$(BDIR))
-_EXE := $(BDIR)/$(NAME)
+BLD_DIR := bin/$(BUILD)
+BLD_DIR := $(patsubst %/,%,$(BLD_DIR))
+_EXE := $(BLD_DIR)/$(NAME)
 _NAMENOEXT := $(NAME:.exe=)
 _NAMENOEXT := $(_NAMENOEXT:.dll=)
 
-ODIR := $(BDIR)/obj
+OBJ_DIR := $(BLD_DIR)/obj
 _OBJS := $(SOURCE_FILES:.rc=.res)
 _OBJS := $(_OBJS:.c=.o)
 _OBJS := $(_OBJS:.cpp=.o)
-OBJS := $(patsubst %,$(ODIR)/%,$(_OBJS))
-SUBDIRS := $(patsubst %,$(ODIR)/%,$(PROJECT_DIRS))
+OBJS := $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
+OBJ_SUBDIRS := $(patsubst %,$(OBJ_DIR)/%,$(PROJECT_DIRS))
 
-DEPDIR := $(BDIR)/dep
+DEP_DIR := $(BLD_DIR)/dep
 _DEPS := $(SOURCE_FILES:.rc=.res)
 _DEPS := $(_DEPS:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
-DEPS := $(patsubst %,$(DEPDIR)/%,$(_DEPS))
-DEPSUBDIRS := $(patsubst %,$(DEPDIR)/%,$(PROJECT_DIRS))
+DEPS := $(patsubst %,$(DEP_DIR)/%,$(_DEPS))
+DEP_SUBDIRS := $(patsubst %,$(DEP_DIR)/%,$(PROJECT_DIRS))
 
 ifeq ($(DUMP_ASSEMBLY),true)
-	ASMDIR := $(BDIR)/asm
+	ASM_DIR := $(BLD_DIR)/asm
 	_ASMS := $(_OBJS:%.res=)
 	_ASMS := $(_ASMS:.o=.o.asm)
-	ASMS := $(patsubst %,$(ASMDIR)/%,$(_ASMS))
-	ASMSUBDIRS := $(patsubst %,$(ASMDIR)/%,$(PROJECT_DIRS))
+	ASMS := $(patsubst %,$(ASM_DIR)/%,$(_ASMS))
+	ASM_SUBDIRS := $(patsubst %,$(ASM_DIR)/%,$(PROJECT_DIRS))
 endif
 
-_DIRECTORIES := bin $(BDIR) $(ODIR) $(SUBDIRS) $(DEPDIR) $(DEPSUBDIRS) $(ASMDIR) $(ASMSUBDIRS)
+_DIRECTORIES := bin $(BLD_DIR) $(OBJ_DIR) $(OBJ_SUBDIRS) $(DEP_DIR) $(DEP_SUBDIRS) $(ASM_DIR) $(ASM_SUBDIRS)
 _DIRECTORIES := $(sort $(_DIRECTORIES))
-_BUILD_DEPENDENCIES := $(patsubst %,$(BDIR)/%,$(notdir $(BUILD_DEPENDENCIES)))
+_BUILD_DEPENDENCIES := $(filter %.dll,$(BUILD_DEPENDENCIES))
+_BUILD_DEPENDENCIES := $(patsubst %,$(BLD_DIR)/%,$(notdir $(_BUILD_DEPENDENCIES)))
 
 #==============================================================================
 # Compiler & flags
@@ -92,9 +93,9 @@ CC?=g++
 RC?=windres.exe
 CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
 CFLAGS?=-g $(CFLAGS_ALL)
-CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 
-POST_COMPILE=@mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
+POST_COMPILE=@mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 
 #==============================================================================
 # Build Scripts
@@ -111,36 +112,36 @@ define c_cpp_compile =
 endef
 
 define dll_so_dependency =
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BDIR)))
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 endef
 
 # Build Recipes
-$(ODIR)/%.o: src/%.cpp
-$(ODIR)/%.o: src/%.cpp $(DEPDIR)/%.d | $(_DIRECTORIES)
+$(OBJ_DIR)/%.o: src/%.cpp
+$(OBJ_DIR)/%.o: src/%.cpp $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(c_cpp_compile)
 
-$(ODIR)/%.o: src/%.c
-$(ODIR)/%.o: src/%.c $(DEPDIR)/%.d | $(_DIRECTORIES)
+$(OBJ_DIR)/%.o: src/%.c
+$(OBJ_DIR)/%.o: src/%.c $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(c_cpp_compile)
 
-$(ODIR)/%.res: src/%.rc
-$(ODIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
+$(OBJ_DIR)/%.res: src/%.rc
+$(OBJ_DIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
 	$(RC) -J rc -O coff -i $< -o $@
 
-$(ASMDIR)/%.o.asm: $(ODIR)/%.o
+$(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	objdump -d -C -Mintel $< > $@
 
-$(BDIR)/%.dll:
+$(BLD_DIR)/%.dll:
 	$(dll_so_dependency)
 
-$(BDIR)/%.so:
+$(BLD_DIR)/%.so:
 	$(dll_so_dependency)
 
-$(_EXE): $(OBJS) $(ASMS) $(BDIR) $(_BUILD_DEPENDENCIES)
+$(_EXE): $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
 ifeq ($(suffix $(_EXE)),.dll)
-	-rm -f $(BDIR)/lib$(_NAMENOEXT).def
-	-rm -f $(BDIR)/lib$(_NAMENOEXT).a
-	$(CC) -shared -Wl,--output-def="$(BDIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BDIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	-rm -f $(BLD_DIR)/lib$(_NAMENOEXT).def
+	-rm -f $(BLD_DIR)/lib$(_NAMENOEXT).a
+	$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
 	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
@@ -176,7 +177,7 @@ makeproduction: rmbuild mkdirbuild releasetobuild
 
 #==============================================================================
 # Dependency recipes
-$(DEPDIR)/%.d: ;
-.PRECIOUS: $(DEPDIR)/%.d
+$(DEP_DIR)/%.d: ;
+.PRECIOUS: $(DEP_DIR)/%.d
 
 include $(wildcard $(DEPS))
