@@ -2,7 +2,7 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "GDB",
+			"name": "GDB/LLDB",
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}.exe",
@@ -35,8 +35,7 @@
 			},
 			"osx": {
 				"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}",
-				"MIMode": "gdb",
-				"miDebuggerPath": "/usr/bin/gdb",
+				"MIMode": "lldb",
 				"env": {
 					"PATH": "${config:terminal.integrated.env.osx.PATH}",
 				}
