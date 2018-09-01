@@ -192,6 +192,10 @@ PRODUCTION_EXCLUDE= \
 PRODUCTION_FOLDER=build
 ```
 
+### Production building in OS X
+
+Use Xcode to bundle your final build! It's as simple as that. Otherwise it's going to launch through a terminal window. Follow the rest of the directions outlined [HERE](https://www.sfml-dev.org/tutorials/2.5/start-osx.php), copy your code-base in, and you should be good to go. 
+
 ## Profile: Debug
 
 Running the **Profile: Debug** task will build the Debug target (if necessary) and generate a **profiler_analysis.stats** file from a **gmon.out** file using gcc's "gprof" profiler. You can then examine the stats file in the workspace.

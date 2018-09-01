@@ -1,4 +1,4 @@
-CC=g++
+CC=clang++
 CFLAGS_ALL=-Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=never
 
 LIB_DIRS= \

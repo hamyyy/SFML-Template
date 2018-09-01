@@ -55,6 +55,13 @@ profiler_error() {
 	tput sgr0
 }
 
+prod_osx() {
+	tput setaf 1
+	tput bold
+	echo $dec Production building is not supported on OS X. Use Xcode to bundle your final build. $dec
+	tput sgr0
+}
+
 tput setaf 4
 if [[ $1 == 'buildrun' ]] ; then
 	if $MAKE_EXEC BUILD=$BUILD; then
@@ -83,11 +90,16 @@ elif [[ $1 == 'run' ]] ; then
 	bin/$BUILD/$NAME
 
 elif [[ $1 == 'buildprod' ]] ; then
-	if $MAKE_EXEC BUILD=$BUILD buildprod; then
-		build_success
+	if [[ $PLATFORM != 'osx' ]] ; then
+		if $MAKE_EXEC BUILD=$BUILD buildprod; then
+			build_success
+		else
+			build_fail
+		fi
 	else
-		build_fail
+		prod_osx
 	fi
+
 
 elif [[ $1 == 'profile' ]] ; then
 	if [[ $BUILD == 'Debug' ]] ; then
