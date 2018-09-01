@@ -9,7 +9,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 * Static Profiler (gprof)
 * Automated dependencies
 * Automated production build task
-* Cross-platform build environments (Windows, Linux & OS X)
+* Cross-platform build environments (Windows, Linux & MacOS)
 * Bash terminal integration
 * Optionally auto-generate assembly from compiled objects (using objdump)
 * Optional Keybindings (F8, F9 & F10)
@@ -22,7 +22,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 * [MinGW (GCC) 7.3.0 DW2 32-bit (for Windows)](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.3.0/threads-posix/dwarf/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z/download)
 * [Git Bash (for Windows) ](https://git-scm.com/downloads)
 
-### OS X
+### MacOS
 * [SFML 2.5.0 - Clang 64-bit](https://www.sfml-dev.org/files/SFML-2.5.0-macOS-clang.tar.gz)
 * Command Line Tools / XCode (type "git" in terminal to trigger the installer)
 
@@ -46,8 +46,8 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 2. Download & Extract MinGW to **C:/mingw32/** where the bin/lib/include folders are contained within
 3. Continue to "All" section below
 
-### OS X
-1. Install "Command Line Tools" in OS X if they're not already installed (type "git" in terminal or something)
+### MacOS
+1. Install "Command Line Tools" in MacOS if they're not already installed (type "git" in terminal or something)
 2. Follow the "Installing SFML" directions here: https://www.sfml-dev.org/tutorials/2.5/start-osx.php#installing-sfml
 3. Continue to "All" section below
 
@@ -71,7 +71,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 At this point, everything you need is installed
 
 1. Open the **sfml-vscode-boilerplate** folder in VS Code. You should see an lime-green status bar at the bottom (color-picked from the SFML logo).
-2. Hit **Ctrl+Shift+B** and select **C/Cpp: Select a configuration...** and choose the platform you're working on. (Do this any time you create a new project with this boilerplate on OS X or Linux, otherwise it will default to Windows)
+2. Hit **Ctrl+Shift+B** and select **C/Cpp: Select a configuration...** and choose the platform you're working on. (Do this any time you create a new project with this boilerplate on macOS or Linux, otherwise it will default to Windows)
 3. At this point you should be able to run a build task (**Ctrl+Shift+B** > **Build & Run**), but it'll be nicer to add keybindings for these tasks so you can build with 1 keypress.
 4. Open the .vscode folder and click on the **\_keybindings.json** file. This is not an officially recognized file, but just contains the keybindings you can copy into the actual keybindings.json file.
 5. Go into **File** > **Preferences** > **Keyboard Shortcuts** & click on the keybindings.json link at the top.
@@ -103,9 +103,9 @@ The environment variables used by the Makefile are managed from the **env** fold
     ./env/linux.debug.mk: Linux, Debug build  
     ./env/linux.release.mk: Linux, Release build
 
-    ./env/osx.all.mk: Mac OS X, All builds  
-    ./env/osx.debug.mk: Mac OS X, Debug build  
-    ./env/osx.release.mk: Mac OS X, Release build
+    ./env/osx.all.mk: MacOS, All builds  
+    ./env/osx.debug.mk: MacOS, Debug build  
+    ./env/osx.release.mk: MacOS, Release build
 
 
 ## Environment Variables
@@ -192,9 +192,9 @@ PRODUCTION_EXCLUDE= \
 PRODUCTION_FOLDER=build
 ```
 
-### Production building in OS X
+### Production building in MacOS
 
-Use Xcode to bundle your final build! It's as simple as that. Otherwise it's going to launch through a terminal window. Follow the rest of the directions outlined [HERE](https://www.sfml-dev.org/tutorials/2.5/start-osx.php), copy your code-base in, and you should be good to go. 
+Use Xcode to bundle your final build! It's as simple as that. Otherwise your game/program will launch through a terminal window. Follow the rest of the directions outlined [HERE](https://www.sfml-dev.org/tutorials/2.5/start-osx.php), copy your code-base in the Xcode project folder, and you should be good to go. 
 
 ## Profile: Debug
 

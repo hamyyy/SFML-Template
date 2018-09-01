@@ -58,7 +58,7 @@ profiler_error() {
 prod_osx() {
 	tput setaf 1
 	tput bold
-	echo $dec Production building is not supported on OS X. Use Xcode to bundle your final build. $dec
+	echo $dec Production building is not supported on macOS. Use Xcode to bundle your final build. $dec
 	echo $dec See https://www.sfml-dev.org/tutorials/2.5/start-osx.php for more information. $dec
 	tput sgr0
 }
