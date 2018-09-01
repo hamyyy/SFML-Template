@@ -106,23 +106,17 @@ rebuild: clean makebuild
 buildprod: makebuild makeproduction
 
 #==============================================================================
-define c_cpp_compile =
-	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
-	$(POST_COMPILE)
-endef
-
-define dll_so_dependency =
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
-endef
 
 # Build Recipes
 $(OBJ_DIR)/%.o: src/%.cpp
 $(OBJ_DIR)/%.o: src/%.cpp $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(c_cpp_compile)
+	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
+	$(POST_COMPILE)
 
 $(OBJ_DIR)/%.o: src/%.c
 $(OBJ_DIR)/%.o: src/%.c $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(c_cpp_compile)
+	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
+	$(POST_COMPILE)
 
 $(OBJ_DIR)/%.res: src/%.rc
 $(OBJ_DIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
@@ -132,10 +126,10 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	objdump -d -C -Mintel $< > $@
 
 $(BLD_DIR)/%.dll:
-	$(dll_so_dependency)
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
 $(BLD_DIR)/%.so:
-	$(dll_so_dependency)
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
 $(_EXE): $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
 ifeq ($(suffix $(_EXE)),.dll)
