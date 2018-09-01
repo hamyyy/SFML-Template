@@ -26,6 +26,7 @@
 
 	"files.encoding": "windows1252",
 	"files.trimTrailingWhitespace": true,
+	"files.eol": "\n",
 	"files.exclude": {
 		"Makefile": true,
 		"build.sh": true,
