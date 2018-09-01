@@ -4,6 +4,7 @@
             "name": "Linux",
             "intelliSenseMode": "gcc-x64",
             "includePath": [
+                "${workspaceFolder}/src/**",
                 "/usr/local/include/**",
                 "/usr/include/**"
             ],
@@ -15,6 +16,7 @@
             "name": "OS X",
             "intelliSenseMode": "clang-x64",
             "includePath": [
+                "${workspaceFolder}/src/**",
                 "/usr/local/include/**",
                 "/usr/include/**"
             ],
