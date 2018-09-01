@@ -82,7 +82,7 @@ elif [[ $1 == 'run' ]] ; then
 	launch
 	bin/$BUILD/$NAME
 
-elif [ $1 == 'buildprod' ]] ; then
+elif [[ $1 == 'buildprod' ]] ; then
 	if $MAKE_EXEC BUILD=$BUILD buildprod; then
 		build_success
 	else

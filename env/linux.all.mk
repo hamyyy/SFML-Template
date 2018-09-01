@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS_ALL=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
+CFLAGS_ALL=-Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=never
 
 LIB_DIRS= \
 	/usr/local/lib
