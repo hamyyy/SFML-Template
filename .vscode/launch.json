@@ -34,8 +34,13 @@
 				}
 			},
 			"osx": {
-				"MIMode": "lldb"
-			}
+				"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}",
+				"MIMode": "gdb",
+				"miDebuggerPath": "/usr/bin/gdb",
+				"env": {
+					"PATH": "${config:terminal.integrated.env.osx.PATH}",
+				}
+			},
 		}
 	]
 }

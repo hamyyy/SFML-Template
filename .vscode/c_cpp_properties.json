@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Linux/MacOS",
+            "name": "Linux",
             "intelliSenseMode": "gcc-x64",
             "includePath": [
                 "${workspaceFolder}/src/**",
@@ -12,6 +12,17 @@
                 "/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include-fixed",
                 "/usr/local/include",
                 "/usr/include"
+            ],
+            "defines": [],
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        },
+        {
+            "name": "OS X",
+            "intelliSenseMode": "clang-x64",
+            "includePath": [
+                "/usr/local/include/**",
+                "/usr/include/**"
             ],
             "defines": [],
             "cStandard": "c11",

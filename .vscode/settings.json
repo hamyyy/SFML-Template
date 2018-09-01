@@ -23,6 +23,9 @@
 	"terminal.integrated.env.linux": {
 		"PATH": "/usr/bin",
 	},
+	"terminal.integrated.env.osx": {
+		"PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+	},
 
 	"files.encoding": "windows1252",
 	"files.trimTrailingWhitespace": true,

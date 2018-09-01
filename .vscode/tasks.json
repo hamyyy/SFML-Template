@@ -6,8 +6,7 @@
 		"cwd": "${workspaceRoot}",
 		"env": {
 			"PROF_EXEC": "gprof",
-			"PROF_ANALYSIS_FILE": "profiler_analysis.stats",
-			"DUMP_ASSEMBLY": "true"
+			"PROF_ANALYSIS_FILE": "profiler_analysis.stats"
 		}
 	},
 	"windows": {
@@ -16,7 +15,8 @@
 				"Path": "${config:terminal.integrated.env.windows.Path}",
 				"NAME": "${workspaceRootFolderName}.exe",
 				"MAKE_EXEC": "mingw32-make",
-				"PLATFORM": "windows"
+				"PLATFORM": "windows",
+				"DUMP_ASSEMBLY": "true"
 			}
 		}
 	},
@@ -26,7 +26,19 @@
 				"PATH": "${config:terminal.integrated.env.linux.PATH}",
 				"NAME": "${workspaceRootFolderName}",
 				"MAKE_EXEC": "make",
-				"PLATFORM": "linux"
+				"PLATFORM": "linux",
+				"DUMP_ASSEMBLY": "true"
+			}
+		}
+	},
+	"osx": {
+		"options": {
+			"env": {
+				"PATH": "${config:terminal.integrated.env.osx.PATH}",
+				"NAME": "${workspaceRootFolderName}",
+				"MAKE_EXEC": "make",
+				"PLATFORM": "osx",
+				"DUMP_ASSEMBLY": "false"
 			}
 		}
 	},

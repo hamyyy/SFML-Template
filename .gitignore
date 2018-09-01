@@ -4,6 +4,7 @@ build
 gmon.out
 *.stats
 Thumbs.db
+.DS_Store
 
 # Project specific
 #
