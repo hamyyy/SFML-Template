@@ -17,18 +17,42 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 
 ## Prerequisites
 
-* [SFML 2.5.0 - MinGW (GCC) 7.3.0 DW2 32-bit](https://www.sfml-dev.org/files/SFML-2.5.0-windows-gcc-7.3.0-mingw-32-bit.zip)
-* [MinGW (GCC) 7.3.0 DW2 32-bit](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.3.0/threads-posix/dwarf/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z/download)
-* [Visual Studio Code (Windows version)](https://code.visualstudio.com/download)
+* [Visual Studio Code](https://code.visualstudio.com/download)
+* Extensions (install from Extensions panel):
   * [Official C/C++ Extension (0.18.1+)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
   * [Include Autocomplete Extension (Optional)](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
+  * [Shader languages support for VS Code (Optional Syntax Highlighting)](https://marketplace.visualstudio.com/items?itemName=slevesque.shader)
+  * [x86 and x86_64 Assembly (Optional Syntax Highlighting)](https://marketplace.visualstudio.com/items?itemName=13xforever.language-x86-64-assembly)
+  * [Studio Icons (Optional Icon Theme)](https://marketplace.visualstudio.com/items?itemName=jtlowe.vscode-icon-theme)
+
+
+
+### Windows
+* [SFML 2.5.0 - MinGW (GCC) 7.3.0 DW2 32-bit (for Windows)](https://www.sfml-dev.org/files/SFML-2.5.0-windows-gcc-7.3.0-mingw-32-bit.zip)
+* [MinGW (GCC) 7.3.0 DW2 32-bit (for Windows)](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.3.0/threads-posix/dwarf/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z/download)
 * [Git Bash (for Windows) ](https://git-scm.com/downloads)
 
+### OS X
+* Command Line Tools / XCode (type "git" in terminal to trigger it)
+* [SFML 2.5.0 - Clang 64-bit](https://www.sfml-dev.org/files/SFML-2.5.0-macOS-clang.tar.gz)
+
+### 
 
 ## Installation
 
+### Windows
 1. Download & Extract SFML to **C:/SFML-2.5.0/** where the bin/lib/include folders are contained within
 2. Download & Extract MinGW to **C:/mingw32/** where the bin/lib/include folders are contained within
+3. Continue to "All" section below
+
+### OS X
+1. Install "Command Line Tools" in OS X if they're not already installed (type "git" in terminal or something)
+2. Follow the "Installing SFML" directions here: https://www.sfml-dev.org/tutorials/2.5/start-osx.php#installing-sfml
+3. Continue to "All" section below
+
+### Linux
+
+### All
 4. Download & Install Visual Studio Code if you don't already have it.
 5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
 6. _(Optional)_ Install the **Include Autocomplete** extension. The C++ extension has decent include functionality already, but this one is a little better about headers contained in sub-folders. Note: It leverages the **"includePath"** array in **c\_cpp\_properties.json**

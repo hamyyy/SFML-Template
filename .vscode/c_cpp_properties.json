@@ -4,14 +4,8 @@
             "name": "Linux",
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                "${workspaceFolder}/src/**",
-                "/usr/include/x86_64-linux-gnu/c++/6.3.0",
-                "/usr/include/c++/6.3.0/backward",
-                "/usr/include/c++/6.3.0",
-                "/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include",
-                "/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include-fixed",
-                "/usr/local/include",
-                "/usr/include"
+                "/usr/local/include/**",
+                "/usr/include/**"
             ],
             "defines": [],
             "cStandard": "c11",

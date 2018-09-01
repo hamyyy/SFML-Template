@@ -21,10 +21,10 @@
 		"Path": "C:/mingw32/bin;C:/SFML-2.5.0/bin"
 	},
 	"terminal.integrated.env.linux": {
-		"PATH": "/usr/bin",
+		"PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 	},
 	"terminal.integrated.env.osx": {
-		"PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+		"PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 	},
 
 	"files.encoding": "windows1252",
