@@ -56,7 +56,7 @@ profiler_error() {
 }
 
 tput setaf 4
-if [ $1 == 'buildrun' ] ; then
+if [[ $1 == 'buildrun' ]] ; then
 	if $MAKE_EXEC BUILD=$BUILD; then
 		build_success_launch
 		bin/$BUILD/$NAME
@@ -64,33 +64,33 @@ if [ $1 == 'buildrun' ] ; then
 		build_fail
 	fi
 
-elif [ $1 == 'build' ] ; then
+elif [[ $1 == 'build' ]] ; then
 	if $MAKE_EXEC BUILD=$BUILD; then
 		build_success
 	else
 		build_fail
 	fi
 
-elif [ $1 == 'rebuild' ] ; then
+elif [[ $1 == 'rebuild' ]] ; then
 	if $MAKE_EXEC BUILD=$BUILD rebuild; then
 		build_success
 	else
 		build_fail
 	fi
 
-elif [ $1 == 'run' ] ; then
+elif [[ $1 == 'run' ]] ; then
 	launch
 	bin/$BUILD/$NAME
 
-elif [ $1 == 'buildprod' ] ; then
+elif [ $1 == 'buildprod' ]] ; then
 	if $MAKE_EXEC BUILD=$BUILD buildprod; then
 		build_success
 	else
 		build_fail
 	fi
 
-elif [ $1 == 'profile' ] ; then
-	if [ $BUILD == 'Debug' ] ; then
+elif [[ $1 == 'profile' ]] ; then
+	if [[ $BUILD == 'Debug' ]] ; then
 		if $MAKE_EXEC BUILD=$BUILD; then
 			build_success_launch
 			tput sgr0
