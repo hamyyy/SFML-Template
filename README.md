@@ -52,9 +52,9 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 3. Continue to "All" section below
 
 ### Linux
-1. Ensure the GCC Toolchain is installed
-1. Follow the "Installing SFML" directions here: https://www.sfml-dev.org/tutorials/2.5/start-linux.php#installing-sfml
-3. Continue to "All section below
+1. Ensure the GCC Toolchain is installed (run sudo apt install build-essential) if it's not
+1. Download & Extract SFML to **~/SFML-2.5.0/** where the lib/include/share folders are contained within
+3. Continue to "All" section below
 
 ### All
 4. Download & Install Visual Studio Code if you don't already have it.
