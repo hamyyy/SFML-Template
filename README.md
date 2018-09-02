@@ -50,7 +50,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 2. Follow the "Installing SFML" directions here: https://www.sfml-dev.org/tutorials/2.5/start-osx.php#installing-sfml
 
 ### Linux (Ubuntu)
-1. Upgrade to [Ubuntu 18.10 Cosmic Cuttlefish](https://linuxconfig.org/how-to-upgrade-ubuntu-to-18-10-cosmic-cuttlefish) if you're not on it. Ensure the GCC Toolchain is installed (**sudo apt install build-essential**)
+1. Upgrade to [Ubuntu 18.10 Cosmic Cuttlefish](http://cdimage.ubuntu.com/daily-live/current/HEADER.html). Ensure the GCC Toolchain is installed (**sudo apt install build-essential**)
 2. Run **sudo apt install libsfml-dev**
 
 ### All
