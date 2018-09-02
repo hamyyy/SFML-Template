@@ -44,24 +44,21 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 ### Windows
 1. Download & Extract SFML to **C:/SFML-2.5.0/** where the bin/lib/include folders are contained within
 2. Download & Extract MinGW to **C:/mingw32/** where the bin/lib/include folders are contained within
-3. Continue to "All" section below
 
 ### MacOS
 1. Install "Command Line Tools" in MacOS if they're not already installed (type "git" in terminal or something)
 2. Follow the "Installing SFML" directions here: https://www.sfml-dev.org/tutorials/2.5/start-osx.php#installing-sfml
-3. Continue to "All" section below
 
 ### Linux
 1. Ensure the GCC Toolchain is installed (run sudo apt install build-essential) if it's not
 1. Download & Extract SFML to **~/SFML-2.5.0/** where the lib/include/share folders are contained within
-3. Continue to "All" section below
 
 ### All
-4. Download & Install Visual Studio Code if you don't already have it.
-5. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
-6. _(Optional)_ Install the **Include Autocomplete** extension. The C++ extension has decent include functionality already, but this one is a little better about headers contained in sub-folders. Note: It leverages the **"includePath"** array in **c\_cpp\_properties.json**
-7. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location (default: C:/Program Files/Git/bin/bash.exe). We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux
-8. In **settings.json** Ensure **Path** in the **terminal.integrated.env.windows** object is set to the correct location of the compiler's executable (example: C:\\mingw32\\bin) and the SFML directory is correct as well. Keep in mind Paths should be separated by a semi-colon with no spaces between.
+3. Download & Install Visual Studio Code if you don't already have it.
+4. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
+5. _(Optional)_ Install the **Include Autocomplete** extension. The C++ extension has decent include functionality already, but this one is a little better about headers contained in sub-folders. Note: It leverages the **"includePath"** array in **c\_cpp\_properties.json**
+6. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location (default: C:/Program Files/Git/bin/bash.exe). We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux
+7. In **settings.json** Ensure **Path** in the **terminal.integrated.env.windows** object is set to the correct location of the compiler's executable (example: C:\\mingw32\\bin) and the SFML directory is correct as well. Keep in mind Paths should be separated by a semi-colon with no spaces between.
 
 **Note:** You can manage the "Path" environment variable from Windows if you'd like, but I've found sandboxing it in VS Code is better for tracking things like .dll dependencies.
 
