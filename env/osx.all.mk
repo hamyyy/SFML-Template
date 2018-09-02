@@ -8,7 +8,3 @@ INCLUDE_DIRS := \
 	/usr/local/include
 
 BUILD_DEPENDENCIES :=
-
-PRODUCTION_DEPENDENCIES := \
-	content
-

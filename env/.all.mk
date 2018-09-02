@@ -13,3 +13,7 @@ PRODUCTION_EXCLUDE := \
 	*.7z \
 	Thumbs.db \
 	.DS_Store
+
+PRODUCTION_DEPENDENCIES := \
+	content
+
