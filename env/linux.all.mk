@@ -11,11 +11,3 @@ BUILD_DEPENDENCIES=
 
 PRODUCTION_DEPENDENCIES= \
 	content
-
-PRODUCTION_EXCLUDE= \
-	*.psd \
-	*.rar \
-	*.7z \
-	Thumbs.db
-
-PRODUCTION_FOLDER=build

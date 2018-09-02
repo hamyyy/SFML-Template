@@ -22,11 +22,3 @@ PRODUCTION_DEPENDENCIES= \
 	C:/SFML-2.5.0/bin/sfml-system-2.dll \
 	C:/SFML-2.5.0/bin/sfml-window-2.dll \
 	content
-
-PRODUCTION_EXCLUDE= \
-	*.psd \
-	*.rar \
-	*.7z \
-	Thumbs.db
-
-PRODUCTION_FOLDER=build

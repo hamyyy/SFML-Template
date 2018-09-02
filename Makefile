@@ -61,7 +61,11 @@ _NAMENOEXT := $(NAME:.exe=)
 _NAMENOEXT := $(_NAMENOEXT:.dll=)
 
 OBJ_DIR := $(BLD_DIR)/obj
-_OBJS := $(SOURCE_FILES:.rc=.res)
+ifeq ($(PLATFORM),windows)
+	_OBJS := $(SOURCE_FILES:.rc=.res)
+else
+	_OBJS := $(SOURCE_FILES:%.rc=)
+endif
 _OBJS := $(_OBJS:.c=.o)
 _OBJS := $(_OBJS:.cpp=.o)
 OBJS := $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
