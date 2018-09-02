@@ -107,10 +107,14 @@ The environment variables used by the Makefile are managed from the **env** fold
 
 ## Environment Variables
 
-The environment variables that can be added to each .mk file are outlined below. If you need a line-break anywhere simply add a **"\\"** character.
+The environment variables that can be added to each .mk file are outlined below. If you need a line-break anywhere simply add a **"\\"** character. You can set base variables in *.all.mk and then build specific variables using "VAR := $(VAR)" syntax in *.debug.mk or *.release.mk. The heirarchy goes:
 
-**CFLAGS_ALL**: Compiler flags to use in all builds (gets passed to CFLAGS)
-**CFLAGS**: Compiler flags to use in the specific build (Debug/Release)
+    ./env/.all.mk
+    ./env/.(build).mk
+    ./env/(platform).all.mk
+    ./env/(platform).(build).mk
+
+**CFLAGS**: Compiler flags to use.
 
 **LIB_DIRS**:  
 Add any additional lib directories (full path)
