@@ -12,6 +12,7 @@ BUILD_DEPENDENCIES := \
 	C:/SFML-2.5.0/bin/openal32.dll
 
 PRODUCTION_DEPENDENCIES := \
+	$(PRODUCTION_DEPENDENCIES) \
 	C:/mingw32/bin/libgcc_s_dw2-1.dll \
 	C:/mingw32/bin/libstdc++-6.dll \
 	C:/mingw32/bin/libwinpthread-1.dll \
@@ -20,5 +21,4 @@ PRODUCTION_DEPENDENCIES := \
 	C:/SFML-2.5.0/bin/sfml-graphics-2.dll \
 	C:/SFML-2.5.0/bin/sfml-network-2.dll \
 	C:/SFML-2.5.0/bin/sfml-system-2.dll \
-	C:/SFML-2.5.0/bin/sfml-window-2.dll \
-	$(PRODUCTION_DEPENDENCIES)
+	C:/SFML-2.5.0/bin/sfml-window-2.dll
