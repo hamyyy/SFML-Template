@@ -49,9 +49,9 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 1. Install "Command Line Tools" in MacOS if they're not already installed (type "git" in terminal or something)
 2. Follow the "Installing SFML" directions here: https://www.sfml-dev.org/tutorials/2.5/start-osx.php#installing-sfml
 
-### Linux (Ubuntu)
-1. Upgrade to [Ubuntu 18.10 Cosmic Cuttlefish](http://cdimage.ubuntu.com/daily-live/current/HEADER.html). Ensure the GCC Toolchain is installed (**sudo apt install build-essential**)
-2. Run **sudo apt install libsfml-dev**
+### Linux
+1. Ensure the GCC Toolchain is installed (**sudo apt install build-essential**)
+2. Run **sudo apt install libsfml-dev**. The SFML version you got will vary depending on the distro. 2.5.0 is only included in [Ubuntu 18.10 Cosmic Cuttlefish](http://cdimage.ubuntu.com/daily-live/current/HEADER.html) and a few other non-Ubuntu distros.
 
 ### All
 3. Download & Install Visual Studio Code if you don't already have it.
@@ -233,7 +233,7 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
 4. Copy the build.sh from **sfml-project1** to the root **SFML** directory
 5. Edit the build.sh in **sfml-project1**, replace the entire contents to simply have:
   ```
-  include ../build.sh $1 $2
+  build ../build.sh $1 $2
   ```
 6. Make a copy of **sfml-project1** and call it **sfml-project2**
 7. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
