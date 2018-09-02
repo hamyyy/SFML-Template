@@ -5,6 +5,7 @@
             "intelliSenseMode": "gcc-x64",
             "includePath": [
                 "${workspaceFolder}/src/**",
+                "~/SFML-2.5.0/include/**",
                 "/usr/local/include/**",
                 "/usr/include/**"
             ],
