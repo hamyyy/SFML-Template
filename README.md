@@ -233,7 +233,7 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
 4. Copy the build.sh from **sfml-project1** to the root **SFML** directory
 5. Edit the build.sh in **sfml-project1**, replace the entire contents to simply have:
   ```
-  build ../build.sh $1 $2
+  bash ../build.sh $1 $2
   ```
 6. Make a copy of **sfml-project1** and call it **sfml-project2**
 7. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
