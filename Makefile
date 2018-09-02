@@ -68,7 +68,11 @@ OBJS := $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
 OBJ_SUBDIRS := $(patsubst %,$(OBJ_DIR)/%,$(PROJECT_DIRS))
 
 DEP_DIR := $(BLD_DIR)/dep
-_DEPS := $(SOURCE_FILES:.rc=.res)
+ifeq ($(PLATFORM),windows)
+	_DEPS := $(SOURCE_FILES:.rc=.res)
+else
+	_DEPS := $(SOURCE_FILES:%.rc=)
+endif
 _DEPS := $(_DEPS:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
 DEPS := $(patsubst %,$(DEP_DIR)/%,$(_DEPS))
@@ -120,7 +124,7 @@ $(OBJ_DIR)/%.o: src/%.c $(DEP_DIR)/%.d | $(_DIRECTORIES)
 
 $(OBJ_DIR)/%.res: src/%.rc
 $(OBJ_DIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
-	$(RC) -J rc -O coff -i $< -o $@
+	-$(RC) -J rc -O coff -i $< -o $@
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	objdump -d -C -Mintel $< > $@
