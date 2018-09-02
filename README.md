@@ -27,7 +27,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 * Command Line Tools / XCode (type "git" in terminal to trigger the installer)
 
 ### Linux
-* [SFML 2.5.0 - GCC 64-bit](https://www.sfml-dev.org/files/SFML-2.5.0-linux-gcc-64-bit.tar.gz)
+* Get SFML 2.5.0 from your distro if it has it, or compile from source
 
 ### All
 * [Visual Studio Code](https://code.visualstudio.com/download)
@@ -49,9 +49,9 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build system for
 1. Install "Command Line Tools" in MacOS if they're not already installed (type "git" in terminal or something)
 2. Follow the "Installing SFML" directions here: https://www.sfml-dev.org/tutorials/2.5/start-osx.php#installing-sfml
 
-### Linux
-1. Ensure the GCC Toolchain is installed (run sudo apt install build-essential) if it's not
-1. Download & Extract SFML to **~/SFML-2.5.0/** where the lib/include/share folders are contained within
+### Linux (Ubuntu)
+1. Upgrade to [Ubuntu 18.10 Cosmic Cuttlefish](https://linuxconfig.org/how-to-upgrade-ubuntu-to-18-10-cosmic-cuttlefish) if you're not on it. Ensure the GCC Toolchain is installed (**sudo apt install build-essential**)
+2. Run **sudo apt install libsfml-dev**
 
 ### All
 3. Download & Install Visual Studio Code if you don't already have it.

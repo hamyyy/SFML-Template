@@ -2,12 +2,10 @@ CC=g++
 CFLAGS_ALL=-Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=never
 
 LIB_DIRS= \
-	/usr/local/lib \
-	~/SFML-2.5.0/lib
+	/usr/local/lib
 
 INCLUDE_DIRS= \
-	/usr/local/include \
-	~/SFML-2.5.0/include
+	/usr/local/include
 
 BUILD_DEPENDENCIES=
 
