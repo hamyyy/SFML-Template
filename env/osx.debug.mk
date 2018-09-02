@@ -1,7 +1,7 @@
-CFLAGS=-g $(CFLAGS_ALL) -pg
+CFLAGS := -g $(CFLAGS) -pg
 
-BUILD_FLAGS= \
+BUILD_FLAGS := \
 	-pg
 
-BUILD_MACROS= \
+BUILD_MACROS := \
 	_DEBUG

@@ -1,17 +1,17 @@
-CC=i686-w64-mingw32-g++.exe
-CFLAGS_ALL=-Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=never
-RC=windres.exe
+CC := i686-w64-mingw32-g++.exe
+CFLAGS := -Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=never
+RC := windres.exe
 
-LIB_DIRS= \
+LIB_DIRS := \
 	C:/SFML-2.5.0/lib
 
-INCLUDE_DIRS= \
+INCLUDE_DIRS := \
 	C:/SFML-2.5.0/include
 
-BUILD_DEPENDENCIES= \
+BUILD_DEPENDENCIES := \
 	C:/SFML-2.5.0/bin/openal32.dll
 
-PRODUCTION_DEPENDENCIES= \
+PRODUCTION_DEPENDENCIES := \
 	C:/mingw32/bin/libgcc_s_dw2-1.dll \
 	C:/mingw32/bin/libstdc++-6.dll \
 	C:/mingw32/bin/libwinpthread-1.dll \

@@ -1,12 +1,12 @@
-CFLAGS=-g $(CFLAGS_ALL) -pg
+CFLAGS := -g $(CFLAGS) -pg
 
-BUILD_FLAGS= \
+BUILD_FLAGS := \
 	-pg
 
-BUILD_MACROS= \
+BUILD_MACROS := \
 	_DEBUG
 
-LINK_LIBRARIES= \
+LINK_LIBRARIES := \
 	sfml-graphics-d \
 	sfml-audio-d \
 	sfml-network-d \
