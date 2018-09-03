@@ -6,7 +6,9 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}.exe",
-			"args": [],
+			"args": [
+				"-exec info registers"
+			],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"preLaunchTask": "Build: Debug",
