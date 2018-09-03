@@ -14,7 +14,7 @@
             "cppStandard": "c++17"
         },
         {
-            "name": "OS X",
+            "name": "MacOS",
             "intelliSenseMode": "clang-x64",
             "includePath": [
                 "${workspaceFolder}/src/**",
