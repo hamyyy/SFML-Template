@@ -7,31 +7,34 @@
                 "${workspaceFolder}/src/**",
                 "~/SFML-2.5.0/include/**",
                 "/usr/local/include/**",
-                "/usr/include/**"
+                "/usr/include/**",
+                "${workspaceRoot}/src/**"
             ],
             "defines": [],
             "cStandard": "c11",
             "cppStandard": "c++17"
         },
         {
-            "name": "MacOS",
+            "name": "Mac",
             "intelliSenseMode": "clang-x64",
             "includePath": [
                 "${workspaceFolder}/src/**",
                 "/usr/local/include/**",
-                "/usr/include/**"
+                "/usr/include/**",
+                "${workspaceRoot}/src/**"
             ],
             "defines": [],
             "cStandard": "c11",
             "cppStandard": "c++17"
         },
         {
-            "name": "Windows",
+            "name": "Win32",
             "intelliSenseMode": "gcc-x64",
             "compilerPath": "C:/mingw32/bin/gcc.exe",
             "includePath": [
                 "${workspaceFolder}/src/**",
-                "C:/SFML-2.5.0/include/**"
+                "C:/SFML-2.5.0/include/**",
+                "${workspaceRoot}/src/**"
             ],
             "defines": [],
             "cStandard": "c11",
