@@ -1,3 +1,5 @@
+MAX_PARALLEL_JOBS := 8
+
 LINK_LIBRARIES := \
 	sfml-graphics \
 	sfml-audio \

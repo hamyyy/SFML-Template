@@ -114,7 +114,11 @@ The environment variables that can be added to each .mk file are outlined below.
     ./env/(platform).all.mk
     ./env/(platform).(build).mk
 
-**CFLAGS**: Compiler flags to use.
+**CFLAGS**:  
+Compiler flags to use.
+
+**MAX_PARALLEL_JOBS**:  
+Max number of parallel jobs to run, based on number of cpus cores available
 
 **LIB_DIRS**:  
 Add any additional lib directories (full path)
@@ -141,19 +145,22 @@ LINK_LIBRARIES= \
   something
 ```
 
-**FLAGS_RELEASE**: Additional compiler flags for the particular build (including prefix)
+**FLAGS_RELEASE**:  
+Additional compiler flags for the particular build (including prefix)
 ```makefile
 BUILD_FLAGS= \
   -mwindows
 ```
 
-**BUILD_MACROS**: Macros to include in the build
+**BUILD_MACROS**:  
+Macros to include in the build
 ```makefile
 BUILD_MACROS= \
   _DEBUG
 ```
 
-**BUILD_DEPENDENCIES**: Dependency .dll/.so files to include in the bin/(build) folders
+**BUILD_DEPENDENCIES**:  
+Dependency .dll/.so files to include in the bin/(build) folders
 ```makefile
 BUILD_DEPENDENCIES= \
 	C:/SFML-2.5.0/bin/openal32.dll
@@ -164,7 +171,8 @@ BUILD_DEPENDENCIES= \
 
 I thought it was important to include a build task that creates a final "build" folder and copies the files in the bin/Release folder, any dependency .dlls, and any other directories into it. It's accessed via (**Ctrl+Shift+B** > **Build: Production**) and uses a couple special environment variables:
 
-**PRODUCTION_DEPENDENCIES**: Files & folders to copy into the "build" folder upon using the "Build: Production" task.
+**PRODUCTION_DEPENDENCIES**:  
+Files & folders to copy into the "build" folder upon using the "Build: Production" task.
 ```makefile
 PRODUCTION_DEPENDENCIES= \
   C:/mingw32/bin/libgcc_s_dw2-1.dll \
@@ -179,7 +187,8 @@ PRODUCTION_DEPENDENCIES= \
   content
 ```
 
-**PRODUCTION_EXCLUDE**: Files & extensions to exclude from the production build.
+**PRODUCTION_EXCLUDE**:  
+Files & extensions to exclude from the production build.
 ```makefile
 PRODUCTION_EXCLUDE= \
   *.psd \
@@ -188,7 +197,8 @@ PRODUCTION_EXCLUDE= \
   Thumbs.db
 ```
 
-**PRODUCTION_FOLDER**: The folder the production build will go into. This can be an absolute path or a relative path. Defaults to "build" if not defined.
+**PRODUCTION_FOLDER**:  
+The folder the production build will go into. This can be an absolute path or a relative path. Defaults to "build" if not defined.
 ```makefile
 PRODUCTION_FOLDER=build
 ```

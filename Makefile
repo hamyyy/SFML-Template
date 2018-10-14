@@ -6,7 +6,7 @@ BUILD?=Release
 _BUILDL := $(shell echo $(BUILD) | tr A-Z a-z)
 
 # Maximum parallel jobs during build process
-MAX_PARALLEL?=8
+MAX_PARALLEL_JOBS?=8
 
 # Platform specific environment variables
 -include env/.all.mk
@@ -109,8 +109,8 @@ POST_COMPILE=@mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 
 #==============================================================================
 # Build Scripts
-all: 
-	@$(MAKE) -j$(MAX_PARALLEL) --no-print-directory makebuild
+all:
+	@$(MAKE) -j$(MAX_PARALLEL_JOBS) --no-print-directory makebuild
 
 rebuild: clean all
 
