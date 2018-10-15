@@ -9,8 +9,6 @@ int main()
 
     shape.setFillColor(sf::Color::Green);
 
-    int color = 0;
-
     while (window.isOpen())
     {
         sf::Event event;
