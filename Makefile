@@ -114,11 +114,11 @@ endif
 # Compiler & flags
 CC?=g++
 RC?=windres.exe
-CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
+CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall
 CFLAGS?=-g $(CFLAGS_ALL)
 CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 
-OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
+OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ASM_COMPILE = objdump -d -C -Mintel $< > $@
 POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
@@ -126,7 +126,7 @@ POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 #==============================================================================
 # Build Scripts
 all:
-	@$(MAKE) -j$(MAX_PARALLEL_JOBS) --no-print-directory makebuild
+	@$(MAKE) -j$(MAX_PARALLEL_JOBS) -k --no-print-directory makebuild
 
 rebuild: clean all
 
@@ -134,9 +134,16 @@ buildprod: all makeproduction
 
 #==============================================================================
 
+export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
+
+define color_reset
+	@tput setaf 4
+endef
+
 # Build Recipes
 $(OBJ_DIR)/%.o: src/%.c
 $(OBJ_DIR)/%.o: src/%.c $(DEP_DIR)/%.d | $(_DIRECTORIES)
+	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
 endif
@@ -145,6 +152,7 @@ endif
 
 $(OBJ_DIR)/%.o: src/%.cpp
 $(OBJ_DIR)/%.o: src/%.cpp $(DEP_DIR)/%.d | $(_DIRECTORIES)
+	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
 endif
