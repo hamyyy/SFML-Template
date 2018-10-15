@@ -137,26 +137,26 @@ buildprod: all makeproduction
 # Build Recipes
 $(OBJ_DIR)/%.o: src/%.c
 $(OBJ_DIR)/%.o: src/%.c $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(_Q)$(OBJ_COMPILE)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
 endif
+	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
 
 $(OBJ_DIR)/%.o: src/%.cpp
 $(OBJ_DIR)/%.o: src/%.cpp $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(_Q)$(OBJ_COMPILE)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
 endif
+	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
 
 $(OBJ_DIR)/%.res: src/%.rc
 $(OBJ_DIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
-	$(_Q)$(RC_COMPILE)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
 endif
+	$(_Q)$(RC_COMPILE)
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(_Q)$(ASM_COMPILE)
