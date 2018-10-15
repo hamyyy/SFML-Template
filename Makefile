@@ -168,7 +168,9 @@ endif
 	$(_Q)$(RC_COMPILE)
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
+ifeq ($(CLEAN_OUTPUT),false)
 	$(call color_reset)
+endif
 	$(_Q)$(ASM_COMPILE)
 
 $(BLD_DIR)/%.dll:
@@ -198,7 +200,9 @@ makebuild: $(_EXE)
 	@echo '$(BUILD) build target is up to date.'
 
 $(_DIRECTORIES):
+ifeq ($(CLEAN_OUTPUT),false)
 	$(call color_reset)
+endif
 	$(_Q)mkdir -p $@
 
 .PHONY: clean
