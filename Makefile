@@ -8,6 +8,12 @@ _BUILDL := $(shell echo $(BUILD) | tr A-Z a-z)
 # Maximum parallel jobs during build process
 MAX_PARALLEL_JOBS?=8
 
+# Dump assembly?
+DUMP_ASSEMBLY?=false
+
+# Clean output?
+CLEAN_OUTPUT?=true
+
 # Platform specific environment variables
 -include env/.all.mk
 -include env/.$(_BUILDL).mk
@@ -97,6 +103,13 @@ _DIRECTORIES := $(sort $(_DIRECTORIES))
 _BUILD_DEPENDENCIES := $(filter %.dll,$(BUILD_DEPENDENCIES))
 _BUILD_DEPENDENCIES := $(patsubst %,$(BLD_DIR)/%,$(notdir $(_BUILD_DEPENDENCIES)))
 
+# Quiet flag
+ifeq ($(CLEAN_OUTPUT),true)
+	_Q=@
+else
+	_Q=
+endif
+
 #==============================================================================
 # Compiler & flags
 CC?=g++
@@ -105,7 +118,10 @@ CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall -fdiagnostics-color=never
 CFLAGS?=-g $(CFLAGS_ALL)
 CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 
-POST_COMPILE=@mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
+OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
+RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
+ASM_COMPILE = objdump -d -C -Mintel $< > $@
+POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 
 #==============================================================================
 # Build Scripts
@@ -119,22 +135,31 @@ buildprod: all makeproduction
 #==============================================================================
 
 # Build Recipes
-$(OBJ_DIR)/%.o: src/%.cpp
-$(OBJ_DIR)/%.o: src/%.cpp $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
-	$(POST_COMPILE)
-
 $(OBJ_DIR)/%.o: src/%.c
 $(OBJ_DIR)/%.o: src/%.c $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
+	$(_Q)$(OBJ_COMPILE)
+ifeq ($(CLEAN_OUTPUT),true)
+	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
+endif
+	$(POST_COMPILE)
+
+$(OBJ_DIR)/%.o: src/%.cpp
+$(OBJ_DIR)/%.o: src/%.cpp $(DEP_DIR)/%.d | $(_DIRECTORIES)
+	$(_Q)$(OBJ_COMPILE)
+ifeq ($(CLEAN_OUTPUT),true)
+	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
+endif
 	$(POST_COMPILE)
 
 $(OBJ_DIR)/%.res: src/%.rc
 $(OBJ_DIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
-	-$(RC) -J rc -O coff -i $< -o $@
+	$(_Q)$(RC_COMPILE)
+ifeq ($(CLEAN_OUTPUT),true)
+	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
+endif
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
-	objdump -d -C -Mintel $< > $@
+	$(_Q)$(ASM_COMPILE)
 
 $(BLD_DIR)/%.dll:
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
@@ -143,38 +168,46 @@ $(BLD_DIR)/%.so:
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
 $(_EXE): $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
+ifeq ($(CLEAN_OUTPUT),true)
+	@echo
+	@echo 'Linking: $(_EXE)'
+endif
 ifeq ($(suffix $(_EXE)),.dll)
 	-rm -f $(BLD_DIR)/lib$(_NAMENOEXT).def
 	-rm -f $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
-	$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 
 makebuild: $(_EXE)
 	@echo '$(BUILD) build target is up to date.'
 
 $(_DIRECTORIES):
-	mkdir -p $@
+	$(_Q)mkdir -p $@
 
 .PHONY: clean
 clean:
-	$(RM) $(_EXE)
-	$(RM) $(DEPS)
-	$(RM) $(OBJS)
+ifeq ($(CLEAN_OUTPUT),true)
+	@echo 'Cleaning old build files & folders...'
+	@echo
+endif
+	$(_Q)$(RM) $(_EXE)
+	$(_Q)$(RM) $(DEPS)
+	$(_Q)$(RM) $(OBJS)
 
 #==============================================================================
 # Production recipes
-rmbuild:
+rmprod:
 	-rm -f -r $(PRODUCTION_FOLDER)
 
-mkdirbuild:
+mkdirprod:
 	mkdir -p $(PRODUCTION_FOLDER)
 
-releasetobuild: $(_EXE)
+releasetoprod: $(_EXE)
 	cp $(_EXE) $(PRODUCTION_FOLDER)
 
-makeproduction: rmbuild mkdirbuild releasetobuild
+makeproduction: rmprod mkdirprod releasetoprod
 	@echo -n 'Adding dynamic libraries & project dependencies...'
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER) -name '$(excl)' -delete))

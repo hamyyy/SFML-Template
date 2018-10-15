@@ -120,6 +120,9 @@ Compiler flags to use.
 **MAX_PARALLEL_JOBS**:  
 Max number of parallel jobs to run, based on number of cpus cores available
 
+**CLEAN_OUTPUT**:
+If set to 'true', the build output will only show the path/filename of the source file being built as well as the linking step and a couple helpful messages. All other commands will be hidden (including assembly dumps)
+
 **LIB_DIRS**:  
 Add any additional lib directories (full path)
 ```makefile
