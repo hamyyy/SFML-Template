@@ -8,7 +8,7 @@
                 "~/SFML-2.5.0/include/**",
                 "/usr/local/include/**",
                 "/usr/include/**",
-                "${workspaceRoot}/src/**"
+                "${workspaceRoot}/src"
             ],
             "defines": [],
             "cStandard": "c11",
@@ -21,7 +21,7 @@
                 "${workspaceFolder}/src/**",
                 "/usr/local/include/**",
                 "/usr/include/**",
-                "${workspaceRoot}/src/**"
+                "${workspaceRoot}/src"
             ],
             "defines": [],
             "cStandard": "c11",
@@ -34,7 +34,7 @@
             "includePath": [
                 "${workspaceFolder}/src/**",
                 "C:/SFML-2.5.0/include/**",
-                "${workspaceRoot}/src/**"
+                "${workspaceRoot}/src"
             ],
             "defines": [],
             "cStandard": "c11",
