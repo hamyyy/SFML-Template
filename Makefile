@@ -123,6 +123,12 @@ RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ASM_COMPILE = objdump -d -C -Mintel $< > $@
 POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 
+export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
+
+define color_reset
+	@tput setaf 4
+endef
+
 #==============================================================================
 # Build Scripts
 all:
@@ -133,12 +139,6 @@ rebuild: clean all
 buildprod: all makeproduction
 
 #==============================================================================
-
-export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
-
-define color_reset
-	@tput setaf 4
-endef
 
 # Build Recipes
 $(OBJ_DIR)/%.o: src/%.c
@@ -161,21 +161,26 @@ endif
 
 $(OBJ_DIR)/%.res: src/%.rc
 $(OBJ_DIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
+	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
 endif
 	$(_Q)$(RC_COMPILE)
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
+	$(call color_reset)
 	$(_Q)$(ASM_COMPILE)
 
 $(BLD_DIR)/%.dll:
+	$(call color_reset)
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
 $(BLD_DIR)/%.so:
+	$(call color_reset)
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
 $(_EXE): $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
+	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo
 	@echo 'Linking: $(_EXE)'
@@ -189,13 +194,16 @@ else
 endif
 
 makebuild: $(_EXE)
+	$(call color_reset)
 	@echo '$(BUILD) build target is up to date.'
 
 $(_DIRECTORIES):
+	$(call color_reset)
 	$(_Q)mkdir -p $@
 
 .PHONY: clean
 clean:
+	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo 'Cleaning old build files & folders...'
 	@echo
@@ -207,15 +215,19 @@ endif
 #==============================================================================
 # Production recipes
 rmprod:
+	$(call color_reset)
 	-$(_Q)rm -f -r $(PRODUCTION_FOLDER)
 
 mkdirprod:
+	$(call color_reset)
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)
 
 releasetoprod: $(_EXE)
+	$(call color_reset)
 	$(_Q)$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 
 makeproduction: rmprod mkdirprod releasetoprod
+	$(call color_reset)
 	@echo -n 'Adding dynamic libraries & project dependencies...'
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER) -name '$(excl)' -delete))
