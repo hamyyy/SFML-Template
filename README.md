@@ -120,8 +120,11 @@ Compiler flags to use.
 **MAX_PARALLEL_JOBS**:  
 Max number of parallel jobs to run, based on number of cpus cores available
 
-**CLEAN_OUTPUT**:
+**CLEAN_OUTPUT**:  
 If set to 'true', the build output will only show the path/filename of the source file being built as well as the linking step and a couple helpful messages. All other commands will be hidden (including assembly dumps)
+
+**DUMP_ASSEMBLY**:  
+If set to 'true', *.o.asm files will generate within the bin/(Build)/asm folder. The bin folder is hidden from VS Code by default, but you can open the asm folder in a seaparate instance and browse the assembly that way if you'd like to, or customize it from settings.json.
 
 **LIB_DIRS**:  
 Add any additional lib directories (full path)
@@ -254,10 +257,6 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
   ```
 6. Make a copy of **sfml-project1** and call it **sfml-project2**
 7. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
-
-## Assembly Auto-generation
-
-In **tasks.json**, if the environment variable **DUMP_ASSEMBLY" is set to "true" (with quotation marks), *.o.asm files will generate within the bin/(Build)/asm folder. The bin folder is hidden from VS Code by default, but you can open the asm folder in a seaparate instance and browse the assembly that way if you'd like to.
 
 ## Notes
 

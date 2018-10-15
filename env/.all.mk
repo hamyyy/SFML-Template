@@ -1,5 +1,6 @@
 MAX_PARALLEL_JOBS := 8
 CLEAN_OUTPUT := true
+DUMP_ASSEMBLY := false
 
 LINK_LIBRARIES := \
 	sfml-graphics \
