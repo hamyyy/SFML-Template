@@ -199,13 +199,13 @@ endif
 #==============================================================================
 # Production recipes
 rmprod:
-	-rm -f -r $(PRODUCTION_FOLDER)
+	-$(_Q)rm -f -r $(PRODUCTION_FOLDER)
 
 mkdirprod:
-	mkdir -p $(PRODUCTION_FOLDER)
+	$(_Q)mkdir -p $(PRODUCTION_FOLDER)
 
 releasetoprod: $(_EXE)
-	cp $(_EXE) $(PRODUCTION_FOLDER)
+	$(_Q)$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 
 makeproduction: rmprod mkdirprod releasetoprod
 	@echo -n 'Adding dynamic libraries & project dependencies...'
