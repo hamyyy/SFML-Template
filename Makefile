@@ -228,7 +228,7 @@ mkdirprod:
 
 releasetoprod: $(_EXE)
 	$(call color_reset)
-	$(_Q)$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
+	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 
 makeproduction: rmprod mkdirprod releasetoprod
 	$(call color_reset)
