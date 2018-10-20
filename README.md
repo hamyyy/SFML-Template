@@ -1,5 +1,5 @@
 # sfml-vscode-boilerplate
-An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build environment for [Visual Studio Code](https://code.visualstudio.com/)
+An [SFML](https://www.sfml-dev.org) 2.5.1 configuration & C++17 build environment for [Visual Studio Code](https://code.visualstudio.com/)
 
 
 ## Features
@@ -18,16 +18,16 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build environmen
 ## Prerequisites
 
 ### Windows
-* [SFML 2.5.0 - MinGW (GCC) 7.3.0 DW2 32-bit (for Windows)](https://www.sfml-dev.org/files/SFML-2.5.0-windows-gcc-7.3.0-mingw-32-bit.zip)
-* [MinGW (GCC) 7.3.0 DW2 32-bit (for Windows)](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.3.0/threads-posix/dwarf/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z/download)
+* [SFML 2.5.1 - GCC 7.3.0 MinGW (DW2) 32-bit (for Windows)](https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit.zip)
+* [GCC 7.3.0 MinGW (DW2) 32-bit (for Windows)](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.3.0/threads-posix/dwarf/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z/download)
 * [Git Bash (for Windows) ](https://git-scm.com/downloads)
 
 ### MacOS
-* [SFML 2.5.0 - Clang 64-bit](https://www.sfml-dev.org/files/SFML-2.5.0-macOS-clang.tar.gz)
+* [SFML 2.5.1 - Clang 64-bit](https://www.sfml-dev.org/files/SFML-2.5.1-macOS-clang.tar.gz)
 * Command Line Tools / XCode (type "git" in terminal to trigger the installer)
 
 ### Linux
-* Get SFML 2.5.0 from your distro if it has it, or compile from source
+* Get SFML 2.5.1 from your distro if it has it, or compile from source
 
 ### All
 * [Visual Studio Code](https://code.visualstudio.com/download)
@@ -42,7 +42,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build environmen
 ## Installation
 
 ### Windows
-1. Download & Extract SFML to **C:/SFML-2.5.0/** where the bin/lib/include folders are contained within
+1. Download & Extract SFML to **C:/SFML-2.5.1/** where the bin/lib/include folders are contained within
 2. Download & Extract MinGW to **C:/mingw32/** where the bin/lib/include folders are contained within
 
 ### MacOS
@@ -51,7 +51,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.0 configuration & C++17 build environmen
 
 ### Linux
 1. Ensure the GCC Toolchain is installed (**sudo apt install build-essential**)
-2. Run **sudo apt install libsfml-dev**. The SFML version you got will vary depending on the distro. 2.5.0 is only included in [Ubuntu 18.10 Cosmic Cuttlefish](http://cdimage.ubuntu.com/daily-live/current/HEADER.html) and a few other non-Ubuntu distros.
+2. Run **sudo apt install libsfml-dev**. The SFML version you got will vary depending on the distro. 2.5.0 is only included in [Ubuntu 18.10 Cosmic Cuttlefish](http://cdimage.ubuntu.com/daily-live/current/HEADER.html) and a few other non-Ubuntu distros -- Not sure yet about 2.5.1.
 
 ### All
 3. Download & Install Visual Studio Code if you don't already have it.
@@ -169,7 +169,7 @@ BUILD_MACROS= \
 Dependency .dll/.so files to include in the bin/(build) folders
 ```makefile
 BUILD_DEPENDENCIES= \
-	C:/SFML-2.5.0/bin/openal32.dll
+	C:/SFML-2.5.1/bin/openal32.dll
 ```
 
 
@@ -184,12 +184,12 @@ PRODUCTION_DEPENDENCIES= \
   C:/mingw32/bin/libgcc_s_dw2-1.dll \
   C:/mingw32/bin/libstdc++-6.dll \
   C:/mingw32/bin/libwinpthread-1.dll \
-  C:/SFML-2.5.0/bin/openal32.dll \
-  C:/SFML-2.5.0/bin/sfml-audio-2.dll \
-  C:/SFML-2.5.0/bin/sfml-graphics-2.dll \
-  C:/SFML-2.5.0/bin/sfml-network-2.dll \
-  C:/SFML-2.5.0/bin/sfml-system-2.dll \
-  C:/SFML-2.5.0/bin/sfml-window-2.dll \
+  C:/SFML-2.5.1/bin/openal32.dll \
+  C:/SFML-2.5.1/bin/sfml-audio-2.dll \
+  C:/SFML-2.5.1/bin/sfml-graphics-2.dll \
+  C:/SFML-2.5.1/bin/sfml-network-2.dll \
+  C:/SFML-2.5.1/bin/sfml-system-2.dll \
+  C:/SFML-2.5.1/bin/sfml-window-2.dll \
   content
 ```
 
