@@ -1,5 +1,5 @@
 CC := clang++
-CFLAGS := -Os -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17
+CFLAGS := -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17
 
 LIB_DIRS := \
 	/usr/local/lib

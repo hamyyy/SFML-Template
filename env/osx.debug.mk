@@ -1,4 +1,4 @@
-CFLAGS := -g $(CFLAGS) -pg
+CFLAGS := -g -Og $(CFLAGS) -pg
 
 BUILD_FLAGS := \
 	-pg
