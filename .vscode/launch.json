@@ -12,7 +12,7 @@
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"preLaunchTask": "Build: Debug",
-			"externalConsole": true,
+			"externalConsole": false,
 			"setupCommands": [
 				{
 					"description": "Enable pretty-printing for gdb",
