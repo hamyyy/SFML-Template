@@ -61,6 +61,15 @@ _BUILD_MACROS := $(patsubst %,-D%,$(BUILD_MACROS))
 _LINK_LIBRARIES := $(patsubst %,-l%,$(LINK_LIBRARIES))
 
 #==============================================================================
+# MacOS Specific
+MACOS_ICON?=icon
+
+ifeq ($(PLATFORM),osx)
+	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(NAME).app/Contents
+	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES) Resources
+endif
+
+#==============================================================================
 # Directories & Dependencies
 BLD_DIR := bin/$(BUILD)
 BLD_DIR := $(patsubst %/,%,$(BLD_DIR))
@@ -228,6 +237,12 @@ mkdirprod:
 
 releasetoprod: $(_EXE)
 	$(call color_reset)
+ifeq ($(PLATFORM),osx)
+	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Resources
+	brew install makeicns
+	makeicns -in osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
+	plutil -convert binary1 osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
+endif
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 
 makeproduction: rmprod mkdirprod releasetoprod

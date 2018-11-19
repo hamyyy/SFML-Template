@@ -91,14 +91,10 @@ elif [[ $1 == 'run' ]] ; then
 	bin/$BUILD/$NAME
 
 elif [[ $1 == 'buildprod' ]] ; then
-	if [[ $PLATFORM != 'osx' ]] ; then
-		if $MAKE_EXEC BUILD=$BUILD buildprod; then
-			build_success
-		else
-			build_fail
-		fi
+	if $MAKE_EXEC BUILD=$BUILD buildprod; then
+		build_success
 	else
-		prod_osx
+		build_fail
 	fi
 
 
