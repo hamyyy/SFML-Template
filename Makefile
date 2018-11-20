@@ -60,6 +60,8 @@ _INCLUDE_DIRS := $(patsubst %,-I%,src/ $(INCLUDE_DIRS))
 _BUILD_MACROS := $(patsubst %,-D%,$(BUILD_MACROS))
 _LINK_LIBRARIES := $(patsubst %,-l%,$(LINK_LIBRARIES))
 
+PRODUCTION_BUILD_ORDER := rmprod mkdirprod releasetoprod
+
 #==============================================================================
 # MacOS Specific
 MACOS_ICON?=icon
@@ -67,6 +69,7 @@ MACOS_ICON?=icon
 ifeq ($(PLATFORM),osx)
 	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(NAME).app/Contents
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES) Resources
+	PRODUCTION_BUILD_ORDER := rmprod mkdirprod prodmac releasetoprod
 endif
 
 #==============================================================================
@@ -235,20 +238,33 @@ mkdirprod:
 	$(call color_reset)
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)
 
-releasetoprod: $(_EXE)
+$(PRODUCTION_FOLDER)/Resources:
+	$(call color_reset)
+	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Resources
+
+$(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns: $(PRODUCTION_FOLDER)/Resources
 	$(call color_reset)
 ifeq ($(PLATFORM),osx)
-	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Resources
 ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
 	$(call color_reset)
 endif
 	makeicns -in env/osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
+endif
+
+$(PRODUCTION_FOLDER)/Info.plist:
+	$(call color_reset)
+ifeq ($(PLATFORM),osx)
 	plutil -convert binary1 env/osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
 endif
+
+prodmac: $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns $(PRODUCTION_FOLDER)/Info.plist
+
+releasetoprod: $(_EXE)
+	$(call color_reset)
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 
-makeproduction: rmprod mkdirprod releasetoprod
+makeproduction: $(PRODUCTION_BUILD_ORDER)
 	$(call color_reset)
 	@echo -n 'Adding dynamic libraries & project dependencies...'
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER)))
