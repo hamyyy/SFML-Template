@@ -239,7 +239,10 @@ releasetoprod: $(_EXE)
 	$(call color_reset)
 ifeq ($(PLATFORM),osx)
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Resources
+ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
+	$(call color_reset)
+endif
 	makeicns -in osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
 	plutil -convert binary1 osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
 endif
