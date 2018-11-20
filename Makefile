@@ -243,8 +243,8 @@ ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
 	$(call color_reset)
 endif
-	makeicns -in osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
-	plutil -convert binary1 osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
+	makeicns -in env/osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
+	plutil -convert binary1 env/osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
 endif
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 
