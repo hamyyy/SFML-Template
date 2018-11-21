@@ -47,6 +47,7 @@
 		"**/Thumbs.db": true
 	},
 	"files.associations": {
+		"*.json": "jsonc",
 		"*.stats": "cpp",
 		"array": "cpp",
 		"*.tcc": "cpp",
@@ -75,7 +76,13 @@
 		"tuple": "cpp",
 		"type_traits": "cpp",
 		"typeinfo": "cpp",
-		"utility": "cpp"
+		"utility": "cpp",
+		"ctime": "cpp",
+		"deque": "cpp",
+		"unordered_map": "cpp",
+		"vector": "cpp",
+		"fstream": "cpp",
+		"iostream": "cpp"
 	},
 
 	"C_Cpp.autocomplete": "Default",
