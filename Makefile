@@ -199,7 +199,7 @@ $(OBJ_DIR)/%.o: src/%.mm $(DEP_DIR)/%.d | $(_DIRECTORIES)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
 endif
-	$(_Q)$(CC) -framework Foundation $< -o $@
+	$(_Q)$(CC) -framework Foundation -lstdc++ $@
 	$(POST_COMPILE)
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
