@@ -6,4 +6,6 @@
 
 #include <iostream>
 
+#include "osx/CFResourcesBundle.hpp"
+
 #endif // MAIN_HPP
