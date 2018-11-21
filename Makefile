@@ -27,6 +27,7 @@ PRODUCTION_DEPENDENCIES?=
 PRODUCTION_EXCLUDE?=
 # Folder location (relative or absolute) to place the production build into
 PRODUCTION_FOLDER?=build
+PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)
 
 #==============================================================================
 # Library directories (separated by spaces)
@@ -67,6 +68,7 @@ MACOS_ICON?=icon
 ifeq ($(PLATFORM),osx)
 	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(NAME).app/Contents
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES) Resources
+	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
 endif
 
 #==============================================================================
@@ -253,11 +255,8 @@ endif
 makeproduction: rmprod mkdirprod releasetoprod
 	$(call color_reset)
 	@echo -n 'Adding dynamic libraries & project dependencies...'
-ifeq ($(PLATFORM),osx)
-PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/Resources
-endif
-	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER)))
-	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER) -name '$(excl)' -delete))
+	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
+	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 	@echo ' Done'
 
 #==============================================================================
