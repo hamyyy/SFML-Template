@@ -1,5 +1,5 @@
 {
-	"CFBundleIdentifier": "com.developer.sfml-vscode-boilerplate",
+	"CFBundleIdentifier": "com.developer.$NAME",
 	"CFBundleIconFile": "sfml",
 	"CFBundleDisplayName": "My SFML App",
 	"LSRequiresIPhoneOS": false,
