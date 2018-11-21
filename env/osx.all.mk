@@ -1,5 +1,6 @@
 CC := clang++
 CFLAGS := -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17
+DUMP_ASSEMBLY := false
 
 LIB_DIRS := \
 	/usr/local/lib
