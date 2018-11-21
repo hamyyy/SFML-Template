@@ -248,6 +248,7 @@ ifeq ($(shell brew ls --versions makeicns),)
 endif
 	makeicns -in env/osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
 	plutil -convert binary1 env/osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
+	plutil -replace CFBundleExecutable -string $(NAME) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)/MacOS
 else
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
