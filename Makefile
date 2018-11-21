@@ -281,11 +281,9 @@ makeproduction: rmprod mkdirprod releasetoprod
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 ifeq ($(PLATFORM),osx)
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
-ifeq ($(shell brew ls --versions create-dmg),)
-	brew install create-dmg
-	$(call color_reset)
-endif
-	$(_Q)create-dmg $(PRODUCTION_FOLDER)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg $(PRODUCTION_FOLDER)/$(PRODUCTION_MACOS_BUNDLE_NAME).app
+	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
+	$(_Q)hdiutil mount $(PRODUCTION_FOLDER)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
+	$(_Q)cp -r $(PRODUCTION_FOLDER)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
 endif
 	@echo ' Done'
 
