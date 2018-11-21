@@ -260,6 +260,7 @@ mkdirprod:
 releasetoprod: $(_EXE)
 	$(call color_reset)
 ifeq ($(PLATFORM),osx)
+	@echo 'Look ma, no Xcode!'
 	@echo 'Creating the MacOS application bundle...'
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Resources
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Frameworks
@@ -284,6 +285,8 @@ makeproduction: rmprod mkdirprod releasetoprod
 	@echo -n 'Adding dynamic libraries & project dependencies...'
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
+	@echo ' Done'
+	@echo 'Creating the dmg image for the application...'
 ifeq ($(PLATFORM),osx)
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
 	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
@@ -291,7 +294,6 @@ ifeq ($(PLATFORM),osx)
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
 	$(_Q)hdiutil unmount /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
 endif
-	@echo ' Done'
 
 #==============================================================================
 # Dependency recipes
