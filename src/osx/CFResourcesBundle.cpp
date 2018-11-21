@@ -1,8 +1,8 @@
 #include "CFResourcesBundle.hpp"
 
+#ifdef __APPLE__
 void initCFBundle()
 {
-#ifdef __APPLE__
     // This function ensures the working directory is set inside of the bundle if in production mode
     CFBundleRef mainBundle = CFBundleGetMainBundle();
     CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
@@ -18,6 +18,5 @@ void initCFBundle()
         if (pathStr.find(".app") != std::string::npos)
             chdir(path);
     }
-
-#endif
 }
+#endif
