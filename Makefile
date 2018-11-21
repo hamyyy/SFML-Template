@@ -241,6 +241,7 @@ releasetoprod: $(_EXE)
 	$(call color_reset)
 ifeq ($(PLATFORM),osx)
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Resources
+	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/MacOS
 ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
 	$(call color_reset)
