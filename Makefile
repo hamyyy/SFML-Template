@@ -67,6 +67,7 @@ MACOS_ICON?=icon
 PRODUCTION_MACOS_BUNDLE_COMPANY?=developer
 PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME?=App
 PRODUCTION_MACOS_BUNDLE_NAME?=App
+PRODUCTION_MACOS_MAKE_DMG?=true
 
 ifeq ($(PLATFORM),osx)
 	PRODUCTION_FOLDER_MACOS := $(PRODUCTION_FOLDER)
@@ -289,6 +290,7 @@ makeproduction: rmprod mkdirprod releasetoprod
 	@echo 'Creating the dmg image for the application...'
 ifeq ($(PLATFORM),osx)
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
+ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
 	$(_Q)hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
@@ -296,6 +298,7 @@ ifeq ($(PLATFORM),osx)
 	$(_Q)hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ > /dev/null
 	$(_Q)hdiutil convert $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg -format UDZO -o $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
 	$(_Q)rm -f $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
+endif
 endif
 
 #==============================================================================
