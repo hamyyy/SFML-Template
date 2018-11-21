@@ -1,7 +1,8 @@
 CFLAGS := -g -Og $(CFLAGS) -pg
 
 BUILD_FLAGS := \
-	-pg
+	-pg \
+	-ObjC++
 
 BUILD_MACROS := \
 	_DEBUG

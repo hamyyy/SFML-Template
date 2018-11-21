@@ -1,4 +1,7 @@
 CFLAGS := -Os $(CFLAGS)
 
+BUILD_FLAGS := \
+	-ObjC++
+
 BUILD_MACROS= \
 	NDEBUG
