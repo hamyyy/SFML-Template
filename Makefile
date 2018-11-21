@@ -247,7 +247,11 @@ endif
 # Production recipes
 rmprod:
 	$(call color_reset)
+ifeq ($(PLATFORM),osx)
+	-$(_Q)rm -f -r $(PRODUCTION_FOLDER_MACOS)
+else
 	-$(_Q)rm -f -r $(PRODUCTION_FOLDER)
+endif
 
 mkdirprod:
 	$(call color_reset)
