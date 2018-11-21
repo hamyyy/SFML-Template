@@ -1,7 +1,7 @@
 {
-	"CFBundleName": "sfmlapp",
-	"CFBundleDisplayName": "My SFML App",
-	"CFBundleIdentifier": "com.developer.sfml-vscode-boilerplate",
+	"CFBundleName": "${PRODUCTION_MACOS_BUNDLE_NAME}",
+	"CFBundleDisplayName": "${PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME}",
+	"CFBundleIdentifier": "com.${PRODUCTION_MACOS_BUNDLE_DEVELOPER}.${PRODUCTION_MACOS_BUNDLE_NAME}",
 	"CFBundleVersion": "0.0.1.1",
 	"CFBundleDevelopmentRegion": "en",
 	"CFBundleInfoDictionaryVersion": "6.0",

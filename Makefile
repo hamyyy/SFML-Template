@@ -64,9 +64,12 @@ _LINK_LIBRARIES := $(LINK_LIBRARIES:%=-l%)
 #==============================================================================
 # MacOS Specific
 MACOS_ICON?=icon
+PRODUCTION_MACOS_BUNDLE_COMPANY?=developer
+PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME?=App
+PRODUCTION_MACOS_BUNDLE_NAME?=App
 
 ifeq ($(PLATFORM),osx)
-	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(NAME).app/Contents
+	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(PRODUCTION_MACOS_BUNDLE_NAME).app/Contents
 	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES)
 	PRODUCTION_MACOS_FRAMEWORKS := $(PRODUCTION_MACOS_FRAMEWORKS:%=%.framework)
@@ -262,6 +265,9 @@ endif
 	makeicns -in env/osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
 	plutil -convert binary1 env/osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
 	plutil -replace CFBundleExecutable -string $(NAME) $(PRODUCTION_FOLDER)/Info.plist
+	plutil -replace CFBundleName -string $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
+	plutil -replace CFBundleDisplayName -string $(PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME) $(PRODUCTION_FOLDER)/Info.plist
+	plutil -replace CFBundleIdentifier -string com.$(PRODUCTION_MACOS_BUNDLE_DEVELOPER).$(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)/MacOS
 else
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
