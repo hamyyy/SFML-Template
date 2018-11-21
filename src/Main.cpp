@@ -2,7 +2,7 @@
 
 int main()
 {
-    initBundle();
+    initCFBundle();
 
     std::cout << "Hello World!" << std::endl;
 

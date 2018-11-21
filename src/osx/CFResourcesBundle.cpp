@@ -1,6 +1,6 @@
-#include "ResourcesBundle.hpp"
+#include "CFResourcesBundle.hpp"
 
-void initBundle()
+void initCFBundle()
 {
 #ifdef __APPLE__
     // This function ensures the working directory is set inside of the bundle if in production mode
