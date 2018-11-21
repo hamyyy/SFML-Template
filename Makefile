@@ -252,6 +252,7 @@ releasetoprod: $(_EXE)
 	$(call color_reset)
 ifeq ($(PLATFORM),osx)
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Resources
+	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Frameworks
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/MacOS
 ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
@@ -270,6 +271,10 @@ makeproduction: rmprod mkdirprod releasetoprod
 	@echo -n 'Adding dynamic libraries & project dependencies...'
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
+ifeq ($(PLATFORM),osx)
+	MACOS_FRAMEWORKS=$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '*.framework')
+	$(foreach framework,$(MACOS_FRAMEWORKS),$(shell cp -r $(framework) $(PRODUCTION_FOLDER)\Frameworks))
+endif
 	@echo ' Done'
 
 #==============================================================================

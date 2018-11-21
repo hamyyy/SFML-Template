@@ -16,4 +16,16 @@ BUILD_FLAGS := \
 	-framework CoreFoundation
 
 PRODUCTION_DEPENDENCIES := \
-	$(PRODUCTION_DEPENDENCIES)
+	$(PRODUCTION_DEPENDENCIES) \
+	sfml-audio.framework \
+	sfml-graphics.framework \
+	sfml-network.framework \
+	sfml-system.framework \
+	sfml-window.framework \
+	FLAC.framework \
+	ogg.framework \
+	vorbis.framework \
+	vorbisenc.framework \
+	vorbisfile.framework \
+	OpenAL.framework \
+	freetype.framework
