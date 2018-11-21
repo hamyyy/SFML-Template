@@ -287,10 +287,10 @@ makeproduction: rmprod mkdirprod releasetoprod
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 	@echo ' Done'
-	@echo 'Creating the dmg image for the application...'
 ifeq ($(PLATFORM),osx)
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
 ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
+	@echo 'Creating the dmg image for the application...'
 	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
 	$(_Q)hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
