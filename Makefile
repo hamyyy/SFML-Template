@@ -245,12 +245,17 @@ ifeq ($(shell brew ls --versions makeicns),)
 endif
 	makeicns -in env/osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
 	plutil -convert binary1 env/osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
-endif
+	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)/MacOS
+else
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
+endif
 
 makeproduction: rmprod mkdirprod releasetoprod
 	$(call color_reset)
 	@echo -n 'Adding dynamic libraries & project dependencies...'
+ifeq ($(PLATFORM),osx)
+PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/Resources
+endif
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER) -name '$(excl)' -delete))
 	@echo ' Done'
