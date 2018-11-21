@@ -269,7 +269,11 @@ ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
 	$(call color_reset)
 endif
+ifeq ($(CLEAN_OUTPUT),true)
+	$(_Q)makeicns -in env/osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns > /dev/null
+else
 	$(_Q)makeicns -in env/osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
+endif
 	$(_Q)plutil -convert binary1 env/osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleExecutable -string $(NAME) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleName -string $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
@@ -290,9 +294,9 @@ makeproduction: rmprod mkdirprod releasetoprod
 ifeq ($(PLATFORM),osx)
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
 	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
-	$(_Q)hdiutil mount $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
+	$(_Q)hdiutil mount $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
-	$(_Q)hdiutil unmount /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
+	$(_Q)hdiutil unmount /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ > /dev/null
 endif
 
 #==============================================================================
