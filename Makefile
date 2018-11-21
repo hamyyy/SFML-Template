@@ -66,8 +66,6 @@ _LINK_LIBRARIES := $(patsubst %,-l%,$(LINK_LIBRARIES))
 MACOS_ICON?=icon
 
 ifeq ($(PLATFORM),osx)
-	SOURCE_FILES := $(SOURCE_FILES) osx/ResourcePath.mm
-	PROJECT_DIRS := $(PROJECT_DIRS) osx
 	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(NAME).app/Contents
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES) Resources
 	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
@@ -90,7 +88,6 @@ endif
 _OBJS := $(_OBJS:.c=.o)
 _OBJS := $(_OBJS:.cpp=.o)
 _OBJS := $(_OBJS:.cc=.o)
-_OBJS := $(_OBJS:.mm=.o)
 OBJS := $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
 OBJ_SUBDIRS := $(patsubst %,$(OBJ_DIR)/%,$(PROJECT_DIRS))
 
@@ -103,7 +100,6 @@ endif
 _DEPS := $(_DEPS:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
 _DEPS := $(_DEPS:.cc=.d)
-_DEPS := $(_DEPS:.mm=.d)
 DEPS := $(patsubst %,$(DEP_DIR)/%,$(_DEPS))
 DEP_SUBDIRS := $(patsubst %,$(DEP_DIR)/%,$(PROJECT_DIRS))
 
@@ -183,15 +179,6 @@ ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
 endif
 	$(_Q)$(OBJ_COMPILE)
-	$(POST_COMPILE)
-
-$(OBJ_DIR)/%.o: src/%.mm
-$(OBJ_DIR)/%.o: src/%.mm $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call color_reset)
-ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
-endif
-	$(_Q)$(CC) -framework Foundation -lstdc++ -o $@ -c $<
 	$(POST_COMPILE)
 
 $(OBJ_DIR)/%.res: src/%.rc
