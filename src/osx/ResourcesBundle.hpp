@@ -3,6 +3,7 @@
 
 #ifdef __APPLE__
 #include "CoreFoundation/CoreFoundation.h"
+#include <string>
 #endif
 
 void initBundle();

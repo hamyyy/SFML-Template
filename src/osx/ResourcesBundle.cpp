@@ -12,9 +12,9 @@ void initBundle()
     }
     CFRelease(resourcesURL);
 
-    std::string pathStr(path);
+    std::string pathStr = path;
     std::size_t found = pathStr.find(".app");
-    if (found!=std::string::npos)
+    if (found != std::string::npos)
         chdir(path);
 
 #endif
