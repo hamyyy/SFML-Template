@@ -293,6 +293,7 @@ ifeq ($(PLATFORM),osx)
 	$(_Q)hdiutil mount $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
 	$(_Q)hdiutil unmount /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ > /dev/null
+	$(_Q)hdiutil convert $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg -format UDZO -o $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
 endif
 
 #==============================================================================
