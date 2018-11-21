@@ -12,9 +12,9 @@ void initBundle()
     }
     CFRelease(resourcesURL);
 
-    bool result = false;
-    CFStringFindWithOptions((UInt8 *)path, CFSTR(".app"), PATH_MAX, CFStringCompareFlags::compareBackwards, result);
-    if (result)
+    std::string pathStr(path);
+    std::size_t found = pathStr.find(".app");
+    if (found!=std::string::npos)
         chdir(path);
 
 #endif
