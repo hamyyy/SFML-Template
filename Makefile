@@ -270,7 +270,6 @@ endif
 	$(_Q)plutil -replace CFBundleDisplayName -string "$(PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME)" $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleIdentifier -string com.$(PRODUCTION_MACOS_BUNDLE_DEVELOPER).$(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)/MacOS
-	@echo ' Done'
 else
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 endif
