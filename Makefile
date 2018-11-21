@@ -69,7 +69,7 @@ ifeq ($(PLATFORM),osx)
 	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(NAME).app/Contents
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES) Resources
 	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
-	MACOS_FRAMEWORKS=$(shell find $(PRODUCTION_DEPENDENCIES) -name '*.framework')
+	MACOS_FRAMEWORKS := $(shell find $(PRODUCTION_DEPENDENCIES) -name '*.framework')
 endif
 
 #==============================================================================
@@ -273,8 +273,7 @@ makeproduction: rmprod mkdirprod releasetoprod
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 ifeq ($(PLATFORM),osx)
-	$(foreach excl,$(MACOS_FRAMEWORKS),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
-	$(foreach framework,$(MACOS_FRAMEWORKS),$(shell cp -r $(framework) $(PRODUCTION_FOLDER)/Frameworks/$(framework)))
+	$(foreach framework,$(MACOS_FRAMEWORKS),$(shell cp -r $(framework) $(PRODUCTION_FOLDER)/Frameworks))
 endif
 	@echo ' Done'
 

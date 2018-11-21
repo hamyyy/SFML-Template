@@ -17,15 +17,15 @@ BUILD_FLAGS := \
 
 PRODUCTION_DEPENDENCIES := \
 	$(PRODUCTION_DEPENDENCIES) \
-	/Library/Frameworks/sfml-audio.framework \
-	/Library/Frameworks/sfml-graphics.framework \
-	/Library/Frameworks/sfml-network.framework \
-	/Library/Frameworks/sfml-system.framework \
-	/Library/Frameworks/sfml-window.framework \
-	/Library/Frameworks/FLAC.framework \
-	/Library/Frameworks/ogg.framework \
-	/Library/Frameworks/vorbis.framework \
-	/Library/Frameworks/vorbisenc.framework \
-	/Library/Frameworks/vorbisfile.framework \
-	/Library/Frameworks/OpenAL.framework \
-	/Library/Frameworks/freetype.framework
+	sfml-audio.framework \
+	sfml-graphics.framework \
+	sfml-network.framework \
+	sfml-system.framework \
+	sfml-window.framework \
+	FLAC.framework \
+	ogg.framework \
+	vorbis.framework \
+	vorbisenc.framework \
+	vorbisfile.framework \
+	OpenAL.framework \
+	freetype.framework
