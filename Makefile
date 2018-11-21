@@ -291,13 +291,13 @@ ifeq ($(PLATFORM),osx)
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
 	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
 	$(_Q)hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
-	@_MACOS_DEVICES=$(hdiutil attach myimg.dmg | cut -f 1)
+	@_MACOS_DEVICES=$(hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg | cut -f 1)
 	@_MACOS_VOLUME=$(echo $_MACOS_DEVICES | cut -f 1 -d ' ')
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app $(_MACOS_VOLUME)
-	-$(_Q)rm -rf $(_MACOS_VOLUME)/.fseventsd
+	$(_Q)rm -rf $(_MACOS_VOLUME)/.fseventsd
 	$(_Q)hdiutil detach $(_MACOS_VOLUME)/ > /dev/null
 	$(_Q)hdiutil convert $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg -format UDZO -o $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
-	$(_Q)rm -f $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
+	-$(_Q)rm -f $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
 endif
 
 #==============================================================================
