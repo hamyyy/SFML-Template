@@ -68,7 +68,7 @@ MACOS_ICON?=icon
 ifeq ($(PLATFORM),osx)
 	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(NAME).app/Contents
 	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
-	MACOS_FRAMEWORKS := $(patsubst /Library/Frameworks/%,%,$(shell find $(PRODUCTION_DEPENDENCIES) -name '*.framework'))
+	MACOS_FRAMEWORKS := $(patsubst %,/Library/Frameworks/%,$(shell find $(PRODUCTION_DEPENDENCIES) -name '*.framework'))
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES:.framework=.d)
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES) Resources
 endif
