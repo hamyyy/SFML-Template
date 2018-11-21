@@ -272,7 +272,7 @@ makeproduction: rmprod mkdirprod releasetoprod
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 ifeq ($(PLATFORM),osx)
-	MACOS_FRAMEWORKS=$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '*.framework')
+MACOS_FRAMEWORKS=$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '*.framework')
 	$(foreach framework,$(MACOS_FRAMEWORKS),$(shell cp -r $(framework) $(PRODUCTION_FOLDER)/Frameworks/$(framework)))
 endif
 	@echo ' Done'
