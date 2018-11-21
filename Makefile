@@ -50,7 +50,7 @@ NAME?=game.exe
 
 #==============================================================================
 # Project .cpp or .rc files (relative to src directory)
-SOURCE_FILES := $(patsubst src/%,%,$(shell find src -name '*.cpp' -o -name '*.c' -o -name '*.rc'))
+SOURCE_FILES := $(patsubst src/%,%,$(shell find src -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc'))
 # Project subdirectories within src/ that contain source files
 PROJECT_DIRS := $(patsubst src/%,%,$(shell find src -mindepth 1 -maxdepth 99 -type d))
 
@@ -66,6 +66,7 @@ _LINK_LIBRARIES := $(patsubst %,-l%,$(LINK_LIBRARIES))
 MACOS_ICON?=icon
 
 ifeq ($(PLATFORM),osx)
+	SOURCE_FILES := $(SOURCE_FILES) src/osx/ResourcePath.mm
 	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(NAME).app/Contents
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES) Resources
 	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
@@ -87,6 +88,8 @@ else
 endif
 _OBJS := $(_OBJS:.c=.o)
 _OBJS := $(_OBJS:.cpp=.o)
+_OBJS := $(_OBJS:.cc=.o)
+_OBJS := $(_OBJS:.mm=.o)
 OBJS := $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
 OBJ_SUBDIRS := $(patsubst %,$(OBJ_DIR)/%,$(PROJECT_DIRS))
 
@@ -98,6 +101,8 @@ else
 endif
 _DEPS := $(_DEPS:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
+_DEPS := $(_DEPS:.cc=.d)
+_DEPS := $(_DEPS:.mm=.d)
 DEPS := $(patsubst %,$(DEP_DIR)/%,$(_DEPS))
 DEP_SUBDIRS := $(patsubst %,$(DEP_DIR)/%,$(PROJECT_DIRS))
 
@@ -170,6 +175,15 @@ endif
 	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
 
+$(OBJ_DIR)/%.o: src/%.cc
+$(OBJ_DIR)/%.o: src/%.cc $(DEP_DIR)/%.d | $(_DIRECTORIES)
+	$(call color_reset)
+ifeq ($(CLEAN_OUTPUT),true)
+	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
+endif
+	$(_Q)$(OBJ_COMPILE)
+	$(POST_COMPILE)
+
 $(OBJ_DIR)/%.res: src/%.rc
 $(OBJ_DIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
 	$(call color_reset)
@@ -177,6 +191,15 @@ ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
 endif
 	$(_Q)$(RC_COMPILE)
+
+$(OBJ_DIR)/%.o: src/%.mm
+$(OBJ_DIR)/%.o: src/%.mm $(DEP_DIR)/%.d | $(_DIRECTORIES)
+	$(call color_reset)
+ifeq ($(CLEAN_OUTPUT),true)
+	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
+endif
+	$(_Q)$(CC) -framework Foundation $< -o $@
+	$(POST_COMPILE)
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 ifeq ($(CLEAN_OUTPUT),false)
