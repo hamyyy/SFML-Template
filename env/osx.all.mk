@@ -15,17 +15,19 @@ MACOS_ICON := sfml
 BUILD_FLAGS := \
 	-framework CoreFoundation
 
+PRODUCTION_MACOS_FRAMEWORKS := \
+	sfml-audio \
+	sfml-graphics \
+	sfml-network \
+	sfml-system \
+	sfml-window \
+	FLAC \
+	ogg \
+	vorbis \
+	vorbisenc \
+	vorbisfile \
+	OpenAL \
+	freetype
+
 PRODUCTION_DEPENDENCIES := \
-	$(PRODUCTION_DEPENDENCIES) \
-	sfml-audio.framework \
-	sfml-graphics.framework \
-	sfml-network.framework \
-	sfml-system.framework \
-	sfml-window.framework \
-	FLAC.framework \
-	ogg.framework \
-	vorbis.framework \
-	vorbisenc.framework \
-	vorbisfile.framework \
-	OpenAL.framework \
-	freetype.framework
+	$(PRODUCTION_DEPENDENCIES)

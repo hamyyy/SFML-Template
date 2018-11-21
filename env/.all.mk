@@ -9,6 +9,8 @@ LINK_LIBRARIES := \
 	sfml-window \
 	sfml-system
 
+PRODUCTION_MACOS_FRAMEWORKS := \
+
 PRODUCTION_FOLDER := build
 
 PRODUCTION_EXCLUDE := \

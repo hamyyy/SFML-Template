@@ -55,11 +55,11 @@ SOURCE_FILES := $(patsubst src/%,%,$(shell find src -name '*.cpp' -o -name '*.c'
 PROJECT_DIRS := $(patsubst src/%,%,$(shell find src -mindepth 1 -maxdepth 99 -type d))
 
 # Add prefixes to the above variables
-_LIB_DIRS := $(patsubst %,-L%,$(LIB_DIRS))
+_LIB_DIRS := $(LIB_DIRS:%=-L%)
 _INCLUDE_DIRS := $(patsubst %,-I%,src/ $(INCLUDE_DIRS))
 
-_BUILD_MACROS := $(patsubst %,-D%,$(BUILD_MACROS))
-_LINK_LIBRARIES := $(patsubst %,-l%,$(LINK_LIBRARIES))
+_BUILD_MACROS := $(BUILD_MACROS:%=-D%)
+_LINK_LIBRARIES := $(LINK_LIBRARIES:%=-l%)
 
 #==============================================================================
 # MacOS Specific
@@ -68,15 +68,14 @@ MACOS_ICON?=icon
 ifeq ($(PLATFORM),osx)
 	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(NAME).app/Contents
 	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
-	MACOS_FRAMEWORKS := $(patsubst %,/Library/Frameworks/%,$(shell find $(PRODUCTION_DEPENDENCIES) -name '*.framework'))
-	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES:*.framework=)
-	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES) Resources
+	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES)
+	PRODUCTION_MACOS_FRAMEWORKS := $(PRODUCTION_MACOS_FRAMEWORKS:%=%.framework)
 endif
 
 #==============================================================================
 # Directories & Dependencies
 BLD_DIR := bin/$(BUILD)
-BLD_DIR := $(patsubst %/,%,$(BLD_DIR))
+BLD_DIR := $(BLD_DIR:%/=%)
 _EXE := $(BLD_DIR)/$(NAME)
 _NAMENOEXT := $(NAME:.exe=)
 _NAMENOEXT := $(_NAMENOEXT:.dll=)
@@ -90,8 +89,8 @@ endif
 _OBJS := $(_OBJS:.c=.o)
 _OBJS := $(_OBJS:.cpp=.o)
 _OBJS := $(_OBJS:.cc=.o)
-OBJS := $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
-OBJ_SUBDIRS := $(patsubst %,$(OBJ_DIR)/%,$(PROJECT_DIRS))
+OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
+OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
 ifeq ($(PLATFORM),windows)
@@ -102,15 +101,15 @@ endif
 _DEPS := $(_DEPS:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
 _DEPS := $(_DEPS:.cc=.d)
-DEPS := $(patsubst %,$(DEP_DIR)/%,$(_DEPS))
-DEP_SUBDIRS := $(patsubst %,$(DEP_DIR)/%,$(PROJECT_DIRS))
+DEPS := $(_DEPS:%=$(DEP_DIR)/%)
+DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 
 ifeq ($(DUMP_ASSEMBLY),true)
 	ASM_DIR := $(BLD_DIR)/asm
 	_ASMS := $(_OBJS:%.res=)
 	_ASMS := $(_ASMS:.o=.o.asm)
-	ASMS := $(patsubst %,$(ASM_DIR)/%,$(_ASMS))
-	ASM_SUBDIRS := $(patsubst %,$(ASM_DIR)/%,$(PROJECT_DIRS))
+	ASMS := $(_ASMS:%=$(ASM_DIR)/%)
+	ASM_SUBDIRS := $(PROJECT_DIRS:%=$(ASM_DIR)/%)
 endif
 
 _DIRECTORIES := bin $(BLD_DIR) $(OBJ_DIR) $(OBJ_SUBDIRS) $(DEP_DIR) $(DEP_SUBDIRS) $(ASM_DIR) $(ASM_SUBDIRS)
@@ -160,7 +159,7 @@ $(OBJ_DIR)/%.o: src/%.c
 $(OBJ_DIR)/%.o: src/%.c $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
+	@echo $(<:$(OBJ_DIR)/%=%)
 endif
 	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
@@ -169,7 +168,7 @@ $(OBJ_DIR)/%.o: src/%.cpp
 $(OBJ_DIR)/%.o: src/%.cpp $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
+	@echo $(<:$(OBJ_DIR)/%=%)
 endif
 	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
@@ -178,7 +177,7 @@ $(OBJ_DIR)/%.o: src/%.cc
 $(OBJ_DIR)/%.o: src/%.cc $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
+	@echo $(<:$(OBJ_DIR)/%=%)
 endif
 	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
@@ -187,7 +186,7 @@ $(OBJ_DIR)/%.res: src/%.rc
 $(OBJ_DIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(patsubst $(OBJ_DIR)/%,%,$<)
+	@echo $(<:$(OBJ_DIR)/%=%)
 endif
 	$(_Q)$(RC_COMPILE)
 
@@ -274,7 +273,7 @@ makeproduction: rmprod mkdirprod releasetoprod
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 ifeq ($(PLATFORM),osx)
-	$(foreach framework,$(MACOS_FRAMEWORKS),$(shell cp -r $(framework) $(PRODUCTION_FOLDER)/Frameworks))
+	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
 endif
 	@echo ' Done'
 
