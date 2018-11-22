@@ -211,7 +211,9 @@ PRODUCTION_FOLDER=build
 
 ### Production building in MacOS
 
-Use Xcode to bundle your final build! It's as simple as that. Otherwise your game/program will launch through a terminal window. Follow the rest of the directions outlined [HERE](https://www.sfml-dev.org/tutorials/2.5/start-osx.php), copy your code-base in the Xcode project folder, and you should be good to go. 
+Option 1: The "Build: Production" script now works on MacOS. It creats a bundle & a basic dmg, but it does no code signing whatsoever! You must do that yourself (for now). There's a lot to document about, but for now: it requires a CFResourcesBundle.cpp file to change the working directory if run inside of a bundle, an Info.plist.json that gets compiled to the binary Info.plist, an icon that gets compiled to an *.icns file. See osx.all.mk for additional production environment variables. Be aware some of it is still pretty experimental.
+
+Option 2: Use Xcode to bundle your final build! It's as simple as that. Otherwise your game/program will launch through a terminal window. Follow the rest of the directions outlined [HERE](https://www.sfml-dev.org/tutorials/2.5/start-osx.php), copy your code-base in the Xcode project folder, and you should be good to go. 
 
 ## Profile: Debug
 
