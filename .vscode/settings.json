@@ -35,6 +35,7 @@
 		".vscode/_*.json": true,
 		".vscode/tasks.json": true,
 		".vscode/launch.json": true,
+		"env/osx/*.applescript": true,
 		"Makefile": true,
 		"build.sh": true,
 		"gmon.out": true,
