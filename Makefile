@@ -277,6 +277,7 @@ endif
 	$(_Q)plutil -replace CFBundleDisplayName -string "$(PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME)" $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleIdentifier -string com.$(PRODUCTION_MACOS_BUNDLE_DEVELOPER).$(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)/MacOS
+	$(_Q)chmod +x $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 else
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 endif
@@ -290,14 +291,20 @@ makeproduction: rmprod mkdirprod releasetoprod
 ifeq ($(PLATFORM),osx)
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
 ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
+	$(shell hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ &> /dev/null)
 	@echo 'Creating the dmg image for the application...'
-	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
-	$(_Q)hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
+	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg > /dev/null
+	$(_Q)hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg > /dev/null
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
 	-$(_Q)rm -rf /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.fseventsd
+	$(_Q)mkdir -p /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background
+	$(_Q)cp env/osx/dmg-background.png /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background
+	$(_Q)cp env/osx/dmg-background@2x.png /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background
+	$(_Q)ln -s /Applications /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/Applications
+	$(_Q)appName=$(PRODUCTION_MACOS_BUNDLE_NAME) osascript env/osx/dmg.applescript
 	$(_Q)hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ > /dev/null
-	$(_Q)hdiutil convert $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg -format UDZO -o $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
-	$(_Q)rm -f $(PRODUCTION_FOLDER_MACOS)/.$(PRODUCTION_MACOS_BUNDLE_NAME).dmg
+	$(_Q)hdiutil convert $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg -format UDZO -o $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
+	$(_Q)rm -f $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg
 	@echo 'Created $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg'
 endif
 endif
