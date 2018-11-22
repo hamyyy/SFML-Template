@@ -261,7 +261,6 @@ mkdirprod:
 releasetoprod: $(_EXE)
 	$(call color_reset)
 ifeq ($(PLATFORM),osx)
-	@echo 'Look ma, no Xcode!'
 	@echo 'Creating the MacOS application bundle...'
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Resources
 	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Frameworks
