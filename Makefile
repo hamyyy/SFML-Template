@@ -75,6 +75,7 @@ ifeq ($(PLATFORM),osx)
 	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES)
 	PRODUCTION_MACOS_FRAMEWORKS := $(PRODUCTION_MACOS_FRAMEWORKS:%=%.framework)
+	PRODUCTION_MACOS_BACKGROUND := env/osx/dmg-background
 endif
 
 #==============================================================================
@@ -297,8 +298,7 @@ ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
 	-$(_Q)rm -rf /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.fseventsd
 	$(_Q)mkdir -p /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background
-	$(_Q)cp env/osx/dmg-background.png /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background
-	$(_Q)cp env/osx/dmg-background@2x.png /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background
+	$(_Q)tiffutil -cathidpicheck $(PRODUCTION_MACOS_BACKGROUND).png $(PRODUCTION_MACOS_BACKGROUND)@2x.png -out /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background/background.tiff
 	$(_Q)ln -s /Applications /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/Applications
 	$(_Q)appName=$(PRODUCTION_MACOS_BUNDLE_NAME) osascript env/osx/dmg.applescript
 	$(_Q)hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ > /dev/null
