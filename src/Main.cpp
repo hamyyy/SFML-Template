@@ -2,10 +2,6 @@
 
 int main()
 {
-#ifdef __APPLE__
-    initCFBundle();
-#endif
-
     std::cout << "Hello World!" << std::endl;
 
     sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");

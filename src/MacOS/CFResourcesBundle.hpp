@@ -5,7 +5,11 @@
 #include "CoreFoundation/CoreFoundation.h"
 #include <string>
 
-void initCFBundle();
+class CFResourcesBundle
+{
+	public:
+		CFResourcesBundle();
+};
 #endif
 
 #endif // CF_RESOURCES_BUNDLE_HPP
