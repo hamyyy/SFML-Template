@@ -2,8 +2,9 @@
 #define CF_RESOURCES_BUNDLE_HPP
 
 #ifdef __APPLE__
+#include "PCH.hpp"
+
 #include "CoreFoundation/CoreFoundation.h"
-#include <string>
 
 class CFResourcesBundle
 {
@@ -13,4 +14,3 @@ class CFResourcesBundle
 #endif
 
 #endif // CF_RESOURCES_BUNDLE_HPP
-

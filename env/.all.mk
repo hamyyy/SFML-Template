@@ -9,6 +9,8 @@ LINK_LIBRARIES := \
 	sfml-window \
 	sfml-system
 
+PRECOMPILED_HEADER := PCH
+
 PRODUCTION_FOLDER := build
 
 PRODUCTION_EXCLUDE := \

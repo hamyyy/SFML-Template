@@ -36,6 +36,10 @@ INCLUDE_DIRS?=
 # Link libraries (separated by spaces)
 LINK_LIBRARIES?=
 
+# Precompiled header filename (no extension)
+# This file will be excluded from Rebuild, but if the bin/(build) directory is removed, it will be as well.
+PRECOMPILED_HEADER?=stdafx
+
 # Build-specific preprocessor macros
 BUILD_MACROS?=
 # Build-specific compiler flags to be appended to the final build step (with prefix)
@@ -96,6 +100,7 @@ _OBJS := $(_OBJS:.c=.o)
 _OBJS := $(_OBJS:.cpp=.o)
 _OBJS := $(_OBJS:.cc=.o)
 OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
+OBJS_NO_PRECOMPILED := $(OBJS:$(OBJ_DIR)/$(PRECOMPILED_HEADER).o=)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
@@ -243,7 +248,7 @@ ifeq ($(CLEAN_OUTPUT),true)
 endif
 	$(_Q)$(RM) $(_EXE)
 	$(_Q)$(RM) $(DEPS)
-	$(_Q)$(RM) $(OBJS)
+	$(_Q)$(RM) $(OBJS_NO_PRECOMPILED)
 
 #==============================================================================
 # Production recipes
