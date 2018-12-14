@@ -38,7 +38,7 @@ LINK_LIBRARIES?=
 
 # Precompiled header filename (no extension)
 # This file will be excluded from Rebuild, but if the bin/(build) directory is removed, it will be as well.
-PRECOMPILED_HEADER?=stdafx
+PRECOMPILED_HEADER?=PCH
 
 # Build-specific preprocessor macros
 BUILD_MACROS?=

@@ -126,6 +126,12 @@ If set to 'true', the build output will only show the path/filename of the sourc
 **DUMP_ASSEMBLY**:  
 If set to 'true', *.o.asm files will generate within the bin/(Build)/asm folder. The bin folder is hidden from VS Code by default, but you can open the asm folder in a seaparate instance and browse the assembly that way if you'd like to, or customize it from settings.json.
 
+**PRECOMPILED_HEADER**:
+Define a precompiled header file (no extension). Defaults to "PCH" if none is defined in the env files.
+```makefile
+PRECOMPILED_HEADER:=stdafx
+```
+
 **LIB_DIRS**:  
 Add any additional lib directories (full path)
 ```makefile
