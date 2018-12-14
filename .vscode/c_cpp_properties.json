@@ -19,6 +19,7 @@
             "intelliSenseMode": "clang-x64",
             "includePath": [
                 "${workspaceFolder}/src/**",
+                "/Library/Frameworks/SFML.framework/Versions/2.5.1/**",
                 "/usr/local/include/**",
                 "/usr/include/**",
                 "${workspaceRoot}/src"
