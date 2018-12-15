@@ -4,11 +4,10 @@
             "name": "Linux",
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                "${workspaceFolder}/src/**",
-                "~/SFML-2.5.1/include/**",
+                "${workspaceFolder}/src",
+                "~/SFML-2.5.1/include",
                 "/usr/local/include/**",
-                "/usr/include/**",
-                "${workspaceRoot}/src"
+                "/usr/include/**"
             ],
             "defines": [],
             "cStandard": "c11",
@@ -21,11 +20,9 @@
             "name": "Mac",
             "intelliSenseMode": "clang-x64",
             "includePath": [
-                "${workspaceFolder}/src/**",
-                "/Library/Frameworks/SFML.framework/Versions/2.5.1/**",
+                "${workspaceFolder}/src",
                 "/usr/local/include/**",
-                "/usr/include/**",
-                "${workspaceRoot}/src"
+                "/usr/include/**"
             ],
             "defines": [],
             "cStandard": "c11",
@@ -39,9 +36,9 @@
             "intelliSenseMode": "gcc-x64",
             "compilerPath": "C:/mingw32/bin/gcc.exe",
             "includePath": [
-                "${workspaceFolder}/src/**",
-                "C:/SFML-2.5.1/include/**",
-                "${workspaceRoot}/src"
+                "${workspaceFolder}/src",
+                "C:/SFML-2.5.1/include",
+                "C:/SharedLibs/lib"
             ],
             "defines": [],
             "cStandard": "c11",
