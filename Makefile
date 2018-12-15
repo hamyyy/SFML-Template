@@ -151,8 +151,13 @@ CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall
 CFLAGS?=-g $(CFLAGS_ALL)
 CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 
-PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
-OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) -include $(_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
+ifeq ($(PLATFORM),osx)
+	PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) -emit-pch -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
+	OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) -include-pch $(_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
+else
+	PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
+	OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) -include $(_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
+endif
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ASM_COMPILE = objdump -d -C -Mintel $< > $@
 POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
