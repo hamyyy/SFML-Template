@@ -53,19 +53,20 @@ BUILD_DEPENDENCIES?=
 NAME?=game.exe
 
 #==============================================================================
-# Project .cpp or .rc files (relative to src directory)
-SOURCE_FILES := $(patsubst src/%,%,$(shell find src -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc'))
-# Project subdirectories within src/ that contain source files
-PROJECT_DIRS := $(patsubst src/%,%,$(shell find src -mindepth 1 -maxdepth 99 -type d))
+# The source file directory
+SRC_DIR := src
+
+# Project .cpp or .rc files (relative to $(SRC_DIR) directory)
+SOURCE_FILES := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc'))
+# Project subdirectories within $(SRC_DIR)/ that contain source files
+PROJECT_DIRS := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -mindepth 1 -maxdepth 99 -type d))
 
 # Add prefixes to the above variables
 _LIB_DIRS := $(LIB_DIRS:%=-L%)
-_INCLUDE_DIRS := $(patsubst %,-I%,src/ $(INCLUDE_DIRS))
+_INCLUDE_DIRS := $(patsubst %,-I%,$(SRC_DIR)/ $(INCLUDE_DIRS))
 
 _BUILD_MACROS := $(BUILD_MACROS:%=-D%)
 _LINK_LIBRARIES := $(LINK_LIBRARIES:%=-l%)
-
-_PRECOMPILED_HEADER := $(patsubst src/%,%,$(shell find src -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h'))
 
 #==============================================================================
 # MacOS Specific
@@ -102,7 +103,6 @@ _OBJS := $(_OBJS:.c=.o)
 _OBJS := $(_OBJS:.cpp=.o)
 _OBJS := $(_OBJS:.cc=.o)
 OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
-OBJS_NO_PRECOMPILED := $(OBJS:$(OBJ_DIR)/$(PRECOMPILED_HEADER).o=)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
@@ -111,11 +111,17 @@ ifeq ($(PLATFORM),windows)
 else
 	_DEPS := $(SOURCE_FILES:%.rc=)
 endif
+_DEPS := $(PRECOMPILED_HEADER).d $(_DEPS)
 _DEPS := $(_DEPS:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
 _DEPS := $(_DEPS:.cc=.d)
 DEPS := $(_DEPS:%=$(DEP_DIR)/%)
 DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
+
+_PCH_HFILE := $(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh')
+_PCH_EXT := $(_PCH_HFILE:$(SRC_DIR)/$(PRECOMPILED_HEADER).%=%)
+_PCH := $(_PCH_HFILE:$(SRC_DIR)/%=$(OBJ_DIR)/%)
+_PCH_GCH := $(_PCH).gch
 
 ifeq ($(DUMP_ASSEMBLY),true)
 	ASM_DIR := $(BLD_DIR)/asm
@@ -145,7 +151,8 @@ CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall
 CFLAGS?=-g $(CFLAGS_ALL)
 CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 
-OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) -include $(_PRECOMPILED_HEADER) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
+PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
+OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) -include $(_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ASM_COMPILE = objdump -d -C -Mintel $< > $@
 POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
@@ -159,6 +166,7 @@ endef
 #==============================================================================
 # Build Scripts
 all:
+	@$(MAKE) -k -s --no-print-directory makepch
 	@$(MAKE) -j$(MAX_PARALLEL_JOBS) -k --no-print-directory makebuild
 
 rebuild: clean all
@@ -168,8 +176,8 @@ buildprod: all makeproduction
 #==============================================================================
 
 # Build Recipes
-$(OBJ_DIR)/%.o: src/%.c
-$(OBJ_DIR)/%.o: src/%.c $(DEP_DIR)/%.d | $(_DIRECTORIES)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(<:$(OBJ_DIR)/%=%)
@@ -177,8 +185,8 @@ endif
 	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
 
-$(OBJ_DIR)/%.o: src/%.cpp
-$(OBJ_DIR)/%.o: src/%.cpp $(DEP_DIR)/%.d | $(_DIRECTORIES)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(<:$(OBJ_DIR)/%=%)
@@ -186,8 +194,8 @@ endif
 	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
 
-$(OBJ_DIR)/%.o: src/%.cc
-$(OBJ_DIR)/%.o: src/%.cc $(DEP_DIR)/%.d | $(_DIRECTORIES)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(<:$(OBJ_DIR)/%=%)
@@ -195,8 +203,17 @@ endif
 	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
 
-$(OBJ_DIR)/%.res: src/%.rc
-$(OBJ_DIR)/%.res: src/%.rc src/%.h | $(_DIRECTORIES)
+$(OBJ_DIR)/%.$(_PCH_EXT).gch : $(SRC_DIR)/%.$(_PCH_EXT)
+$(OBJ_DIR)/%.$(_PCH_EXT).gch : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_DIR)/%.d | $(_DIRECTORIES)
+	$(call color_reset)
+ifeq ($(CLEAN_OUTPUT),true)
+	@echo $(<:$(OBJ_DIR)/%=%)
+endif
+	$(_Q)$(PCH_COMPILE)
+	$(POST_COMPILE)
+
+$(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc
+$(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(SRC_DIR)/%.h | $(_DIRECTORIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(<:$(OBJ_DIR)/%=%)
@@ -217,7 +234,7 @@ $(BLD_DIR)/%.so:
 	$(call color_reset)
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
-$(_EXE): $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
+$(_EXE): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo
@@ -231,11 +248,13 @@ else
 	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 
+makepch: $(_PCH_GCH)
+
 makebuild: $(_EXE)
 	$(call color_reset)
 	@echo '$(BUILD) build target is up to date.'
 
-$(_DIRECTORIES):
+$(_DIRECTORIES) :
 ifeq ($(CLEAN_OUTPUT),false)
 	$(call color_reset)
 endif
@@ -250,7 +269,7 @@ ifeq ($(CLEAN_OUTPUT),true)
 endif
 	$(_Q)$(RM) $(_EXE)
 	$(_Q)$(RM) $(DEPS)
-	$(_Q)$(RM) $(OBJS_NO_PRECOMPILED)
+	$(_Q)$(RM) $(OBJS)
 
 #==============================================================================
 # Production recipes
