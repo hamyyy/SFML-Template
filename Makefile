@@ -65,6 +65,8 @@ _INCLUDE_DIRS := $(patsubst %,-I%,src/ $(INCLUDE_DIRS))
 _BUILD_MACROS := $(BUILD_MACROS:%=-D%)
 _LINK_LIBRARIES := $(LINK_LIBRARIES:%=-l%)
 
+_PRECOMPILED_HEADER := $(patsubst src/%,%,$(shell find src -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h'))
+
 #==============================================================================
 # MacOS Specific
 MACOS_ICON?=icon
@@ -143,7 +145,7 @@ CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall
 CFLAGS?=-g $(CFLAGS_ALL)
 CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 
-OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
+OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) -include $(_PRECOMPILED_HEADER) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ASM_COMPILE = objdump -d -C -Mintel $< > $@
 POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
