@@ -111,7 +111,6 @@ ifeq ($(PLATFORM),windows)
 else
 	_DEPS := $(SOURCE_FILES:%.rc=)
 endif
-_DEPS := $(PRECOMPILED_HEADER).d $(_DEPS)
 _DEPS := $(_DEPS:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
 _DEPS := $(_DEPS:.cc=.d)

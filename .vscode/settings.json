@@ -87,7 +87,9 @@
 		"vector": "cpp",
 		"fstream": "cpp",
 		"iostream": "cpp",
-		"cassert": "cpp"
+		"cassert": "cpp",
+		"string": "cpp",
+		"map": "cpp"
 	},
 
 	"C_Cpp.autocomplete": "Default",
