@@ -20,9 +20,9 @@
 #include <list>
 #include <deque>
 #include <memory>
-#include <functional>
 
 // Additional C/C++ libs
+#include <functional>
 #include <cassert>
 #include <cmath>
 #include <sstream>
