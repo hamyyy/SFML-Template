@@ -12,7 +12,10 @@
             ],
             "defines": [],
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++17",
+            "forcedInclude": [
+                "${workspaceFolder}/src/PCH.hpp"
+            ]
         },
         {
             "name": "Mac",
@@ -26,7 +29,10 @@
             ],
             "defines": [],
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++17",
+            "forcedInclude": [
+                "${workspaceFolder}/src/PCH.hpp"
+            ]
         },
         {
             "name": "Win32",
@@ -39,7 +45,10 @@
             ],
             "defines": [],
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++17",
+            "forcedInclude": [
+                "${workspaceFolder}/src/PCH.hpp"
+            ]
         }
     ],
     "version": 4
