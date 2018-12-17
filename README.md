@@ -127,9 +127,11 @@ If set to 'true', the build output will only show the path/filename of the sourc
 If set to 'true', *.o.asm files will generate within the bin/(Build)/asm folder. The bin folder is hidden from VS Code by default, but you can open the asm folder in a seaparate instance and browse the assembly that way if you'd like to, or customize it from settings.json.
 
 **PRECOMPILED_HEADER**:
-Define a precompiled header file (no extension). Defaults to "PCH" if none is defined in the env files. This file will be excluded from Rebuild/Build tasks, but if the bin/(build) directory is removed, it will be as well.
+Define a precompiled header file (no extension). If this variable is not defined in the env files, then the precompiled header will not be used. This file will be excluded from Rebuild/Build tasks, but if the bin/(build) directory is removed, it will be as well.
+
+If you're unfamiliar with how precompiled headers work, these speed up compile time by precompiling commonly used includes like standard libraries and the SFML includes. The PCH.hpp gets implicitly included in each cpp file, so you don't need to manually include it each time like with Visual Studio. When it actually compiles, it can be large, but it does not affect the size of the final binary (which would be the same size with or without the PCH). 
 ```makefile
-PRECOMPILED_HEADER:=stdafx
+PRECOMPILED_HEADER:=PCH
 ```
 
 **LIB_DIRS**:  

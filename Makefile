@@ -38,7 +38,7 @@ LINK_LIBRARIES?=
 
 # Precompiled header filename (no extension)
 # This file will be excluded from Rebuild, but if the bin/(build) directory is removed, it will be as well.
-PRECOMPILED_HEADER?=PCH
+PRECOMPILED_HEADER?=
 
 # Build-specific preprocessor macros
 BUILD_MACROS?=
@@ -120,7 +120,9 @@ DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 _PCH_HFILE := $(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh')
 _PCH_EXT := $(_PCH_HFILE:$(SRC_DIR)/$(PRECOMPILED_HEADER).%=%)
 _PCH := $(_PCH_HFILE:$(SRC_DIR)/%=$(OBJ_DIR)/%)
-_PCH_GCH := $(_PCH).gch
+ifneq ($(_PCH),)
+	_PCH_GCH := $(_PCH).gch
+endif
 
 ifeq ($(DUMP_ASSEMBLY),true)
 	ASM_DIR := $(BLD_DIR)/asm
@@ -151,7 +153,11 @@ CFLAGS?=-g $(CFLAGS_ALL)
 CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 
 PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
-OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) -include $(_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
+ifeq ($(_PCH),)
+	OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
+else
+	OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) -include $(_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
+endif
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ASM_COMPILE = objdump -d -C -Mintel $< > $@
 POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
