@@ -56,6 +56,7 @@ NAME?=game.exe
 # The source file directory
 SRC_DIR := src
 
+
 # Project .cpp or .rc files (relative to $(SRC_DIR) directory)
 SOURCE_FILES := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc'))
 # Project subdirectories within $(SRC_DIR)/ that contain source files
@@ -93,12 +94,10 @@ _EXE := $(BLD_DIR)/$(NAME)
 _NAMENOEXT := $(NAME:.exe=)
 _NAMENOEXT := $(_NAMENOEXT:.dll=)
 
+_SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES:.rc=.res),$(SOURCE_FILES:%.rc=))
+
 OBJ_DIR := $(BLD_DIR)/obj
-ifeq ($(PLATFORM),windows)
-	_OBJS := $(SOURCE_FILES:.rc=.res)
-else
-	_OBJS := $(SOURCE_FILES:%.rc=)
-endif
+_OBJS := $(_SOURCES_IF_RC)
 _OBJS := $(_OBJS:.c=.o)
 _OBJS := $(_OBJS:.cpp=.o)
 _OBJS := $(_OBJS:.cc=.o)
@@ -106,11 +105,7 @@ OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
-ifeq ($(PLATFORM),windows)
-	_DEPS := $(SOURCE_FILES:.rc=.res)
-else
-	_DEPS := $(SOURCE_FILES:%.rc=)
-endif
+_DEPS := $(_SOURCES_IF_RC)
 _DEPS := $(_DEPS:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
 _DEPS := $(_DEPS:.cc=.d)
@@ -119,11 +114,8 @@ DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 
 _PCH_HFILE := $(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh')
 _PCH_EXT := $(_PCH_HFILE:$(SRC_DIR)/$(PRECOMPILED_HEADER).%=%)
-ifeq ($(PLATFORM),osx)
-	_PCH_COMPILER_EXT := pch
-else
-	_PCH_COMPILER_EXT := gch
-endif
+_PCH_COMPILER_EXT := $(if $(filter osx,$(PLATFORM)),p,g)ch
+
 
 _PCH := $(_PCH_HFILE:$(SRC_DIR)/%=$(OBJ_DIR)/%)
 ifneq ($(_PCH),)
@@ -138,17 +130,13 @@ ifeq ($(DUMP_ASSEMBLY),true)
 	ASM_SUBDIRS := $(PROJECT_DIRS:%=$(ASM_DIR)/%)
 endif
 
-_DIRECTORIES := bin $(BLD_DIR) $(OBJ_DIR) $(OBJ_SUBDIRS) $(DEP_DIR) $(DEP_SUBDIRS) $(ASM_DIR) $(ASM_SUBDIRS)
-_DIRECTORIES := $(sort $(_DIRECTORIES))
-_BUILD_DEPENDENCIES := $(filter %.dll,$(BUILD_DEPENDENCIES))
-_BUILD_DEPENDENCIES := $(patsubst %,$(BLD_DIR)/%,$(notdir $(_BUILD_DEPENDENCIES)))
+_DIRECTORIES := $(sort bin $(BLD_DIR) $(OBJ_DIR) $(OBJ_SUBDIRS) $(DEP_DIR) $(DEP_SUBDIRS) $(ASM_DIR) $(ASM_SUBDIRS))
+_BUILD_DEPENDENCIES := $(patsubst %,$(BLD_DIR)/%,$(notdir $(filter %.dll,$(BUILD_DEPENDENCIES))))
+
+_CLEAN := $(filter true,$(CLEAN_OUTPUT))
 
 # Quiet flag
-ifeq ($(CLEAN_OUTPUT),true)
-	_Q=@
-else
-	_Q=
-endif
+_Q := $(if $(_CLEAN),@)
 
 #==============================================================================
 # Compiler & flags
@@ -156,23 +144,18 @@ CC?=g++
 RC?=windres.exe
 CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall
 CFLAGS?=-g $(CFLAGS_ALL)
-CFLAGS_DEPS=-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 
+CFLAGS_DEPS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
-ifeq ($(_PCH),)
-	OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
-else
-	OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) -include $(_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
+ifneq ($(_PCH),)
+	_INCLUDE_PCH := -include $(_PCH)
 endif
+OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(_INCLUDE_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ASM_COMPILE = objdump -d -C -Mintel $< > $@
 POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 
 export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
-
-define color_reset
-	@tput setaf 4
-endef
 
 #==============================================================================
 # Build Scripts
@@ -185,75 +168,55 @@ rebuild: clean all
 buildprod: all makeproduction
 
 #==============================================================================
+# Functions
+define color_reset
+	@tput setaf 4
+endef
 
+define comple_with
+	$(color_reset)
+	$(if $(_CLEAN),@echo $($(1):$(OBJ_DIR)/%=%))
+	$(_Q)$(2)
+	$(POST_COMPILE)
+endef
+
+MKDIR := $(_Q)mkdir -p
+WITH_DEPS = $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
+
+#==============================================================================
 # Build Recipes
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call color_reset)
-ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(<:$(OBJ_DIR)/%=%)
-endif
-	$(_Q)$(OBJ_COMPILE)
-	$(POST_COMPILE)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(WITH_DEPS)
+	$(call comple_with,<,$(OBJ_COMPILE))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call color_reset)
-ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(<:$(OBJ_DIR)/%=%)
-endif
-	$(_Q)$(OBJ_COMPILE)
-	$(POST_COMPILE)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(WITH_DEPS)
+	$(call comple_with,<,$(OBJ_COMPILE))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call color_reset)
-ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(<:$(OBJ_DIR)/%=%)
-endif
-	$(_Q)$(OBJ_COMPILE)
-	$(POST_COMPILE)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(WITH_DEPS)
+	$(call comple_with,<,$(OBJ_COMPILE))
 
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT)
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call color_reset)
-ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(<:$(OBJ_DIR)/%=%)
-endif
-	$(_Q)$(PCH_COMPILE)
-	$(POST_COMPILE)
+	$(call comple_with,<,$(PCH_COMPILE))
 
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(SRC_DIR)/%.h | $(_DIRECTORIES)
-	$(call color_reset)
-ifeq ($(CLEAN_OUTPUT),true)
-	@echo $(<:$(OBJ_DIR)/%=%)
-endif
+	$(color_reset)
+	$(if $(_CLEAN),@echo $(<:$(OBJ_DIR)/%=%))
 	$(_Q)$(RC_COMPILE)
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
-ifeq ($(CLEAN_OUTPUT),false)
-	$(call color_reset)
-endif
+	$(if $(_CLEAN),,$(color_reset))
 	$(_Q)$(ASM_COMPILE)
 
-$(BLD_DIR)/%.dll:
-	$(call color_reset)
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
-
-$(BLD_DIR)/%.so:
-	$(call color_reset)
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
-
+# TODO: Redo the .dll stuff at some point
 $(_EXE): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
-	$(call color_reset)
-ifeq ($(CLEAN_OUTPUT),true)
-	@echo
-	@echo 'Linking: $(_EXE)'
-endif
+	$(color_reset)
+	$(if $(_CLEAN),@echo; echo 'Linking: $(_EXE)')
 ifeq ($(suffix $(_EXE)),.dll)
-	-rm -f $(BLD_DIR)/lib$(_NAMENOEXT).def
-	-rm -f $(BLD_DIR)/lib$(_NAMENOEXT).a
+	-rm -f $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
 	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
@@ -262,50 +225,46 @@ endif
 makepch: $(_PCH_GCH)
 
 makebuild: $(_EXE)
-	$(call color_reset)
+	$(color_reset)
 	@echo '$(BUILD) build target is up to date.'
 
 $(_DIRECTORIES) :
-ifeq ($(CLEAN_OUTPUT),false)
-	$(call color_reset)
-endif
-	$(_Q)mkdir -p $@
+	$(if $(_CLEAN),,$(color_reset))
+	$(MKDIR) $@
 
 .PHONY: clean
 clean:
-	$(call color_reset)
-ifeq ($(CLEAN_OUTPUT),true)
-	@echo 'Cleaning old build files & folders...'
-	@echo
-endif
-	$(_Q)$(RM) $(_EXE)
-	$(_Q)$(RM) $(DEPS)
-	$(_Q)$(RM) $(OBJS)
+	$(color_reset)
+	$(if $(_CLEAN),@echo 'Cleaning old build files & folders...'; echo)
+	$(_Q)$(RM) $(_EXE) $(DEPS) $(OBJS)
 
 #==============================================================================
 # Production recipes
+
+$(BLD_DIR)/%.dll:
+	$(color_reset)
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
+
+$(BLD_DIR)/%.so:
+	$(color_reset)
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
+
 rmprod:
-	$(call color_reset)
-ifeq ($(PLATFORM),osx)
-	-$(_Q)rm -f -r $(PRODUCTION_FOLDER_MACOS)
-else
-	-$(_Q)rm -f -r $(PRODUCTION_FOLDER)
-endif
+	$(color_reset)
+	-$(_Q)rm -f -r $(if $(filter osx,$(PLATFORM)),$(PRODUCTION_FOLDER_MACOS),$(PRODUCTION_FOLDER))
 
 mkdirprod:
-	$(call color_reset)
-	$(_Q)mkdir -p $(PRODUCTION_FOLDER)
+	$(color_reset)
+	$(MKDIR) $(PRODUCTION_FOLDER)
 
 releasetoprod: $(_EXE)
-	$(call color_reset)
+	$(color_reset)
 ifeq ($(PLATFORM),osx)
 	@echo 'Creating the MacOS application bundle...'
-	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Resources
-	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/Frameworks
-	$(_Q)mkdir -p $(PRODUCTION_FOLDER)/MacOS
+	$(MKDIR) $(PRODUCTION_FOLDER)/Resources $(PRODUCTION_FOLDER)/Frameworks $(PRODUCTION_FOLDER)/MacOS
 ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
-	$(call color_reset)
+	$(color_reset)
 endif
 	$(_Q)makeicns -in env/osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
 	$(_Q)plutil -convert binary1 env/osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
@@ -320,7 +279,7 @@ else
 endif
 
 makeproduction: rmprod mkdirprod releasetoprod
-	$(call color_reset)
+	$(color_reset)
 	@echo -n 'Adding dynamic libraries & project dependencies...'
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
@@ -334,7 +293,7 @@ ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(_Q)hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg > /dev/null
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
 	-$(_Q)rm -rf /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.fseventsd
-	$(_Q)mkdir -p /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background
+	$(MKDIR) /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background
 	$(_Q)tiffutil -cathidpicheck $(PRODUCTION_MACOS_BACKGROUND).png $(PRODUCTION_MACOS_BACKGROUND)@2x.png -out /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/.background/background.tiff
 	$(_Q)ln -s /Applications /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/Applications
 	$(_Q)appName=$(PRODUCTION_MACOS_BUNDLE_NAME) osascript env/osx/dmg.applescript

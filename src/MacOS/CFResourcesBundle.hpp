@@ -7,6 +7,7 @@ class CFResourcesBundle
 {
 	public:
 		CFResourcesBundle();
+
 };
 
 #endif // CF_RESOURCES_BUNDLE_HPP

@@ -12,6 +12,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.1 configuration & C++17 build environmen
 * Cross-platform build environments (Windows, Linux & MacOS)
 * Bash terminal integration
 * Optionally auto-generate assembly from compiled objects (using objdump)
+* Optional precompiled header (cross-platform as well)
 * Optional Keybindings (F8, F9 & F10)
 
 
