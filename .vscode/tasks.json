@@ -43,7 +43,9 @@
 		"echo": false,
 		"reveal": "always",
 		"focus": true,
-		"panel": "shared"
+		"panel": "shared",
+		"clear": false,
+		"showReuseMessage": true
 	},
 	"tasks": [
 		{
