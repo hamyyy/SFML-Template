@@ -119,9 +119,15 @@ DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 
 _PCH_HFILE := $(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh')
 _PCH_EXT := $(_PCH_HFILE:$(SRC_DIR)/$(PRECOMPILED_HEADER).%=%)
+ifeq ($(PLATFORM),osx)
+	_PCH_COMPILER_EXT := pch
+else
+	_PCH_COMPILER_EXT := gch
+endif
+
 _PCH := $(_PCH_HFILE:$(SRC_DIR)/%=$(OBJ_DIR)/%)
 ifneq ($(_PCH),)
-	_PCH_GCH := $(_PCH).gch
+	_PCH_GCH := $(_PCH).$(_PCH_COMPILER_EXT)
 endif
 
 ifeq ($(DUMP_ASSEMBLY),true)
@@ -208,8 +214,8 @@ endif
 	$(_Q)$(OBJ_COMPILE)
 	$(POST_COMPILE)
 
-$(OBJ_DIR)/%.$(_PCH_EXT).gch : $(SRC_DIR)/%.$(_PCH_EXT)
-$(OBJ_DIR)/%.$(_PCH_EXT).gch : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_DIR)/%.d | $(_DIRECTORIES)
+$(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT)
+$(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(call color_reset)
 ifeq ($(CLEAN_OUTPUT),true)
 	@echo $(<:$(OBJ_DIR)/%=%)
