@@ -42,4 +42,7 @@
 // Utils
 //#include "Utility/Types.hpp" // Example
 
+// Macros
+#define _UNUSED(x) (void)(x)
+
 #endif // PRECOMPILED_HEADER_HPP
