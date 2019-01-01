@@ -15,7 +15,6 @@
 				"Path": "${config:terminal.integrated.env.windows.Path}",
 				"NAME": "${workspaceRootFolderName}.exe",
 				"MAKE_EXEC": "mingw32-make",
-				"PLATFORM": "windows"
 			}
 		}
 	},
@@ -24,8 +23,7 @@
 			"env": {
 				"PATH": "${config:terminal.integrated.env.linux.PATH}",
 				"NAME": "${workspaceRootFolderName}",
-				"MAKE_EXEC": "make",
-				"PLATFORM": "linux"
+				"MAKE_EXEC": "make"
 			}
 		}
 	},
@@ -34,8 +32,7 @@
 			"env": {
 				"PATH": "${config:terminal.integrated.env.osx.PATH}",
 				"NAME": "${workspaceRootFolderName}",
-				"MAKE_EXEC": "make",
-				"PLATFORM": "osx"
+				"MAKE_EXEC": "make"
 			}
 		}
 	},

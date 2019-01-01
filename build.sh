@@ -3,6 +3,14 @@
 
 BUILD=$2
 
+if [[ $OSTYPE == "linux-gnu" || $OSTYPE == "cygwin" ]]; then
+	export PLATFORM=linux
+elif [[ $OSTYPE == "darwin"* ]]; then
+	export PLATFORM=osx
+elif [[ $OSTYPE == "msys" || $OSTYPE == "win32" ]]; then
+	export PLATFORM=windows
+fi
+
 
 dec=\=\=\=\=\=\=
 
