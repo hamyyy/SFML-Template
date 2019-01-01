@@ -4,8 +4,8 @@ int main()
 {
     std::cout << "Hello World!" << std::endl;
 
-    sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");
-    sf::CircleShape shape(200.f);
+    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    sf::CircleShape shape(window.getSize().x/2);
 
     shape.setFillColor(sf::Color::White);
 
