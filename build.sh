@@ -35,7 +35,7 @@ if [[ $PLATFORM == 'windows' ]]; then
 	fi
 fi
 
-if [[ $BUILD != "Release" || $BUILD != 'Debug' ]]; then
+if [[ $BUILD != "Release" && $BUILD != 'Debug' ]]; then
 	BUILD=Release
 fi
 
