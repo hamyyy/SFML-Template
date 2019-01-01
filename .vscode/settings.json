@@ -38,6 +38,7 @@
 		"env/osx/dmg.applescript": true,
 		"Makefile": true,
 		"build.sh": true,
+		"build_nocode.sh": true,
 		"gmon.out": true,
 		"bin": true,
 		"build": true,
