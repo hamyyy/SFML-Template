@@ -3,13 +3,18 @@
 
 CMD=$1
 BUILD=$2
+NOCODE=$3
 
-if [[ $OSTYPE == "linux-gnu" || $OSTYPE == "cygwin" ]]; then
+if [[ $OSTYPE == 'linux-gnu' || $OSTYPE == 'cygwin' ]]; then
 	export PLATFORM=linux
-elif [[ $OSTYPE == "darwin"* ]]; then
+elif [[ $OSTYPE == 'darwin'* ]]; then
 	export PLATFORM=osx
-elif [[ $OSTYPE == "msys" || $OSTYPE == "win32" ]]; then
+elif [[ $OSTYPE == 'msys' || $OSTYPE == 'win32' ]]; then
 	export PLATFORM=windows
+fi
+
+if [[ $BUILD != "Release" || $BUILD != 'Debug' ]]; then
+	BUILD=Release
 fi
 
 
@@ -73,10 +78,7 @@ prod_osx() {
 }
 
 tput setaf 4
-if [[ $CMD == 'nocode' ]] ; then
-	CMD=buildprod
-	BUILD=Release
-
+if [[ $NOCODE == 'nocode' ]] ; then
 	cwd=${PWD##*/}
 	export PROF_EXEC=gprof
 

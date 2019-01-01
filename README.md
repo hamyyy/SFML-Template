@@ -277,3 +277,21 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
 This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well. Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 
 That should be all you need to get started. Happy game making and/or programming!
+
+## Build Without Code (experimental)
+
+If you have a reason to build your project without Code (on Raspbian or something), you can run build.sh the following way:
+
+1. Use any bash terminal (Git Bash if Windows).
+2. Run a variation of the following:
+  ```
+  bash build.sh (build|buildrun|rebuild|run|buildprod|profile) (Debug|Release) nocode
+  ```
+
+For instance, to Build & Run Release, you'd use:
+  ```
+  bash build.sh buildrun Release nocode
+  ```
+
+If the build mode is not Debug or Release, it will default to Release. If you need to, change the "Path" variables within the build.sh file in the "nocode" block.
+
