@@ -5,17 +5,42 @@ CMD=$1
 BUILD=$2
 NOCODE=$3
 
+cwd=${PWD##*/}
+
 if [[ $OSTYPE == 'linux-gnu' || $OSTYPE == 'cygwin' ]]; then
 	export PLATFORM=linux
+	export NAME=$cwd
 elif [[ $OSTYPE == 'darwin'* ]]; then
 	export PLATFORM=osx
+	export NAME=$cwd
 elif [[ $OSTYPE == 'msys' || $OSTYPE == 'win32' ]]; then
 	export PLATFORM=windows
+	export NAME=$cwd.exe
+fi
+
+if [[ $NOCODE == 'nocode' ]] ; then
+	if [[ $PLATFORM == 'windows' ]]; then
+		export PATH="$PATH:/c/mingw32/bin:/c/SFML-2.5.1/bin"
+	else
+		export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+	fi
+fi
+
+export MAKE_EXEC=make
+if [[ $PLATFORM == 'windows' ]]; then
+	if [ $(type -P "mingw32-make.exe") ]; then
+		export MAKE_EXEC=mingw32-make.exe
+	elif [ $(type -P "make.exe") ]; then
+		export MAKE_EXEC=make.exe
+	fi
 fi
 
 if [[ $BUILD != "Release" || $BUILD != 'Debug' ]]; then
 	BUILD=Release
 fi
+
+PROF_EXEC=gprof
+PROF_ANALYSIS_FILE=profiler_analysis.stats
 
 
 dec=\=\=\=\=\=\=
@@ -78,21 +103,6 @@ prod_osx() {
 }
 
 tput setaf 4
-if [[ $NOCODE == 'nocode' ]] ; then
-	cwd=${PWD##*/}
-	export PROF_EXEC=gprof
-
-	if [[ $PLATFORM == 'windows' ]]; then
-		export PATH="$PATH:/c/mingw32/bin:/c/SFML-2.5.1/bin"
-		export NAME=$cwd.exe
-		export MAKE_EXEC=mingw32-make
-	elif [[ $PLATFORM == 'linux' || $PLATFORM == 'osx' ]]; then
-		export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-		export NAME=$cwd
-		export MAKE_EXEC=make
-	fi
-fi
-
 if [[ $CMD == 'buildrun' ]] ; then
 	if $MAKE_EXEC BUILD=$BUILD; then
 		build_success_launch
