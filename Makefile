@@ -160,11 +160,13 @@ export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
 #==============================================================================
 # Build Scripts
 all:
-	@$(MAKE) -k -s --no-print-directory makepch
+	@$(MAKE) -k --no-print-directory makepch
 	@$(MAKE) -j$(MAX_PARALLEL_JOBS) -k --no-print-directory makebuild
 
+.PHONY: rebuild
 rebuild: clean all
 
+.PHONY: buildprod
 buildprod: all makeproduction
 
 #==============================================================================
@@ -222,8 +224,12 @@ else
 	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 
-makepch: $(_PCH_GCH)
 
+.PHONY: makepch
+makepch: $(_PCH_GCH)
+	@echo > /dev/null
+
+.PHONY: makebuild
 makebuild: $(_EXE)
 	$(color_reset)
 	@echo '$(BUILD) build target is up to date.'
@@ -249,14 +255,17 @@ $(BLD_DIR)/%.so:
 	$(color_reset)
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
+.PHONY: rmprod
 rmprod:
 	$(color_reset)
 	-$(_Q)rm -f -r $(if $(filter osx,$(PLATFORM)),$(PRODUCTION_FOLDER_MACOS),$(PRODUCTION_FOLDER))
 
+.PHONY: mkdirprod
 mkdirprod:
 	$(color_reset)
 	$(MKDIR) $(PRODUCTION_FOLDER)
 
+.PHONY: releasetoprod
 releasetoprod: $(_EXE)
 	$(color_reset)
 ifeq ($(PLATFORM),osx)
@@ -278,6 +287,7 @@ else
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 endif
 
+.PHONY: makeproduction
 makeproduction: rmprod mkdirprod releasetoprod
 	$(color_reset)
 	@echo -n 'Adding dynamic libraries & project dependencies...'
