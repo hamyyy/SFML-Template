@@ -45,61 +45,39 @@ PROF_ANALYSIS_FILE=profiler_analysis.stats
 
 dec=\=\=\=\=\=\=
 
-build_success() {
-	tput setaf 2
+display_styled() {
+	tput setaf $1
 	tput bold
-	echo $dec Build Succeeded $dec
+	echo $dec $2 $dec
 	tput sgr0
+}
+
+build_success() {
+	display_styled 2 "Build Succeeded"
 }
 
 build_success_launch() {
-	tput setaf 2
-	tput bold
-	echo $dec Build Succeeded: Launching bin/$BUILD/$NAME $dec
-	tput sgr0
+	display_styled 2 "Build Succeeded: Launching bin/$BUILD/$NAME"
 }
 
 build_fail() {
-	tput setaf 1
-	tput bold
-	echo $dec Build Failed: Review the compile errors above $dec
-	tput sgr0
+	display_styled 1 "Build Failed: Review the compile errors above"
 }
 
 launch() {
-	tput setaf 2
-	tput bold
-	echo $dec Launching bin/$BUILD/$NAME $dec
-	tput sgr0
+	display_styled 2 "Launching bin/$BUILD/$NAME"
 }
 
 launch_prod() {
-	tput setaf 2
-	tput bold
-	echo $dec Launching Production Build: $NAME $dec
-	tput sgr0
+	display_styled 2 "Launching Production Build: $NAME"
 }
 
 profiler_done() {
-	tput setaf 2
-	tput bold
-	echo $dec Profiler Completed: View $PROF_ANALYSIS_FILE for details $dec
-	tput sgr0
+	display_styled 2 "Profiler Completed: View $PROF_ANALYSIS_FILE for details"
 }
 
 profiler_error() {
-	tput setaf 1
-	tput bold
-	echo $dec Error: Profiler must be run on Debug build. $dec
-	tput sgr0
-}
-
-prod_osx() {
-	tput setaf 1
-	tput bold
-	echo $dec Production building is not supported on macOS. Use Xcode to bundle your final build. $dec
-	echo $dec See https://www.sfml-dev.org/tutorials/2.5/start-osx.php for more information. $dec
-	tput sgr0
+	display_styled 1 "Error: Profiler must be run on Debug build."
 }
 
 tput setaf 4
