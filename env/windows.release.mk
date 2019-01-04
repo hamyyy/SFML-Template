@@ -1,4 +1,4 @@
-CFLAGS := -Os $(CFLAGS)
+CFLAGS := -Os -s $(CFLAGS)
 
 BUILD_FLAGS := \
 	-mwindows

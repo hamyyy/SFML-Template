@@ -80,6 +80,10 @@ profiler_error() {
 	display_styled 1 "Error: Profiler must be run on Debug build."
 }
 
+profiler_osx() {
+	display_styled 1 "Error: Profiling (with gprof) is not supported on Mac OSX."
+}
+
 tput setaf 4
 if [[ $CMD == 'buildrun' ]] ; then
 	if $MAKE_EXEC BUILD=$BUILD; then
@@ -116,7 +120,9 @@ elif [[ $CMD == 'buildprod' ]] ; then
 
 
 elif [[ $CMD == 'profile' ]] ; then
-	if [[ $BUILD == 'Debug' ]] ; then
+	if [[ $PLATFORM == 'osx' ]] ; then
+		profiler_osx
+	elif [[ $BUILD == 'Debug' ]] ; then
 		if $MAKE_EXEC BUILD=$BUILD; then
 			build_success_launch
 			tput sgr0

@@ -155,7 +155,11 @@ ifneq ($(_PCH),)
 endif
 OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(_INCLUDE_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
-ASM_COMPILE = objdump -d -C -Mintel $< > $@
+ifeq ($(PLATFORM),osx)
+	ASM_COMPILE = otool -tvV $< | c++filt > $@
+else
+	ASM_COMPILE = objdump -d -C -Mintel $< > $@
+endif
 POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 
 export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
