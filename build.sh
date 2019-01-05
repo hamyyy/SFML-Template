@@ -7,7 +7,7 @@ NOCODE=$3
 
 cwd=${PWD##*/}
 
-if [[ $OSTYPE == 'linux-gnu' || $OSTYPE == 'cygwin' ]]; then
+if [[ $OSTYPE == 'linux-gnu'* || $OSTYPE == 'cygwin'* ]]; then
 	export PLATFORM=linux
 	export NAME=$cwd
 elif [[ $OSTYPE == 'darwin'* ]]; then
