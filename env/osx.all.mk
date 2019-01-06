@@ -1,6 +1,5 @@
 CC := clang++
 CFLAGS := -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17
-DUMP_ASSEMBLY := false
 
 LIB_DIRS := \
 	/usr/local/lib
@@ -20,7 +19,7 @@ PRODUCTION_DEPENDENCIES := \
 
 PRODUCTION_MACOS_BUNDLE_DEVELOPER := developer
 PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME := SFML Boilerplate
-PRODUCTION_MACOS_BUNDLE_NAME := SFMLBoilerplate
+PRODUCTION_MACOS_BUNDLE_NAME := SFML Boilerplate
 PRODUCTION_MACOS_MAKE_DMG := true
 
 PRODUCTION_MACOS_FRAMEWORKS := \

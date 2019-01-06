@@ -7,8 +7,12 @@ NOCODE=$3
 
 cwd=${PWD##*/}
 
-if [[ $OSTYPE == 'linux-gnu' || $OSTYPE == 'cygwin' ]]; then
-	export PLATFORM=linux
+if [[ $OSTYPE == 'linux-gnu'* || $OSTYPE == 'cygwin'* ]]; then
+	if [[ $OSTYPE == 'linux-gnueabihf' ]]; then
+		export PLATFORM=rpi
+	else
+		export PLATFORM=linux
+	fi
 	export NAME=$cwd
 elif [[ $OSTYPE == 'darwin'* ]]; then
 	export PLATFORM=osx
@@ -22,7 +26,11 @@ if [[ $NOCODE == 'nocode' ]] ; then
 	if [[ $PLATFORM == 'windows' ]]; then
 		export PATH="$PATH:/c/mingw32/bin:/c/SFML-2.5.1/bin"
 	else
-		export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+		if [[ $PLATFORM == 'rpi' ]]; then
+			export PATH="$PATH:/usr/local/gcc-8.1.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+		else
+			export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+		fi
 	fi
 fi
 
@@ -45,61 +53,43 @@ PROF_ANALYSIS_FILE=profiler_analysis.stats
 
 dec=\=\=\=\=\=\=
 
-build_success() {
-	tput setaf 2
+display_styled() {
+	tput setaf $1
 	tput bold
-	echo $dec Build Succeeded $dec
+	echo $dec $2 $dec
 	tput sgr0
+}
+
+build_success() {
+	display_styled 2 "Build Succeeded"
 }
 
 build_success_launch() {
-	tput setaf 2
-	tput bold
-	echo $dec Build Succeeded: Launching bin/$BUILD/$NAME $dec
-	tput sgr0
+	display_styled 2 "Build Succeeded: Launching bin/$BUILD/$NAME"
 }
 
 build_fail() {
-	tput setaf 1
-	tput bold
-	echo $dec Build Failed: Review the compile errors above $dec
-	tput sgr0
+	display_styled 1 "Build Failed: Review the compile errors above"
 }
 
 launch() {
-	tput setaf 2
-	tput bold
-	echo $dec Launching bin/$BUILD/$NAME $dec
-	tput sgr0
+	display_styled 2 "Launching bin/$BUILD/$NAME"
 }
 
 launch_prod() {
-	tput setaf 2
-	tput bold
-	echo $dec Launching Production Build: $NAME $dec
-	tput sgr0
+	display_styled 2 "Launching Production Build: $NAME"
 }
 
 profiler_done() {
-	tput setaf 2
-	tput bold
-	echo $dec Profiler Completed: View $PROF_ANALYSIS_FILE for details $dec
-	tput sgr0
+	display_styled 2 "Profiler Completed: View $PROF_ANALYSIS_FILE for details"
 }
 
 profiler_error() {
-	tput setaf 1
-	tput bold
-	echo $dec Error: Profiler must be run on Debug build. $dec
-	tput sgr0
+	display_styled 1 "Error: Profiler must be run on Debug build."
 }
 
-prod_osx() {
-	tput setaf 1
-	tput bold
-	echo $dec Production building is not supported on macOS. Use Xcode to bundle your final build. $dec
-	echo $dec See https://www.sfml-dev.org/tutorials/2.5/start-osx.php for more information. $dec
-	tput sgr0
+profiler_osx() {
+	display_styled 1 "Error: Profiling (with gprof) is not supported on Mac OSX."
 }
 
 tput setaf 4
@@ -138,7 +128,9 @@ elif [[ $CMD == 'buildprod' ]] ; then
 
 
 elif [[ $CMD == 'profile' ]] ; then
-	if [[ $BUILD == 'Debug' ]] ; then
+	if [[ $PLATFORM == 'osx' ]] ; then
+		profiler_osx
+	elif [[ $BUILD == 'Debug' ]] ; then
 		if $MAKE_EXEC BUILD=$BUILD; then
 			build_success_launch
 			tput sgr0
