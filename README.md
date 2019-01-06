@@ -14,6 +14,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.1 configuration & C++17 build environmen
 * Optionally auto-generate assembly from compiled objects (using objdump)
 * Optional precompiled header (cross-platform as well)
 * Optional Keybindings (F8, F9 & F10)
+* Even works on Raspberry Pi! (see bottom of Readme)
 
 
 ## Prerequisites
@@ -104,6 +105,8 @@ The environment variables used by the Makefile are managed from the **env** fold
     ./env/osx.all.mk: MacOS, All builds  
     ./env/osx.debug.mk: MacOS, Debug build  
     ./env/osx.release.mk: MacOS, Release build
+
+    ./env/rpi.release.mk: Linux (Raspberry Pi), Release build
 
 
 ## Environment Variables
@@ -278,7 +281,7 @@ This will be an ongoing project that I'll try to update as new SFML versions com
 
 That should be all you need to get started. Happy game making and/or programming!
 
-## Build Without Code (experimental)
+## Build Without VS Code (experimental)
 
 If you have a reason to build your project without Code (on Raspbian or something), you can run build.sh the following way:
 
@@ -295,3 +298,8 @@ For instance, to Build & Run Release, you'd use:
 
 If the build mode is not Debug or Release, it will default to Release. If you need to, change the "Path" variables within the build.sh file in the "nocode" block.
 
+## Build on Raspberry Pi (experimental)
+
+I'll maybe make a full guide for this, but I'd recommend doing your development on another machine, and then just pulling the project via git and building it on the Pi with the build script in the previous section. Raspbian Lite (as of 1/6/2019) only comes with GCC 6.x, so you'll want to add GCC 8.x via **[this guide](https://solarianprogrammer.com/2017/12/08/raspberry-pi-raspbian-install-gcc-compile-cpp-17-programs/)** and compile SFML 2.5.1 from source. Once your app/game is compiled, you can launch apps via startx & matchbox-window-manager (after enabling OpenGL from raspi-config).
+
+In the precompiled header (src/PCH.hpp), I added an extra SFML define for the Pi aptly named **SFML_SYSTEM_PI** so you can conditionalize parts of your code for PI specific things (think "kiosk mode"). From there, you're in the wild west.

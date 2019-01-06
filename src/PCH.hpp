@@ -8,6 +8,13 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
+// Raspberry Pi
+#ifdef SFML_SYSTEM_LINUX
+	#ifdef __arm__
+		#define SFML_SYSTEM_PI
+	#endif
+#endif // SFML SYSTEM_LINUX
+
 // Typical stdafx.h
 #include <cstdio>
 #include <string>
