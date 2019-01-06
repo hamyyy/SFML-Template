@@ -14,7 +14,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.1 configuration & C++17 build environmen
 * Optionally auto-generate assembly from compiled objects (using objdump)
 * Optional precompiled header (cross-platform as well)
 * Optional Keybindings (F8, F9 & F10)
-* Even works on Raspberry Pi! (see bottom of Readme)
+* Optionally build on Raspberry Pi! (see bottom of Readme)
 
 
 ## Prerequisites
