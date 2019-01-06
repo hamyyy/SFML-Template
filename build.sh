@@ -72,6 +72,10 @@ build_fail() {
 	display_styled 1 "Build Failed: Review the compile errors above"
 }
 
+build_prod_error() {
+	display_styled 1 "Error: buildprod must be run on Release build."
+}
+
 launch() {
 	display_styled 2 "Launching bin/$BUILD/$NAME"
 }
@@ -120,10 +124,14 @@ elif [[ $CMD == 'run' ]] ; then
 	bin/$BUILD/$NAME
 
 elif [[ $CMD == 'buildprod' ]] ; then
-	if $MAKE_EXEC BUILD=$BUILD buildprod; then
-		build_success
+	if [[ $BUILD == 'Release' ]] ; then
+		if $MAKE_EXEC BUILD=$BUILD buildprod; then
+			build_success
+		else
+			build_fail
+		fi
 	else
-		build_fail
+		build_prod_error
 	fi
 
 
