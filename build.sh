@@ -8,7 +8,11 @@ NOCODE=$3
 cwd=${PWD##*/}
 
 if [[ $OSTYPE == 'linux-gnu'* || $OSTYPE == 'cygwin'* ]]; then
-	export PLATFORM=linux
+	if [[ $OSTYPE == 'linux-gnueabihf' ]]; then
+		export PLATFORM=rpi
+	else
+		export PLATFORM=linux
+	fi
 	export NAME=$cwd
 elif [[ $OSTYPE == 'darwin'* ]]; then
 	export PLATFORM=osx
@@ -22,7 +26,7 @@ if [[ $NOCODE == 'nocode' ]] ; then
 	if [[ $PLATFORM == 'windows' ]]; then
 		export PATH="$PATH:/c/mingw32/bin:/c/SFML-2.5.1/bin"
 	else
-		export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+		export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 	fi
 fi
 
