@@ -26,7 +26,7 @@ if [[ $NOCODE == 'nocode' ]] ; then
 	if [[ $PLATFORM == 'windows' ]]; then
 		export PATH="$PATH:/c/mingw32/bin:/c/SFML-2.5.1/bin"
 	else
-		if [[ $PLATFORM == 'windows' ]]; then
+		if [[ $PLATFORM == 'rpi' ]]; then
 			export PATH="$PATH:/usr/local/gcc-8.1.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 		else
 			export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
