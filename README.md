@@ -300,6 +300,6 @@ If the build mode is not Debug or Release, it will default to Release. If you ne
 
 ## Build on Raspberry Pi (experimental)
 
-I'll maybe make a full guide for this, but I'd recommend doing your development on another machine, and then just pulling the project via git and building it on the Pi with the build script in the previous section. Raspbian Lite (as of 1/6/2019) only comes with GCC 6.x, so you'll want to add GCC 8.x via **[this guide](https://solarianprogrammer.com/2017/12/08/raspberry-pi-raspbian-install-gcc-compile-cpp-17-programs/)** and compile SFML 2.5.1 from source. Once your app/game is compiled, you can launch apps via startx & matchbox-window-manager (after enabling OpenGL from raspi-config).
+I'll maybe make a full guide for this, but I'd recommend doing your development on another machine, and then just pulling the project via git and building it on the Pi with the build script in the previous section. Raspbian Lite (as of 1/6/2019) only comes with GCC 6.x, so you'll want to add GCC 8.x via **[this guide](https://solarianprogrammer.com/2017/12/08/raspberry-pi-raspbian-install-gcc-compile-cpp-17-programs/)** and compile SFML 2.5.1 from source. Once your app/game is compiled, you can launch it via startx & matchbox-window-manager (after enabling OpenGL from raspi-config).
 
 In the precompiled header (src/PCH.hpp), I added an extra SFML define for the Pi aptly named **SFML_SYSTEM_PI** so you can conditionalize parts of your code for PI specific things (think "kiosk mode"). From there, you're in the wild west.
