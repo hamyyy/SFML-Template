@@ -1,4 +1,4 @@
-CFLAGS := -Os -s $(CFLAGS)
+CFLAGS := -Os $(CFLAGS)
 
 BUILD_MACROS= \
 	NDEBUG
