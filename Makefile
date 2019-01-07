@@ -226,7 +226,7 @@ $(_EXE): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(_EXE)')
 ifeq ($(suffix $(_EXE)),.dll)
 	-rm -f $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(if $(filter osx,$(PLATFORM)),,-s) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
 	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
