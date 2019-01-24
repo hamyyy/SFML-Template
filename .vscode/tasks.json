@@ -34,7 +34,7 @@
 	"tasks": [
 		{
 			"label": "Build & Run: Release",
-			"command": "bash ./build.sh buildrun Release",
+			"command": "bash ./build.sh buildrun Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -44,7 +44,7 @@
 		},
 		{
 			"label": "Build: Release",
-			"command": "bash ./build.sh build Release",
+			"command": "bash ./build.sh build Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -54,7 +54,7 @@
 		},
 		{
 			"label": "Run: Release",
-			"command": "bash ./build.sh run Release",
+			"command": "bash ./build.sh run Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -64,7 +64,7 @@
 		},
 		{
 			"label": "Rebuild: Release",
-			"command": "bash ./build.sh rebuild Release",
+			"command": "bash ./build.sh rebuild Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -74,7 +74,7 @@
 		},
 		{
 			"label": "Build & Run: Debug",
-			"command": "bash ./build.sh buildrun Debug",
+			"command": "bash ./build.sh buildrun Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -84,7 +84,7 @@
 		},
 		{
 			"label": "Build: Debug",
-			"command": "bash ./build.sh build Debug",
+			"command": "bash ./build.sh build Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -94,7 +94,7 @@
 		},
 		{
 			"label": "Run: Debug",
-			"command": "bash ./build.sh run Debug",
+			"command": "bash ./build.sh run Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -104,7 +104,7 @@
 		},
 		{
 			"label": "Rebuild: Debug",
-			"command": "bash ./build.sh rebuild Debug",
+			"command": "bash ./build.sh rebuild Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -114,7 +114,7 @@
 		},
 		{
 			"label": "Profile: Debug",
-			"command": "bash ./build.sh profile Debug",
+			"command": "bash ./build.sh profile Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -124,7 +124,7 @@
 		},
 		{
 			"label": "Build: Production",
-			"command": "bash ./build.sh buildprod Release",
+			"command": "bash ./build.sh buildprod Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",

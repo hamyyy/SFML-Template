@@ -34,8 +34,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.1 configuration & C++17 build environmen
 ### All
 * [Visual Studio Code](https://code.visualstudio.com/download)
 * Extensions (install from Extensions panel):
-  * [Official C/C++ Extension (0.18.1+)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
-  * [Include Autocomplete Extension (Optional)](https://marketplace.visualstudio.com/items?itemName=ajshort.include-autocomplete)
+  * [Official C/C++ Extension (0.21.0+)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
   * [Shader languages support for VS Code (Optional Syntax Highlighting)](https://marketplace.visualstudio.com/items?itemName=slevesque.shader)
   * [x86 and x86_64 Assembly (Optional Syntax Highlighting)](https://marketplace.visualstudio.com/items?itemName=13xforever.language-x86-64-assembly)
   * [Studio Icons (Optional Icon Theme)](https://marketplace.visualstudio.com/items?itemName=jtlowe.vscode-icon-theme)
@@ -53,7 +52,7 @@ An [SFML](https://www.sfml-dev.org) 2.5.1 configuration & C++17 build environmen
 
 ### Linux
 1. Ensure the GCC Toolchain is installed (**sudo apt install build-essential**)
-2. Run **sudo apt install libsfml-dev**. The SFML version you got will vary depending on the distro. 2.5.0 is only included in [Ubuntu 18.10 Cosmic Cuttlefish](http://cdimage.ubuntu.com/daily-live/current/HEADER.html) and a few other non-Ubuntu distros -- Not sure yet about 2.5.1.
+2. Run **sudo apt install libsfml-dev**. The SFML version you got will vary depending on the distro. 2.5.1 is included in [Ubuntu 19.04 Disco Dingo](http://cdimage.ubuntu.com/daily-live/current/HEADER.html) for example.
 
 ### All
 3. Download & Install Visual Studio Code if you don't already have it.
@@ -288,15 +287,15 @@ If you have a reason to build your project without Code (on Raspbian or somethin
 1. Use any bash terminal (Git Bash if Windows).
 2. Run a variation of the following:
   ```
-  bash build.sh (build|buildrun|rebuild|run|buildprod|profile) (Debug|Release) nocode
+  bash build.sh (build|buildrun|rebuild|run|buildprod|profile) (Debug|Release)
   ```
 
 For instance, to Build & Run Release, you'd use:
   ```
-  bash build.sh buildrun Release nocode
+  bash build.sh buildrun Release
   ```
 
-If the build mode is not Debug or Release, it will default to Release. If you need to, change the "Path" variables within the build.sh file in the "nocode" block.
+If the build mode is not Debug or Release, it will default to Release. If you need to, change the "Path" variables within the build.sh file in the "if [[ $VSCODE != 'vscode' ]] ; then" block.
 
 ## Build on Raspberry Pi (experimental)
 

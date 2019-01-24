@@ -3,7 +3,7 @@
 
 CMD=$1
 BUILD=$2
-NOCODE=$3
+VSCODE=$3
 
 cwd=${PWD##*/}
 
@@ -22,16 +22,18 @@ elif [[ $OSTYPE == 'msys' || $OSTYPE == 'win32' ]]; then
 	export NAME=$cwd.exe
 fi
 
-if [[ $NOCODE == 'nocode' ]] ; then
+if [[ $VSCODE != 'vscode' ]] ; then
+	export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 	if [[ $PLATFORM == 'windows' ]]; then
-		export PATH="$PATH:/c/mingw32/bin:/c/SFML-2.5.1/bin"
+		export PATH="/c/SFML-2.5.1/bin:/c/mingw32/bin:$PATH"
 	else
 		if [[ $PLATFORM == 'rpi' ]]; then
-			export PATH="$PATH:/usr/local/gcc-8.1.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-		else
-			export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+			export PATH="/usr/local/gcc-8.1.0/bin:$PATH"
 		fi
 	fi
+	echo
+	echo build.sh PATH=$PATH
+	echo
 fi
 
 export MAKE_EXEC=make
