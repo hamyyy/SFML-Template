@@ -47,7 +47,7 @@
 #endif // SFML_SYSTEM_WINDOWS
 
 // Utils
-//#include "Utility/Types.hpp" // Example
+#include "Utility/Types.hpp"
 
 // Macros
 #define _UNUSED(x) (void)(x)
