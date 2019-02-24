@@ -28,7 +28,7 @@ elif [[ $OSTYPE == 'msys' || $OSTYPE == 'win32' ]]; then
 	export NAME=$cwd.exe
 fi
 
-if [[ $VSCODE != 'vscode' ]] ; then
+if [[ $VSCODE != 'vscode' ]]; then
 	export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 	if [[ $PLATFORM == 'windows' ]]; then
 		export PATH="/c/SFML-2.5.1/bin:/c/mingw32/bin:$PATH"
@@ -105,7 +105,7 @@ profiler_osx() {
 }
 
 tput setaf 4
-if [[ $CMD == 'buildrun' ]] ; then
+if [[ $CMD == 'buildrun' ]]; then
 	if $MAKE_EXEC BUILD=$BUILD; then
 		build_success_launch
 		bin/$BUILD/$NAME
@@ -113,26 +113,26 @@ if [[ $CMD == 'buildrun' ]] ; then
 		build_fail
 	fi
 
-elif [[ $CMD == 'build' ]] ; then
+elif [[ $CMD == 'build' ]]; then
 	if $MAKE_EXEC BUILD=$BUILD; then
 		build_success
 	else
 		build_fail
 	fi
 
-elif [[ $CMD == 'rebuild' ]] ; then
+elif [[ $CMD == 'rebuild' ]]; then
 	if $MAKE_EXEC BUILD=$BUILD rebuild; then
 		build_success
 	else
 		build_fail
 	fi
 
-elif [[ $CMD == 'run' ]] ; then
+elif [[ $CMD == 'run' ]]; then
 	launch
 	bin/$BUILD/$NAME
 
-elif [[ $CMD == 'buildprod' ]] ; then
-	if [[ $BUILD == 'Release' ]] ; then
+elif [[ $CMD == 'buildprod' ]]; then
+	if [[ $BUILD == 'Release' ]]; then
 		if $MAKE_EXEC BUILD=$BUILD buildprod; then
 			build_success
 		else
@@ -143,10 +143,10 @@ elif [[ $CMD == 'buildprod' ]] ; then
 	fi
 
 
-elif [[ $CMD == 'profile' ]] ; then
-	if [[ $PLATFORM == 'osx' ]] ; then
+elif [[ $CMD == 'profile' ]]; then
+	if [[ $PLATFORM == 'osx' ]]; then
 		profiler_osx
-	elif [[ $BUILD == 'Debug' ]] ; then
+	elif [[ $BUILD == 'Debug' ]]; then
 		if $MAKE_EXEC BUILD=$BUILD; then
 			build_success_launch
 			tput sgr0

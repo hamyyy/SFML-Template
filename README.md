@@ -295,6 +295,11 @@ For instance, to Build & Run Release, you'd use:
   bash build.sh buildrun Release
   ```
 
+If you run the script without any parameters, it's the same as the following:
+  ```
+  bash build.sh buildprod Release
+  ```
+
 If the build mode is not Debug or Release, it will default to Release. If you need to, change the "Path" variables within the build.sh file in the "if [[ $VSCODE != 'vscode' ]] ; then" block.
 
 ## Build on Raspberry Pi (experimental)
