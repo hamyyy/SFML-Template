@@ -160,7 +160,7 @@ ifeq ($(PLATFORM),osx)
 else
 	ASM_COMPILE = objdump -d -C -Mintel $< > $@
 endif
-POST_COMPILE = @mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
+POST_COMPILE = $(_Q)mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 
 export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
 

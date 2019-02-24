@@ -1,11 +1,17 @@
-# echo $1
-# echo $2
+#!/bin/bash
 
 CMD=$1
 BUILD=$2
 VSCODE=$3
 
 cwd=${PWD##*/}
+
+if [[ $CMD == '' ]]; then
+	CMD=buildprod
+fi
+if [[ $BUILD == '' ]]; then
+	BUILD=Release
+fi
 
 if [[ $OSTYPE == 'linux-gnu'* || $OSTYPE == 'cygwin'* ]]; then
 	if [[ $OSTYPE == 'linux-gnueabihf' ]]; then
