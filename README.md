@@ -265,6 +265,7 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
 4. Copy the build.sh from **sfml-project1** to the root **SFML** directory
 5. Edit the build.sh in **sfml-project1**, replace the entire contents to simply have:
   ```
+  #!/bin/bash
   bash ../build.sh $1 $2 $3
   ```
 6. Make a copy of **sfml-project1** and call it **sfml-project2**
