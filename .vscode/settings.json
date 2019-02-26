@@ -1,5 +1,5 @@
 {
-	"editor.fontFamily": "'Ubuntu Mono', 'Courier New', Consolas, monospace",
+	"editor.fontFamily": "'Ubuntu Mono', 'Courier', 'Courier New', Consolas, monospace",
 	"editor.lineHeight": 20,
 	"editor.fontSize": 12,
 	"editor.tabSize": 4,
