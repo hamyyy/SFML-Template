@@ -149,11 +149,11 @@ CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall
 CFLAGS?=-g $(CFLAGS_ALL)
 
 CFLAGS_DEPS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
-PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) -fdiagnostics-color=always $(_INCLUDE_DIRS) -o $@ -c $<
+PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
 ifneq ($(_PCH),)
 	_INCLUDE_PCH := -include $(_PCH)
 endif
-OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(_INCLUDE_PCH) $(CFLAGS) -fdiagnostics-color=always -o $@ -c $<
+OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(_INCLUDE_PCH) $(CFLAGS) -o $@ -c $<
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ifeq ($(PLATFORM),osx)
 	ASM_COMPILE = otool -tvV $< | c++filt > $@
@@ -225,8 +225,8 @@ $(_EXE): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(_EXE)')
 ifeq ($(suffix $(_EXE)),.dll)
-	-rm -f $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	-$(_Q)rm -f $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
+	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
 	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif

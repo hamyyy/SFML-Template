@@ -19,14 +19,21 @@ if [[ $OSTYPE == 'linux-gnu'* || $OSTYPE == 'cygwin'* ]]; then
 	else
 		export PLATFORM=linux
 	fi
-	export NAME=$cwd
+	if [[ $NAME == '' ]]; then
+		export NAME=$cwd
+	fi
 elif [[ $OSTYPE == 'darwin'* ]]; then
 	export PLATFORM=osx
-	export NAME=$cwd
+	if [[ $NAME == '' ]]; then
+		export NAME=$cwd
+	fi
 elif [[ $OSTYPE == 'msys' || $OSTYPE == 'win32' ]]; then
 	export PLATFORM=windows
-	export NAME=$cwd.exe
+	if [[ $NAME == '' ]]; then
+		export NAME=$cwd.exe
+	fi
 fi
+
 
 if [[ $VSCODE != 'vscode' ]]; then
 	export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
@@ -57,7 +64,6 @@ fi
 
 PROF_EXEC=gprof
 PROF_ANALYSIS_FILE=profiler_analysis.stats
-
 
 dec=\=\=\=\=\=\=
 
