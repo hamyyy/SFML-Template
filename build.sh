@@ -38,7 +38,7 @@ fi
 if [[ $VSCODE != 'vscode' ]]; then
 	export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 	if [[ $PLATFORM == 'windows' ]]; then
-		export PATH="/c/SFML-2.5.1/bin:/c/mingw32/bin:$PATH"
+		export PATH="/c/mingw32/bin:$PATH"
 	else
 		if [[ $PLATFORM == 'rpi' ]]; then
 			export PATH="/usr/local/gcc-8.1.0/bin:$PATH"
