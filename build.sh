@@ -84,10 +84,14 @@ build_success_launch() {
 
 build_fail() {
 	display_styled 1 "Build Failed: Review the compile errors above"
+	tput sgr0
+	exit 1
 }
 
 build_prod_error() {
 	display_styled 1 "Error: buildprod must be run on Release build."
+	tput sgr0
+	exit 1
 }
 
 launch() {
@@ -104,10 +108,14 @@ profiler_done() {
 
 profiler_error() {
 	display_styled 1 "Error: Profiler must be run on Debug build."
+	tput sgr0
+	exit 1
 }
 
 profiler_osx() {
 	display_styled 1 "Error: Profiling (with gprof) is not supported on Mac OSX."
+	tput sgr0
+	exit 1
 }
 
 tput setaf 4
