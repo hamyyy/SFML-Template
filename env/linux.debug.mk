@@ -1,7 +1,7 @@
-CFLAGS := -g -Og $(CFLAGS) -pg
+CFLAGS := -O2 $(CFLAGS)
 
 BUILD_FLAGS := \
-	-pg
+	-pthread
 
 BUILD_MACROS := \
-	_DEBUG
+	NDEBUG

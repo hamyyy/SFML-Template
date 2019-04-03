@@ -35,10 +35,12 @@
 #include <functional>
 #include <sstream>
 #include <iomanip>
-#include <atomic>
 #include <random>
 #include <type_traits>
 #include <exception>
+#include <thread>
+#include <mutex>
+#include <atomic>
 
 // Windows
 #ifdef SFML_SYSTEM_WINDOWS

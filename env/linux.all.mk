@@ -8,3 +8,7 @@ INCLUDE_DIRS := \
 	/usr/local/include
 
 BUILD_DEPENDENCIES :=
+
+LINK_LIBRARIES := \
+	$(LINK_LIBRARIES) \
+	X11
