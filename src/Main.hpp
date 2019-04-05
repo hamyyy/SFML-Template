@@ -3,12 +3,12 @@
 
 #ifdef __APPLE__
 	#include "MacOS/CFResourcesBundle.hpp"
-	CFResourcesBundle __macAppBundle;
+	MacHelper __macHelper;
 #endif // __APPLE__
 
 #ifdef __linux__
-	#include "Linux/XInitThreadsHelper.hpp"
-	XInitThreadsHelper __xinitThreadsHelper;
+	#include "Linux/LinuxHelper.hpp"
+	LinuxHelper __linuxHelper;
 #endif // __linux__
 
 //

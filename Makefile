@@ -56,6 +56,8 @@ NAME?=game.exe
 # The source file directory
 SRC_DIR := src
 
+# The full working directory
+_LINUX_GREP_CWD := $(shell echo $(CURDIR) | sed 's/\//\\\//g')
 
 # Project .cpp or .rc files (relative to $(SRC_DIR) directory)
 SOURCE_FILES := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc'))
@@ -298,7 +300,11 @@ else ifeq ($(PLATFORM),linux)
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 	$(_Q)cp env/linux/$(LINUX_ICON).png $(PRODUCTION_FOLDER)/$(LINUX_ICON).png
 	$(_Q)cp env/linux/exec.desktop $(PRODUCTION_FOLDER)/$(NAME).desktop
+	$(_Q)sed -i 's/^Exec=.*/Exec=$(_LINUX_GREP_CWD)\/$(PRODUCTION_FOLDER)\/$(NAME)/' $(PRODUCTION_FOLDER)/$(NAME).desktop
+	$(_Q)sed -i 's/^Icon=.*/Icon=$(_LINUX_GREP_CWD)\/$(PRODUCTION_FOLDER)\/$(LINUX_ICON).png/' $(PRODUCTION_FOLDER)/$(NAME).desktop
+	$(_Q)chmod +x $(PRODUCTION_FOLDER)/$(NAME)
 	$(_Q)chmod +x $(PRODUCTION_FOLDER)/$(NAME).desktop
+	$(_Q)cp $(PRODUCTION_FOLDER)/$(NAME).desktop ~/.local/share/applications
 else
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 endif

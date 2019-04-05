@@ -1,7 +1,7 @@
 #ifdef __APPLE__
-#include "CFResourcesBundle.hpp"
+#include "MacHelper.hpp"
 
-CFResourcesBundle::CFResourcesBundle()
+MacHelper::MacHelper()
 {
     // This function ensures the working directory is set inside of the bundle if in production mode
     CFBundleRef mainBundle = CFBundleGetMainBundle();
