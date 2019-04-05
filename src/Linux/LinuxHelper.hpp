@@ -9,9 +9,6 @@ class LinuxHelper
 {
 	public:
 		LinuxHelper();
-
-	private:
-		std::string current_path();
 };
 
 #endif // LINUX_HELPER_HPP
