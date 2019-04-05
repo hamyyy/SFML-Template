@@ -56,9 +56,6 @@ NAME?=game.exe
 # The source file directory
 SRC_DIR := src
 
-# The full working directory
-_LINUX_GREP_CWD := $(shell echo $(CURDIR) | sed 's/\//\\\//g')
-
 # Project .cpp or .rc files (relative to $(SRC_DIR) directory)
 SOURCE_FILES := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc'))
 # Project subdirectories within $(SRC_DIR)/ that contain source files
@@ -74,6 +71,11 @@ _LINK_LIBRARIES := $(LINK_LIBRARIES:%=-l%)
 #==============================================================================
 # Linux Specific
 LINUX_ICON?=icon
+
+# The full working directory
+ifeq ($(PLATFORM),osx)
+	_LINUX_GREP_CWD := $(shell echo $(CURDIR) | sed 's/\//\\\//g')
+endif
 
 #==============================================================================
 # MacOS Specific
@@ -301,6 +303,8 @@ else ifeq ($(PLATFORM),linux)
 	$(_Q)cp env/linux/$(LINUX_ICON).png $(PRODUCTION_FOLDER)/$(LINUX_ICON).png
 	$(_Q)cp env/linux/exec.desktop $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)sed -i 's/^Exec=.*/Exec=$(_LINUX_GREP_CWD)\/$(PRODUCTION_FOLDER)\/$(NAME)/' $(PRODUCTION_FOLDER)/$(NAME).desktop
+	$(_Q)sed -i 's/^Name=.*/Name=$(PRODUCTION_LINUX_APP_NAME)/' $(PRODUCTION_FOLDER)/$(NAME).desktop
+	$(_Q)sed -i 's/^Comment=.*/Comment=$(PRODUCTION_LINUX_APP_COMMENT)/' $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)sed -i 's/^Icon=.*/Icon=$(_LINUX_GREP_CWD)\/$(PRODUCTION_FOLDER)\/$(LINUX_ICON).png/' $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)chmod +x $(PRODUCTION_FOLDER)/$(NAME)
 	$(_Q)chmod +x $(PRODUCTION_FOLDER)/$(NAME).desktop

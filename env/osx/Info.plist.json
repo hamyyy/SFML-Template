@@ -8,6 +8,6 @@
 	"CFBundlePackageType": "APPL",
 	"CFBundleSignature": "????",
 	"CFBundleExecutable": "${NAME}",
-	"CFBundleIconFile": "sfml",
+	"CFBundleIconFile": "${MACOS_ICON}",
 	"NSHighResolutionCapable": true
 }
