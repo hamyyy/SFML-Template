@@ -73,7 +73,7 @@ _LINK_LIBRARIES := $(LINK_LIBRARIES:%=-l%)
 LINUX_ICON?=icon
 
 # The full working directory
-ifeq ($(PLATFORM),osx)
+ifeq ($(PLATFORM),linux)
 	_LINUX_GREP_CWD := $(shell echo $(CURDIR) | sed 's/\//\\\//g')
 endif
 
