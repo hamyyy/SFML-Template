@@ -2,8 +2,6 @@
 #define LINUX_HELPER_HPP
 
 #include <X11/Xlib.h>
-#include <limits.h>
-#include <unistd.h>
 
 class LinuxHelper
 {
