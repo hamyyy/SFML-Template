@@ -32,4 +32,5 @@ LinuxHelper::LinuxHelper()
             printf("Error: Working directory was not set correctly.");
     }
 }
+
 #endif
