@@ -70,6 +70,10 @@ _BUILD_MACROS := $(BUILD_MACROS:%=-D%)
 _LINK_LIBRARIES := $(LINK_LIBRARIES:%=-l%)
 
 #==============================================================================
+# Linux Specific
+LINUX_ICON?=icon
+
+#==============================================================================
 # MacOS Specific
 MACOS_ICON?=icon
 PRODUCTION_MACOS_BUNDLE_COMPANY?=developer
@@ -290,6 +294,11 @@ endif
 	$(_Q)plutil -replace CFBundleIdentifier -string com.$(PRODUCTION_MACOS_BUNDLE_DEVELOPER).$(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)/MacOS
 	$(_Q)chmod +x $(PRODUCTION_FOLDER)/MacOS/$(NAME)
+else ifeq ($(PLATFORM),linux)
+	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
+	$(_Q)cp env/linux/$(LINUX_ICON).png $(PRODUCTION_FOLDER)/$(LINUX_ICON).png
+	$(_Q)cp env/linux/exec.desktop $(PRODUCTION_FOLDER)/$(NAME).desktop
+	$(_Q)chmod +x $(PRODUCTION_FOLDER)/$(NAME).desktop
 else
 	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
 endif

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=0.0.1
+Name=SFML
+Comment=My SFML Game
+Exec=sfml-vscode-boilerplate
+Icon=sfml
+Terminal=false
+Type=Application
+Categories=Game;Application;
