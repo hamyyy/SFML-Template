@@ -2,7 +2,7 @@
 #define MAIN_HPP
 
 #ifdef __APPLE__
-	#include "MacOS/CFResourcesBundle.hpp"
+	#include "MacOS/MacHelper.hpp"
 	MacHelper __macHelper;
 #endif // __APPLE__
 
