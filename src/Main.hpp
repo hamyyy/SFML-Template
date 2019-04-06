@@ -11,6 +11,11 @@
 	LinuxHelper __linuxHelper;
 #endif // __linux__
 
+#ifdef _WIN32
+	#include "Windows/WindowsHelper.hpp"
+	WindowsHelper __winHelper;
+#endif // __linux__
+
 //
 
 #endif // MAIN_HPP
