@@ -14,7 +14,7 @@
 #ifdef _WIN32
 	#include "Win32/WindowsHelper.hpp"
 	WindowsHelper __windowsHelper;
-#endif // __linux__
+#endif // _WIN32
 
 //
 
