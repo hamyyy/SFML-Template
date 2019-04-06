@@ -5,9 +5,9 @@ int main()
     std::cout << "Hello World!" << std::endl;
 
     sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    #ifdef SFML_SYSTEM_WINDOWS
-        __winHelper.setIcon(window.getSystemHandle());
-    #endif
+#ifdef SFML_SYSTEM_WINDOWS
+    __windowsHelper.setIcon(window.getSystemHandle());
+#endif
 
     sf::CircleShape shape(window.getSize().x/2);
     shape.setFillColor(sf::Color::White);
