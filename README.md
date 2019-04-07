@@ -254,10 +254,19 @@ If you need to add additional external libraries, these are a couple different p
 
 ## Creating an application icon on Windows
 
-There's some interesting nuances to creating Windows icons, so I've included an easy to use shell script that will create one for you from .png files - ```make_icon_win.sh```. It only requires you to install ImageMagick, available here:
+There's some interesting nuances to creating Windows icons, so I've included two easy-to-use shell scripts that will create an icon for you from .png files:
+```
+win-make_icon_from_all.sh
+win-make_icon_from256.sh
+```
+They only require you to install ImageMagick, available here:
 https://www.imagemagick.org/script/download.php#windows (top-most binary)
 
-The script looks for 4 files: icon_16.png, icon_32.png, icon_48.png & icon_256.png. Edit them in the program of your choice & run the script using git bash and you'll get an app.ico file that you can import in ```src/Win32/Icon.rc```. The ```WindowsHelper``` class will read all the icons from the .ico file, and pick out the 16x16 & 32x32 ones for use as the application icon, while windows uses the other sizes for explorer.
+The "win-make_icon_from_all.sh" script looks for 4 files: icon_16.png, icon_32.png, icon_48.png & icon_256.png. Edit them in the program of your choice & run the script using git bash and you'll get an app.ico file that you can import in ```src/Win32/Icon.rc```. The ```WindowsHelper``` class will read all the icons from the .ico file, and pick out the 16x16 & 32x32 ones for use as the application icon, while windows uses the other sizes for explorer.
+
+The "win-make_icon_from256.sh" script is even simpler. You make one icon - icon_256.png, and it will generate the other sizes for you and output the app.ico file.
+
+You can obviously modify these scripts to support other sizes used in edge cases (scaling factors use 20, 40, 64 & 96 for instance), but the 4 included are the most widely used.
 
 ## Multiple Projects
 
