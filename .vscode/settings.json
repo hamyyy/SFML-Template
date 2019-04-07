@@ -62,6 +62,6 @@
 	"C_Cpp.workspaceParsingPriority": "highest",
 
 	"[applescript]": {
-        "files.encoding": "utf8"
-    }
+		"files.encoding": "utf8"
+	}
 }
