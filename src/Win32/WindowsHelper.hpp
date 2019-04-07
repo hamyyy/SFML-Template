@@ -1,5 +1,5 @@
-#ifndef WIN32_HELPER_HPP
-#define WIN32_HELPER_HPP
+#ifndef WINDOWS_HELPER_HPP
+#define WINDOWS_HELPER_HPP
 
 // Local includes
 #include "Icon.h"
@@ -20,4 +20,4 @@ class WindowsHelper
 
 };
 
-#endif // WIN32_HELPER_HPP
+#endif // WINDOWS_HELPER_HPP
