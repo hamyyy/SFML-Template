@@ -252,6 +252,13 @@ If you need to add additional external libraries, these are a couple different p
 * **.vscode/tasks.json** - Used to store the task definitions (Build & Run commands, etc.).
 * **.vscode/_keybindings.json** - As mentioned before, this is used purely to store handy keybindings that one can add themselves, and not recognized by VS Code.
 
+## Creating an application icon on Windows
+
+There's some interesting nuances to creating Windows icons, so I've included an easy to use shell script that will create one for you from .png files - ```make_icon_win.sh```. It only requires you to install ImageMagick, available here:
+https://www.imagemagick.org/script/download.php#windows (top-most binary)
+
+The script looks for 4 files: icon_16.png, icon_32.png, icon_48.png & icon_256.png. Edit them in the program of your choice & run the script using git bash and you'll get an app.ico file that you can import in ```src/Win32/Icon.rc```. The ```WindowsHelper``` class will read all the icons from the .ico file, and pick out the 16x16 & 32x32 ones for use as the application icon, while windows uses the other sizes for explorer.
+
 ## Multiple Projects
 
 Recently, I wanted to avoid duplicate Makefiles in my various projects, so I found a nice little solution to do this.
