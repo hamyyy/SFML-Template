@@ -12,7 +12,11 @@ class WindowsHelper
 		void setIcon(const sf::WindowHandle &handle);
 
 	private:
-        HICON m_hIcon;
+		PBYTE getIconDirectory(const int &inResourceId);
+		HICON getIconFromIconDirectory(const PBYTE &inIconDirectory, const uint &inSize);
+
+        HICON m_hIcon32;
+		HICON m_hIcon16;
 
 };
 
