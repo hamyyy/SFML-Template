@@ -15,7 +15,7 @@ WindowsHelper::WindowsHelper()
  * The window handle uses 32x32 (ICON_BIG) & 16x16 (ICON_SMALL) sized icons.
  * This should be called any time the SFML window is create/recreated
  *****************************************************************************/
-void WindowsHelper::setIcon(const sf::WindowHandle &inHandle)
+void WindowsHelper::setIcon(const HWND &inHandle)
 {
 	if(m_hIcon32)
 		SendMessage(inHandle, WM_SETICON, ICON_BIG, (LPARAM)m_hIcon32);

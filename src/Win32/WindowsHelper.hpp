@@ -1,7 +1,6 @@
 #ifndef WINDOWS_HELPER_HPP
 #define WINDOWS_HELPER_HPP
 
-// Local includes
 #include "Icon.h"
 
 class WindowsHelper
@@ -9,7 +8,7 @@ class WindowsHelper
 	public:
 		WindowsHelper();
 
-		void setIcon(const sf::WindowHandle &handle);
+		void setIcon(const HWND &handle);
 
 	private:
 		PBYTE getIconDirectory(const int &inResourceId);
