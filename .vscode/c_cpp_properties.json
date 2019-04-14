@@ -9,7 +9,9 @@
 				"/usr/local/include/**",
 				"/usr/include/**"
 			],
-			"defines": [],
+			"defines": [
+                "_DEBUG"
+			],
 			"cStandard": "c11",
 			"cppStandard": "c++17",
 			"forcedInclude": [
@@ -24,7 +26,9 @@
 				"/usr/local/include/**",
 				"/usr/include/**"
 			],
-			"defines": [],
+			"defines": [
+                "_DEBUG"
+			],
 			"cStandard": "c11",
 			"cppStandard": "c++17",
 			"forcedInclude": [
@@ -39,7 +43,11 @@
 				"${workspaceFolder}/src",
 				"C:/SFML-2.5.1/include"
 			],
-			"defines": [],
+			"defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+			],
 			"cStandard": "c11",
 			"cppStandard": "c++17",
 			"forcedInclude": [

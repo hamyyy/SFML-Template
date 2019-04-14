@@ -31,7 +31,7 @@ void WindowsHelper::setIcon(const HWND &inHandle)
 PBYTE WindowsHelper::getIconDirectory(const int &inResourceId)
 {
 	HMODULE hModule = GetModuleHandle(nullptr);
-	HRSRC hResource = FindResource(hModule, (LPSTR)MAKEINTRESOURCE(inResourceId), RT_GROUP_ICON);
+	HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(inResourceId), RT_GROUP_ICON);
 
 	HGLOBAL hData = LoadResource(hModule, hResource);
 	PBYTE data = (PBYTE)LockResource(hData);
