@@ -4,9 +4,6 @@ MAX_PARALLEL_JOBS := 4
 
 CFLAGS := -Os -s $(CFLAGS)
 
-BUILD_MACROS= \
-	NDEBUG
-
 LIB_DIRS := \
 	/usr/local/gcc-8.1.0/lib \
 	/usr/local/lib
