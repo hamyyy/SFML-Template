@@ -8,7 +8,7 @@ class WindowsHelper
 	public:
 		WindowsHelper();
 
-		void setIcon(const HWND &handle);
+		void setIcon(const HWND &inHandle);
 
 	private:
 		PBYTE getIconDirectory(const int &inResourceId);
