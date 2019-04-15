@@ -120,7 +120,7 @@ _DEPS := $(_SOURCES_IF_RC)
 _DEPS := $(_DEPS:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
 _DEPS := $(_DEPS:.cc=.d)
-DEPS := $(_DEPS:%=$(DEP_DIR)/%)
+DEPS := $(_DEPS:%=$(DEP_DIR)/%) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
 DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 
 _PCH_HFILE := $(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh')
@@ -350,4 +350,4 @@ endif
 $(DEP_DIR)/%.d: ;
 .PRECIOUS: $(DEP_DIR)/%.d
 
-include $(wildcard $(DEPS) $(DEP_DIR)/$(PRECOMPILED_HEADER).d)
+include $(wildcard $(DEPS))
