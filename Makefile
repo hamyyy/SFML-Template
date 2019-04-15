@@ -350,4 +350,4 @@ endif
 $(DEP_DIR)/%.d: ;
 .PRECIOUS: $(DEP_DIR)/%.d
 
-include $(wildcard $(DEPS))
+include $(wildcard $(DEPS) $(DEP_DIR)/$(PRECOMPILED_HEADER).d)
