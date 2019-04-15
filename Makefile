@@ -228,7 +228,7 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(if $(_CLEAN),,$(color_reset))
 	$(_Q)$(ASM_COMPILE)
 
-# TODO: Redo the .dll stuff at some point
+# TODO: Redo the .dll stuff at some point - "targets"
 $(_EXE): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(_EXE)')
@@ -249,7 +249,7 @@ makebuild: $(_EXE)
 	$(color_reset)
 	@echo '$(BUILD) build target is up to date.'
 
-$(_DIRECTORIES) :
+$(_DIRECTORIES):
 	$(if $(_CLEAN),,$(color_reset))
 	$(MKDIR) $@
 
@@ -273,8 +273,10 @@ $(BLD_DIR)/%.so:
 .PHONY: rmprod
 rmprod:
 	$(color_reset)
-	-$(_Q)rm -f -r $(if $(filter osx,$(PLATFORM)),$(PRODUCTION_FOLDER_MACOS),$(PRODUCTION_FOLDER))
-	-$(_Q)rm -f -r ~/.local/share/applications/$(NAME).desktop
+	-$(_Q)rm -rf $(if $(filter osx,$(PLATFORM)),$(PRODUCTION_FOLDER_MACOS),$(PRODUCTION_FOLDER))
+ifeq ($(PLATFORM),linux)
+	-$(_Q)rm -rf ~/.local/share/applications/$(NAME).desktop
+endif
 
 .PHONY: mkdirprod
 mkdirprod:
