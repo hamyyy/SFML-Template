@@ -4,7 +4,7 @@ A cross-platform [SFML](https://www.sfml-dev.org) 2.5.1 & C++17 build environmen
 
 ## Features
 
-* GCC Compiler Configuration
+* GCC & Clang Compiler Configuration
 * Debugger support or standalone Debug build
 * Static Profiler (gprof)
 * Automated dependencies
