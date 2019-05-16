@@ -40,7 +40,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": [],
+			"problemMatcher": [
+				"$gcc"
+			],
 		},
 		{
 			"label": "Build: Release",
@@ -50,7 +52,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": []
+			"problemMatcher": [
+				"$gcc"
+			]
 		},
 		{
 			"label": "Run: Release",
@@ -60,7 +64,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": []
+			"problemMatcher": [
+				"$gcc"
+			]
 		},
 		{
 			"label": "Rebuild: Release",
@@ -70,7 +76,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": []
+			"problemMatcher": [
+				"$gcc"
+			]
 		},
 		{
 			"label": "Build & Run: Debug",
@@ -80,7 +88,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": []
+			"problemMatcher": [
+				"$gcc"
+			]
 		},
 		{
 			"label": "Build: Debug",
@@ -90,7 +100,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": []
+			"problemMatcher": [
+				"$gcc"
+			]
 		},
 		{
 			"label": "Run: Debug",
@@ -100,7 +112,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": []
+			"problemMatcher": [
+				"$gcc"
+			]
 		},
 		{
 			"label": "Rebuild: Debug",
@@ -110,7 +124,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": []
+			"problemMatcher": [
+				"$gcc"
+			]
 		},
 		{
 			"label": "Profile: Debug",
@@ -120,7 +136,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": []
+			"problemMatcher": [
+				"$gcc"
+			]
 		},
 		{
 			"label": "Build: Production",
@@ -130,7 +148,9 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"problemMatcher": []
+			"problemMatcher": [
+				"$gcc"
+			]
 		}
 	]
 }
