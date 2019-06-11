@@ -23,8 +23,7 @@
 			"intelliSenseMode": "clang-x64",
 			"includePath": [
 				"${workspaceFolder}/src",
-				"/usr/local/include/**",
-				"/usr/include/**"
+				"/usr/local/include/**"
 			],
 			"defines": [
                 "_DEBUG"
@@ -33,7 +32,7 @@
 			"cppStandard": "c++17",
 			"forcedInclude": [
 				"${workspaceFolder}/src/PCH.hpp"
-			]
+			],
 		},
 		{
 			"name": "Win32",
