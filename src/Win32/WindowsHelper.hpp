@@ -1,8 +1,6 @@
 #ifndef WINDOWS_HELPER_HPP
 #define WINDOWS_HELPER_HPP
 
-#include "Icon.h"
-
 class WindowsHelper
 {
 	public:

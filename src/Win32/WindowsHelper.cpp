@@ -1,6 +1,8 @@
 #ifdef _WIN32
 #include "WindowsHelper.hpp"
 
+#include "Icon.h"
+
 WindowsHelper::WindowsHelper()
 {
 	// Get the icon directory
