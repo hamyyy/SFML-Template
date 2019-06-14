@@ -48,8 +48,7 @@
 	},
 	"files.associations": {
 		"*.json": "jsonc",
-		"*.stats": "cpp",
-		"*.rc": "cpp"
+		"*.stats": "cpp"
 	},
 
 	"C_Cpp.autocomplete": "Default",
