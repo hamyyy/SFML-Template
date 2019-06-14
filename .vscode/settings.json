@@ -57,6 +57,7 @@
 	"C_Cpp.preferredPathSeparator": "Forward Slash",
 	"C_Cpp.loggingLevel": "Warning",
 	"C_Cpp.workspaceParsingPriority": "highest",
+	"C_Cpp.enhancedColorization": "Disabled",
 
 	"[applescript]": {
 		"files.encoding": "utf8"
