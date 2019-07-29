@@ -169,15 +169,15 @@ ifeq ($(PLATFORM),osx)
 else
 	ASM_COMPILE = objdump -d -C -Mintel $< > $@
 endif
-POST_COMPILE = $(_Q)mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
+POST_COMPILE = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 
 export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
 
 #==============================================================================
 # Build Scripts
 all:
-	@$(MAKE) -k --no-print-directory makepch
-	@$(MAKE) -j$(MAX_PARALLEL_JOBS) -k --no-print-directory makebuild
+	@$(MAKE) -s --no-print-directory makepch
+	@$(MAKE) -j$(MAX_PARALLEL_JOBS) -s --no-print-directory makebuild
 
 .PHONY: rebuild
 rebuild: clean all
@@ -193,9 +193,8 @@ endef
 
 define comple_with
 	$(color_reset)
-	$(if $(_CLEAN),@echo $($(1):$(OBJ_DIR)/%=%))
-	$(_Q)$(2)
-	$(POST_COMPILE)
+	$(if $(_CLEAN),@echo $($(2):$(OBJ_DIR)/%=%))
+	$(3) && $(POST_COMPILE)
 endef
 
 MKDIR := $(_Q)mkdir -p
@@ -205,19 +204,19 @@ WITH_DEPS = $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
 # Build Recipes
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(WITH_DEPS)
-	$(call comple_with,<,$(OBJ_COMPILE))
+	$(call comple_with,@,<,$(OBJ_COMPILE))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(WITH_DEPS)
-	$(call comple_with,<,$(OBJ_COMPILE))
+	$(call comple_with,@,<,$(OBJ_COMPILE))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(WITH_DEPS)
-	$(call comple_with,<,$(OBJ_COMPILE))
+	$(call comple_with,@,<,$(OBJ_COMPILE))
 
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT)
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call comple_with,<,$(PCH_COMPILE))
+	$(call comple_with,@,<,$(PCH_COMPILE))
 
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(SRC_DIR)/%.h | $(_DIRECTORIES)
@@ -234,7 +233,7 @@ $(_EXE): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(_EXE)')
 ifeq ($(suffix $(_EXE)),.dll)
-	-$(_Q)rm -f $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
+	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
 	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
