@@ -1,4 +1,6 @@
 #==============================================================================
+MAKEFLAGS += --silent
+#==============================================================================
 # Build platform
 PLATFORM?=linux
 # Build description (Primarily uses Debug/Release)
@@ -176,8 +178,8 @@ export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
 #==============================================================================
 # Build Scripts
 all:
-	@$(MAKE) -s --no-print-directory makepch
-	@$(MAKE) -j$(MAX_PARALLEL_JOBS) -s --no-print-directory makebuild
+	@$(MAKE) makepch
+	@$(MAKE) -j$(MAX_PARALLEL_JOBS) makebuild
 
 .PHONY: rebuild
 rebuild: clean all

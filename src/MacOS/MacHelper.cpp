@@ -3,6 +3,9 @@
 
 #include "CoreFoundation/CoreFoundation.h"
 
+/******************************************************************************
+ *
+ *****************************************************************************/
 MacHelper::MacHelper()
 {
 	// This function ensures the working directory is set inside of the bundle if in production mode
