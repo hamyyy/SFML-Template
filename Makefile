@@ -1,5 +1,5 @@
 #==============================================================================
-MAKEFLAGS += --silent
+MAKEFLAGS += --no-print-directory
 #==============================================================================
 # Build platform
 PLATFORM?=linux
@@ -65,11 +65,21 @@ PROJECT_DIRS := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -mindepth 1 -m
 
 # Add prefixes to the above variables
 _LIB_DIRS := $(LIB_DIRS:%=-L%)
-_INCLUDE_DIRS := $(patsubst %,-I%,$(SRC_DIR)/ $(INCLUDE_DIRS))
+_INCLUDE_DIRS := $(patsubst %,-I%,$(SRC_DIR)/ lib/ $(INCLUDE_DIRS))
 
 _BUILD_MACROS := $(BUILD_MACROS:%=-D%)
 _LINK_LIBRARIES := $(LINK_LIBRARIES:%=-l%)
 
+#==============================================================================
+# Unit Testing
+TEST_DIR :=
+ifeq ($(BUILD),Tests)
+	TEST_DIR := test
+	SOURCE_FILES := $(SOURCE_FILES:Main.cpp=)
+	SOURCE_FILES := $(patsubst $(TEST_DIR)/%,%,$(shell find $(TEST_DIR) -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc')) $(SOURCE_FILES)
+	_INCLUDE_DIRS := $(patsubst %,-I%,$(TEST_DIR)/) $(_INCLUDE_DIRS)
+	PROJECT_DIRS := $(PROJECT_DIRS)
+endif
 #==============================================================================
 # Linux Specific
 LINUX_ICON?=icon
@@ -111,16 +121,14 @@ _NAMENOEXT := $(_NAMENOEXT:.dll=)
 _SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES:.rc=.res),$(SOURCE_FILES:%.rc=))
 
 OBJ_DIR := $(BLD_DIR)/obj
-_OBJS := $(_SOURCES_IF_RC)
-_OBJS := $(_OBJS:.c=.o)
+_OBJS := $(_SOURCES_IF_RC:.c=.o)
 _OBJS := $(_OBJS:.cpp=.o)
 _OBJS := $(_OBJS:.cc=.o)
 OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
-_DEPS := $(_SOURCES_IF_RC)
-_DEPS := $(_DEPS:.c=.d)
+_DEPS := $(_SOURCES_IF_RC:.c=.d)
 _DEPS := $(_DEPS:.cpp=.d)
 _DEPS := $(_DEPS:.cc=.d)
 DEPS := $(_DEPS:%=$(DEP_DIR)/%) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
@@ -156,15 +164,18 @@ _Q := $(if $(_CLEAN),@)
 # Compiler & flags
 CC?=g++
 RC?=windres.exe
-CFLAGS_ALL?=-Wfatal-errors -Wextra -Wall
-CFLAGS?=-g $(CFLAGS_ALL)
+_CFLAGS_WARNINGS ?= -Wall -Wcast-align -Werror -Wextra -Wformat-nonliteral -Wformat=2 -Winvalid-pch -Wmissing-declarations -Wmissing-format-attribute -Wmissing-include-dirs -Wredundant-decls -Wredundant-decls -Wswitch-default -Wswitch-enum -Wodr
+_CFLAGS_STD :=  -std=c++17
+CFLAGS?=-Os -s $(CFLAGS_STD) $(CFLAGS_WARNINGS) -flto -fdiagnostics-color=always
 
 CFLAGS_DEPS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
 ifneq ($(_PCH),)
 	_INCLUDE_PCH := -include $(_PCH)
 endif
+
 OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(_INCLUDE_PCH) $(CFLAGS) -o $@ -c $<
+
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ifeq ($(PLATFORM),osx)
 	ASM_COMPILE = otool -tvV $< | c++filt > $@
@@ -177,6 +188,7 @@ export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
 
 #==============================================================================
 # Build Scripts
+.DELETE_ON_ERROR: all
 all:
 	@$(MAKE) makepch
 	@$(MAKE) -j$(MAX_PARALLEL_JOBS) makebuild
@@ -196,7 +208,7 @@ endef
 define comple_with
 	$(color_reset)
 	$(if $(_CLEAN),@echo $($(2):$(OBJ_DIR)/%=%))
-	$(3) && $(POST_COMPILE)
+	$(_Q)$(3) && $(POST_COMPILE)
 endef
 
 MKDIR := $(_Q)mkdir -p
@@ -216,6 +228,18 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(WITH_DEPS)
 	$(call comple_with,@,<,$(OBJ_COMPILE))
 
+$(OBJ_DIR)/%.o: $(TEST_DIR)/%.c
+$(OBJ_DIR)/%.o: $(TEST_DIR)/%.c $(WITH_DEPS)
+	$(call comple_with,@,<,$(OBJ_COMPILE))
+
+$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cpp
+$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cpp $(WITH_DEPS)
+	$(call comple_with,@,<,$(OBJ_COMPILE))
+
+$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cc
+$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cc $(WITH_DEPS)
+	$(call comple_with,@,<,$(OBJ_COMPILE))
+
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT)
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(call comple_with,@,<,$(PCH_COMPILE))
@@ -231,7 +255,7 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(_Q)$(ASM_COMPILE)
 
 # TODO: Redo the .dll stuff at some point - "targets"
-$(_EXE): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(_BUILD_DEPENDENCIES)
+$(_EXE): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR) $(_BUILD_DEPENDENCIES)
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(_EXE)')
 ifeq ($(suffix $(_EXE)),.dll)
@@ -240,7 +264,6 @@ ifeq ($(suffix $(_EXE)),.dll)
 else
 	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
-
 
 .PHONY: makepch
 makepch: $(_PCH_GCH)

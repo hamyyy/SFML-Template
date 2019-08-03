@@ -40,6 +40,7 @@
 			"compilerPath": "C:/mingw32/bin/gcc.exe",
 			"includePath": [
 				"${workspaceFolder}/src",
+				"${workspaceFolder}/lib",
 				"C:/SFML-2.5.1/include"
 			],
 			"defines": [

@@ -1,5 +1,5 @@
 CC := clang++
-CFLAGS := -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=always
+CFLAGS := $(_CFLAGS_STD) $(_CFLAGS_WARNINGS) -flto -fdiagnostics-color=always
 
 LIB_DIRS := \
 	/usr/local/lib
