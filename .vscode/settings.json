@@ -36,7 +36,8 @@
 	"files.associations": {
 		"*.json": "jsonc",
 		"*.stats": "cpp",
-		"*.desktop": "properties"
+		"*.desktop": "properties",
+		".clang-format": "yaml"
 	},
 
 	"terminal.integrated.shell.windows": "C:/Program Files/Git/bin/bash.exe",

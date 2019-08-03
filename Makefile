@@ -165,7 +165,7 @@ _Q := $(if $(_CLEAN),@)
 # Compiler & flags
 CC?=g++
 RC?=windres.exe
-CFLAGS?=-Os -s -Wall -flto -fdiagnostics-color=always
+CFLAGS?=-O2 -s -Wall -flto -fdiagnostics-color=always
 
 CFLAGS_DEPS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<

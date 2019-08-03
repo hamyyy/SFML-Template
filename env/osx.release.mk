@@ -1,1 +1,1 @@
-CFLAGS := -Os -s $(CFLAGS)
+CFLAGS := -O2 -s $(CFLAGS)
