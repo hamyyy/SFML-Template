@@ -5,6 +5,7 @@
 			"intelliSenseMode": "gcc-x64",
 			"includePath": [
 				"${workspaceFolder}/src",
+				"${workspaceFolder}/lib",
 				"~/SFML-2.5.1/include",
 				"/usr/local/include/**",
 				"/usr/include/**"
@@ -23,6 +24,7 @@
 			"intelliSenseMode": "clang-x64",
 			"includePath": [
 				"${workspaceFolder}/src",
+				"${workspaceFolder}/lib",
 				"/usr/local/include/**"
 			],
 			"defines": [
