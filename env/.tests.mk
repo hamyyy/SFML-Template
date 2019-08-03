@@ -1,1 +1,1 @@
-CFLAGS := -O2 -s $(_CFLAGS_STD) $(_CFLAGS_WARNINGS) -flto -fdiagnostics-color=always
+CFLAGS := -O2 -s $(_CFLAGS_STD) $(_CFLAGS_WARNINGS) $(_CFLAGS_OTHER)

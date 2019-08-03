@@ -1,6 +1,4 @@
 CC := g++.exe
-CFLAGS :=  $(_CFLAGS_STD) $(_CFLAGS_WARNINGS) -flto -fdiagnostics-color=always
-RC := windres.exe
 
 _MINGW := C:/mingw32/bin
 _SFML := C:/SFML-2.5.1

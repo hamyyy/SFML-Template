@@ -1,5 +1,4 @@
 CC := g++-8.1.0
-CFLAGS := $(_CFLAGS_STD) $(_CFLAGS_WARNINGS) -flto -fdiagnostics-color=always
 MAX_PARALLEL_JOBS := 4
 
 CFLAGS := -O2 -s $(CFLAGS)

@@ -1,5 +1,4 @@
 CC := clang++
-CFLAGS := $(_CFLAGS_STD) $(_CFLAGS_WARNINGS) -flto -fdiagnostics-color=always
 
 LIB_DIRS := \
 	/usr/local/lib
