@@ -1,7 +1,2 @@
-CFLAGS := -O2 -s $(CFLAGS)
-
 BUILD_FLAGS := \
 	-mwindows
-
-LINK_LIBRARIES := \
-	$(LINK_LIBRARIES)
