@@ -1,4 +1,5 @@
 CC := clang++
+CFLAGS := $(CFLAGS:-s=)
 
 LIB_DIRS := \
 	/usr/local/lib
