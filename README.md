@@ -89,6 +89,7 @@ The environment variables used by the Makefile are managed from the **env** fold
     ./build.sh: Contains the build scripts that tasks.json calls
 
     ./env/.all.mk: All platforms & builds
+    ./env/.tests.mk: All platforms, Tests build
 
     ./env/.debug.mk: All platforms, Debug build  
     ./env/.release.mk: All platforms, Release build  
@@ -117,7 +118,6 @@ The environment variables that can be added to each .mk file are outlined below.
     ./env/(platform).all.mk
     ./env/(platform).(build).mk
 
-Although not included in the default boilerplate. You can customize the unit test build with .tests.mk or (platform).tests.mk files.
 
 **CFLAGS**:  
 Compiler flags to use.
