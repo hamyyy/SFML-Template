@@ -20,12 +20,12 @@
 	"files.eol": "\n",
 	"files.exclude": {
 		//".vscode/_*.json": true,
-		//".vscode/tasks.json": true,
-		//".vscode/launch.json": true,
+		".vscode/tasks.json": true,
+		".vscode/launch.json": true,
 		"env/windows/*.sh": true,
 		"env/osx/dmg.applescript": true,
-		//"Makefile": true,
-		//"build.sh": true,
+		"Makefile": true,
+		"build.sh": true,
 		"gmon.out": true,
 		"bin/": true,
 		"build/": true,
@@ -35,7 +35,8 @@
 	},
 	"files.associations": {
 		"*.json": "jsonc",
-		"*.stats": "cpp"
+		"*.stats": "cpp",
+		"*.desktop": "properties"
 	},
 
 	"terminal.integrated.shell.windows": "C:/Program Files/Git/bin/bash.exe",

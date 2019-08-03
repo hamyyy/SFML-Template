@@ -76,10 +76,11 @@ TEST_DIR :=
 ifeq ($(BUILD),Tests)
 	TEST_DIR := test
 	SOURCE_FILES := $(SOURCE_FILES:Main.cpp=)
-	SOURCE_FILES := $(patsubst $(TEST_DIR)/%,%,$(shell find $(TEST_DIR) -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc')) $(SOURCE_FILES)
+	SOURCE_FILES := $(patsubst $(TEST_DIR)/%,.$(TEST_DIR)/%,$(shell find $(TEST_DIR) -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc')) $(SOURCE_FILES)
 	_INCLUDE_DIRS := $(patsubst %,-I%,$(TEST_DIR)/) $(_INCLUDE_DIRS)
-	PROJECT_DIRS := $(PROJECT_DIRS)
+	PROJECT_DIRS := .$(TEST_DIR) $(PROJECT_DIRS)
 endif
+
 #==============================================================================
 # Linux Specific
 LINUX_ICON?=icon
@@ -114,32 +115,32 @@ endif
 # Directories & Dependencies
 BLD_DIR := bin/$(BUILD)
 BLD_DIR := $(BLD_DIR:%/=%)
-_EXE := $(BLD_DIR)/$(NAME)
+TARGET := $(BLD_DIR)/$(NAME)
 _NAMENOEXT := $(NAME:.exe=)
 _NAMENOEXT := $(_NAMENOEXT:.dll=)
 
 _SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES:.rc=.res),$(SOURCE_FILES:%.rc=))
 
 OBJ_DIR := $(BLD_DIR)/obj
-_OBJS := $(_SOURCES_IF_RC:.c=.o)
-_OBJS := $(_OBJS:.cpp=.o)
-_OBJS := $(_OBJS:.cc=.o)
+_OBJS := $(_SOURCES_IF_RC:.c=.c.o)
+_OBJS := $(_OBJS:.cpp=.cpp.o)
+_OBJS := $(_OBJS:.cc=.cc.o)
 OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
-_DEPS := $(_SOURCES_IF_RC:.c=.d)
-_DEPS := $(_DEPS:.cpp=.d)
-_DEPS := $(_DEPS:.cc=.d)
+_DEPS := $(_SOURCES_IF_RC:.c=.c.d)
+_DEPS := $(_DEPS:.cpp=.cpp.d)
+_DEPS := $(_DEPS:.cc=.cc.d)
 DEPS := $(_DEPS:%=$(DEP_DIR)/%) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
 DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 
-_PCH_HFILE := $(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh')
-_PCH_EXT := $(_PCH_HFILE:$(SRC_DIR)/$(PRECOMPILED_HEADER).%=%)
+_PCH_HFILE := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh'))
+_PCH_EXT := $(_PCH_HFILE:$(PRECOMPILED_HEADER).%=%)
 _PCH_COMPILER_EXT := $(if $(filter osx,$(PLATFORM)),p,g)ch
 
 
-_PCH := $(_PCH_HFILE:$(SRC_DIR)/%=$(OBJ_DIR)/%)
+_PCH := $(_PCH_HFILE:%=$(OBJ_DIR)/%)
 ifneq ($(_PCH),)
 	_PCH_GCH := $(_PCH).$(_PCH_COMPILER_EXT)
 endif
@@ -164,9 +165,7 @@ _Q := $(if $(_CLEAN),@)
 # Compiler & flags
 CC?=g++
 RC?=windres.exe
-_CFLAGS_WARNINGS ?= -Wall -Wcast-align -Werror -Wextra -Wformat-nonliteral -Wformat=2 -Winvalid-pch -Wmissing-declarations -Wmissing-format-attribute -Wmissing-include-dirs -Wredundant-decls -Wredundant-decls -Wswitch-default -Wswitch-enum -Wodr
-_CFLAGS_STD :=  -std=c++17
-CFLAGS?=-Os -s $(CFLAGS_STD) $(CFLAGS_WARNINGS) -flto -fdiagnostics-color=always
+CFLAGS?=-Os -s -Wall -flto -fdiagnostics-color=always
 
 CFLAGS_DEPS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
@@ -216,28 +215,12 @@ WITH_DEPS = $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
 
 #==============================================================================
 # Build Recipes
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(WITH_DEPS)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%
+$(OBJ_DIR)/%.o: $(SRC_DIR)/% $(WITH_DEPS)
 	$(call comple_with,@,<,$(OBJ_COMPILE))
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(WITH_DEPS)
-	$(call comple_with,@,<,$(OBJ_COMPILE))
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(WITH_DEPS)
-	$(call comple_with,@,<,$(OBJ_COMPILE))
-
-$(OBJ_DIR)/%.o: $(TEST_DIR)/%.c
-$(OBJ_DIR)/%.o: $(TEST_DIR)/%.c $(WITH_DEPS)
-	$(call comple_with,@,<,$(OBJ_COMPILE))
-
-$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cpp
-$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cpp $(WITH_DEPS)
-	$(call comple_with,@,<,$(OBJ_COMPILE))
-
-$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cc
-$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cc $(WITH_DEPS)
+$(OBJ_DIR)/.$(TEST_DIR)/%.o: $(TEST_DIR)/%
+$(OBJ_DIR)/.$(TEST_DIR)/%.o: $(TEST_DIR)/% $(WITH_DEPS)
 	$(call comple_with,@,<,$(OBJ_COMPILE))
 
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT)
@@ -245,7 +228,7 @@ $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_D
 	$(call comple_with,@,<,$(PCH_COMPILE))
 
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc
-$(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(SRC_DIR)/%.h | $(_DIRECTORIES)
+$(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(color_reset)
 	$(if $(_CLEAN),@echo $(<:$(OBJ_DIR)/%=%))
 	$(_Q)$(RC_COMPILE)
@@ -255,10 +238,10 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(_Q)$(ASM_COMPILE)
 
 # TODO: Redo the .dll stuff at some point - "targets"
-$(_EXE): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR) $(_BUILD_DEPENDENCIES)
+$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR) $(_BUILD_DEPENDENCIES)
 	$(color_reset)
-	$(if $(_CLEAN),@echo; echo 'Linking: $(_EXE)')
-ifeq ($(suffix $(_EXE)),.dll)
+	$(if $(_CLEAN),@echo; echo 'Linking: $(TARGET)')
+ifeq ($(suffix $(TARGET)),.dll)
 	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
@@ -270,7 +253,7 @@ makepch: $(_PCH_GCH)
 	@echo > /dev/null
 
 .PHONY: makebuild
-makebuild: $(_EXE)
+makebuild: $(TARGET)
 	$(color_reset)
 	@echo '$(BUILD) build target is up to date.'
 
@@ -282,7 +265,7 @@ $(_DIRECTORIES):
 clean:
 	$(color_reset)
 	$(if $(_CLEAN),@echo 'Cleaning old build files & folders...'; echo)
-	$(_Q)$(RM) $(_EXE) $(DEPS) $(OBJS)
+	$(_Q)$(RM) $(TARGET) $(DEPS) $(OBJS)
 
 #==============================================================================
 # Production recipes
@@ -309,7 +292,7 @@ mkdirprod:
 	$(MKDIR) $(PRODUCTION_FOLDER)
 
 .PHONY: releasetoprod
-releasetoprod: $(_EXE)
+releasetoprod: $(TARGET)
 	$(color_reset)
 ifeq ($(PLATFORM),osx)
 	@echo 'Creating the MacOS application bundle...'
@@ -325,10 +308,10 @@ endif
 	$(_Q)plutil -replace CFBundleIconFile -string $(MACOS_ICON) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleDisplayName -string "$(PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME)" $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleIdentifier -string com.$(PRODUCTION_MACOS_BUNDLE_DEVELOPER).$(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
-	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)/MacOS
+	$(_Q)cp $(TARGET) $(PRODUCTION_FOLDER)/MacOS
 	$(_Q)chmod +x $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 else ifeq ($(PLATFORM),linux)
-	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
+	$(_Q)cp $(TARGET) $(PRODUCTION_FOLDER)
 	$(_Q)cp env/linux/$(LINUX_ICON).png $(PRODUCTION_FOLDER)/$(LINUX_ICON).png
 	$(_Q)cp env/linux/exec.desktop $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)sed -i 's/^Exec=.*/Exec=$(_LINUX_GREP_CWD)\/$(PRODUCTION_FOLDER)\/$(NAME)/' $(PRODUCTION_FOLDER)/$(NAME).desktop
@@ -340,7 +323,7 @@ else ifeq ($(PLATFORM),linux)
 	$(_Q)chmod +x $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)cp $(PRODUCTION_FOLDER)/$(NAME).desktop ~/.local/share/applications
 else
-	$(_Q)cp $(_EXE) $(PRODUCTION_FOLDER)
+	$(_Q)cp $(TARGET) $(PRODUCTION_FOLDER)
 endif
 
 .PHONY: makeproduction

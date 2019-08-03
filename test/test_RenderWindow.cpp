@@ -24,7 +24,6 @@ TEST_CASE("sf::RenderWindow", "[renderwindow]") {
     REQUIRE(shape.getTexture() == &shapeTexture);
 
     // Show the RenderWindow once
-
     window.clear();
     window.draw(shape);
     window.display();
