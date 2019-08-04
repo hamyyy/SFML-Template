@@ -129,10 +129,8 @@ OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
-_DEPS := $(_SOURCES_IF_RC:.c=.c.d)
-_DEPS := $(_DEPS:.cpp=.cpp.d)
-_DEPS := $(_DEPS:.cc=.cc.d)
-DEPS := $(_DEPS:%=$(DEP_DIR)/%) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
+	DEPS := $(OBJS:$(OBJ_DIR)/%=$(ASM_DIR)/%.asm)
+	DEPS := $(DEPS:%.res=) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
 DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 
 _PCH_HFILE := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh'))
@@ -147,9 +145,8 @@ endif
 
 ifeq ($(DUMP_ASSEMBLY),true)
 	ASM_DIR := $(BLD_DIR)/asm
-	_ASMS := $(_OBJS:%.res=)
-	_ASMS := $(_ASMS:.o=.o.asm)
-	ASMS := $(_ASMS:%=$(ASM_DIR)/%)
+	ASMS := $(OBJS:$(OBJ_DIR)/%=$(ASM_DIR)/%.asm)
+	ASMS := $(ASMS:%.res=)
 	ASM_SUBDIRS := $(PROJECT_DIRS:%=$(ASM_DIR)/%)
 endif
 
@@ -238,7 +235,7 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(_Q)$(ASM_COMPILE)
 
 # TODO: Redo the .dll stuff at some point - "targets"
-$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR) $(_BUILD_DEPENDENCIES)
+$(TARGET): targetdeps
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
@@ -250,6 +247,10 @@ endif
 
 .PHONY: makepch
 makepch: $(_PCH_GCH)
+	@echo > /dev/null
+
+.PHONY: targetdeps
+targetdeps: $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR) $(_BUILD_DEPENDENCIES)
 	@echo > /dev/null
 
 .PHONY: makebuild
