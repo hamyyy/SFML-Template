@@ -30,6 +30,7 @@
 				"${workspaceFolder}/src",
 				"${workspaceFolder}/lib",
 				"${workspaceFolder}/test",
+				"/Library/Frameworks/**",
 				"/usr/local/include/**"
 			],
 			"defines": [
