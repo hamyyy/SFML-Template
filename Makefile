@@ -122,15 +122,15 @@ _NAMENOEXT := $(_NAMENOEXT:.dll=)
 _SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES:.rc=.res),$(SOURCE_FILES:%.rc=))
 
 OBJ_DIR := $(BLD_DIR)/obj
-_OBJS := $(_SOURCES_IF_RC:.c=.c.o)
-_OBJS := $(_OBJS:.cpp=.cpp.o)
-_OBJS := $(_OBJS:.cc=.cc.o)
-OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
+OBJS := $(_SOURCES_IF_RC:.c=.c.o)
+OBJS := $(OBJS:.cpp=.cpp.o)
+OBJS := $(OBJS:.cc=.cc.o)
+OBJS := $(OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
-	DEPS := $(OBJS:$(OBJ_DIR)/%=$(ASM_DIR)/%.asm)
-	DEPS := $(DEPS:%.res=) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
+DEPS := $(OBJS:$(OBJ_DIR)/%=$(DEP_DIR)/%.d)
+DEPS := $(DEPS:%.res=) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
 DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 
 _PCH_HFILE := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh'))
