@@ -3,6 +3,7 @@
 		{
 			"name": "Linux",
 			"intelliSenseMode": "gcc-x64",
+			"compilerPath": "/usr/bin/gcc",
 			"includePath": [
 				"${workspaceFolder}/src",
 				"${workspaceFolder}/lib",
@@ -23,8 +24,10 @@
 		{
 			"name": "Mac",
 			"intelliSenseMode": "clang-x64",
+			"compilerPath": "/usr/bin/clang",
 			"macFrameworkPath": [
-				"/Library/Frameworks"
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
 			],
 			"includePath": [
 				"${workspaceFolder}/src",

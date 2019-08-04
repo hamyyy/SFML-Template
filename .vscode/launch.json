@@ -39,7 +39,6 @@
 			"osx": {
 				"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}",
 				"MIMode": "lldb",
-				"miDebuggerPath": "/usr/bin/lldb",
 				"env": {
 					"PATH": "${config:terminal.integrated.env.osx.PATH}",
 				}
