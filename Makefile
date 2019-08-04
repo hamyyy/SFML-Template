@@ -169,7 +169,7 @@ _Q := $(if $(_CLEAN),@)
 # Compiler & flags
 CC?=g++
 RC?=windres.exe
-CFLAGS?=-O2 -s -Wall -flto -fdiagnostics-color=always
+CFLAGS?=-O2 -Wall -flto -fdiagnostics-color=always
 
 CFLAGS_DEPS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
@@ -239,16 +239,18 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(if $(_CLEAN),,$(color_reset))
 	$(_Q)$(ASM_COMPILE)
 
-# TODO: Redo the .dll stuff at some point - "targets"
-$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR) $(_BUILD_DEPENDENCIES)
+$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR)
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(TARGET)')
-ifeq ($(suffix $(TARGET)),.dll)
+	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
+
+# TODO: Test this further
+$(BLD_DIR)/%.dll: $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR)
+	$(color_reset)
+	$(if $(_CLEAN),@echo; echo 'Linking: $@')
 	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-else
-	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-endif
 
 .PHONY: makepch
 makepch: $(_PCH_GCH)
@@ -271,14 +273,6 @@ clean:
 
 #==============================================================================
 # Production recipes
-
-$(BLD_DIR)/%.dll:
-	$(color_reset)
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
-
-$(BLD_DIR)/%.so:
-	$(color_reset)
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
 .PHONY: rmprod
 rmprod:
