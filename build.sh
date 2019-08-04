@@ -7,6 +7,8 @@ OPTIONS=$4
 
 cwd=${PWD##*/}
 
+export GCC_COLORS="error=01;31:warning=01;33:note=01;36:locus=00;34"
+
 if [[ $CMD == '' ]]; then
 	CMD=buildprod
 fi

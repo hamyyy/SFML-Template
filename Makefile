@@ -122,10 +122,10 @@ _NAMENOEXT := $(_NAMENOEXT:.dll=)
 _SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES:.rc=.res),$(SOURCE_FILES:%.rc=))
 
 OBJ_DIR := $(BLD_DIR)/obj
-OBJS := $(_SOURCES_IF_RC:.c=.c.o)
-OBJS := $(OBJS:.cpp=.cpp.o)
-OBJS := $(OBJS:.cc=.cc.o)
-OBJS := $(OBJS:%=$(OBJ_DIR)/%)
+_OBJS := $(_SOURCES_IF_RC:.c=.c.o)
+_OBJS := $(_OBJS:.cpp=.cpp.o)
+_OBJS := $(_OBJS:.cc=.cc.o)
+OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
@@ -180,8 +180,6 @@ else
 endif
 POST_COMPILE = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 
-export GCC_COLORS := error=01;31:warning=01;33:note=01;36:locus=00;34
-
 #==============================================================================
 # Build Scripts
 .DELETE_ON_ERROR: all
@@ -235,7 +233,7 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(_Q)$(ASM_COMPILE)
 
 # TODO: Redo the .dll stuff at some point - "targets"
-$(TARGET): targetdeps
+$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR) $(_BUILD_DEPENDENCIES)
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
@@ -247,10 +245,6 @@ endif
 
 .PHONY: makepch
 makepch: $(_PCH_GCH)
-	@echo > /dev/null
-
-.PHONY: targetdeps
-targetdeps: $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR) $(_BUILD_DEPENDENCIES)
 	@echo > /dev/null
 
 .PHONY: makebuild
