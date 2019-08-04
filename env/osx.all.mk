@@ -11,7 +11,15 @@ BUILD_DEPENDENCIES :=
 
 MACOS_ICON := sfml
 
+LINK_LIBRARIES :=
+
 BUILD_FLAGS := \
+	-F/Library/Frameworks \
+	-framework sfml-audio \
+	-framework sfml-graphics \
+	-framework sfml-network \
+	-framework sfml-system \
+	-framework sfml-window \
 	-framework CoreFoundation
 
 PRODUCTION_DEPENDENCIES := \
