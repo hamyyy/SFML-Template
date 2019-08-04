@@ -172,12 +172,14 @@ RC?=windres.exe
 CFLAGS?=-O2 -Wall -flto -fdiagnostics-color=always
 
 CFLAGS_DEPS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
+CFLAGS_DEPS_T = -MT $@ -MMD -MP -MF $(DEP_DIR)/.$(TEST_DIR)/$*.Td
 PCH_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(CFLAGS) $(_INCLUDE_DIRS) -o $@ -c $<
 ifneq ($(_PCH),)
 	_INCLUDE_PCH := -include $(_PCH)
 endif
 
 OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(_INCLUDE_PCH) $(CFLAGS) -o $@ -c $<
+OBJ_COMPILE_T = $(CC) $(CFLAGS_DEPS_T) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(_INCLUDE_PCH) $(CFLAGS) -o $@ -c $<
 
 RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
 ifeq ($(PLATFORM),osx)
@@ -186,6 +188,7 @@ else
 	ASM_COMPILE = objdump -d -C -Mintel $< > $@
 endif
 POST_COMPILE = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
+POST_COMPILE_T = mv -f $(DEP_DIR)/.$(TEST_DIR)/$*.Td $(DEP_DIR)/.$(TEST_DIR)/$*.d && touch $@
 
 #==============================================================================
 # Build Scripts
@@ -209,25 +212,24 @@ endef
 define comple_with
 	$(color_reset)
 	$(if $(_CLEAN),@echo $($(2):$(OBJ_DIR)/%=%))
-	$(_Q)$(3) && $(POST_COMPILE)
+	$(_Q)$(3) && $(4)
 endef
 
 MKDIR := $(_Q)mkdir -p
-WITH_DEPS = $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
 
 #==============================================================================
 # Build Recipes
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%
-$(OBJ_DIR)/%.o: $(SRC_DIR)/% $(WITH_DEPS)
-	$(call comple_with,@,<,$(OBJ_COMPILE))
+$(OBJ_DIR)/%.o: $(SRC_DIR)/% $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
+	$(call comple_with,@,<,$(OBJ_COMPILE),$(POST_COMPILE))
 
 $(OBJ_DIR)/.$(TEST_DIR)/%.o: $(TEST_DIR)/%
-$(OBJ_DIR)/.$(TEST_DIR)/%.o: $(TEST_DIR)/% $(WITH_DEPS)
-	$(call comple_with,@,<,$(OBJ_COMPILE))
+$(OBJ_DIR)/.$(TEST_DIR)/%.o: $(TEST_DIR)/% $(_PCH_GCH) $(DEP_DIR)/.$(TEST_DIR)/%.d | $(_DIRECTORIES)
+	$(call comple_with,@,<,$(OBJ_COMPILE_T),$(POST_COMPILE_T))
 
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT)
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call comple_with,@,<,$(PCH_COMPILE))
+	$(call comple_with,@,<,$(PCH_COMPILE),$(POST_COMPILE))
 
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(DEP_DIR)/%.d | $(_DIRECTORIES)
