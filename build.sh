@@ -132,7 +132,11 @@ tput setaf 4
 if [[ $CMD == 'buildrun' ]]; then
 	if $MAKE_EXEC BUILD=$BUILD; then
 		build_success_launch
-		bin/$BUILD/$NAME $OPTIONS
+		if [[ $BUILD == 'Tests' ]]; then
+			bin/Release/$NAME $OPTIONS
+		else
+			bin/$BUILD/$NAME $OPTIONS
+		fi
 	else
 		build_fail
 	fi
@@ -153,7 +157,11 @@ elif [[ $CMD == 'rebuild' ]]; then
 
 elif [[ $CMD == 'run' ]]; then
 	launch
-	bin/$BUILD/$NAME $OPTIONS
+	if [[ $BUILD == 'Tests' ]]; then
+		bin/Release/$NAME $OPTIONS
+	else
+		bin/$BUILD/$NAME $OPTIONS
+	fi
 
 elif [[ $CMD == 'buildprod' ]]; then
 	if [[ $BUILD == 'Release' ]]; then
