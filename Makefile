@@ -136,11 +136,13 @@ OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep
-DEPS := $(OBJS:$(OBJ_DIR)/%=$(DEP_DIR)/%.d)
-DEPS := $(DEPS:%.res=) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
+_DEPS := $(_SOURCES_IF_RC)
+_DEPS := $(_DEPS:%=%.d)
+DEPS := $(_DEPS:%=$(DEP_DIR)/%) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
 DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 
-_PCH_HFILE := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh'))
+_PCH_HFILE := $(shell find $(SRC_DIR) -name '$(PRECOMPILED_HEADER).hpp' -o -name '$(PRECOMPILED_HEADER).h' -o -name '$(PRECOMPILED_HEADER).hh')
+_PCH_HFILE := $(_PCH_HFILE:$(SRC_DIR)/%=%)
 _PCH_EXT := $(_PCH_HFILE:$(PRECOMPILED_HEADER).%=%)
 _PCH_COMPILER_EXT := $(if $(filter osx,$(PLATFORM)),p,g)ch
 
@@ -152,13 +154,13 @@ endif
 
 ifeq ($(DUMP_ASSEMBLY),true)
 	ASM_DIR := $(BLD_DIR)/asm
-	ASMS := $(OBJS:$(OBJ_DIR)/%=$(ASM_DIR)/%.asm)
-	ASMS := $(ASMS:%.res=)
+	_ASMS := $(_OBJS:%.res=)
+	_ASMS := $(_ASMS:.o=.o.asm)
+	ASMS := $(_ASMS:%=$(ASM_DIR)/%)
 	ASM_SUBDIRS := $(PROJECT_DIRS:%=$(ASM_DIR)/%)
 endif
 
 _DIRECTORIES := $(sort bin $(BLD_DIR) $(OBJ_DIR) $(OBJ_SUBDIRS) $(DEP_DIR) $(DEP_SUBDIRS) $(ASM_DIR) $(ASM_SUBDIRS))
-_BUILD_DEPENDENCIES := $(patsubst %,$(BLD_DIR)/%,$(notdir $(filter %.dll,$(BUILD_DEPENDENCIES))))
 
 _CLEAN := $(filter true,$(CLEAN_OUTPUT))
 
