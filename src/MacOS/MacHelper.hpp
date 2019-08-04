@@ -3,9 +3,8 @@
 
 class MacHelper
 {
-	public:
-		MacHelper();
-
+public:
+	MacHelper();
 };
 
 #endif // MACOS_HELPER_HPP

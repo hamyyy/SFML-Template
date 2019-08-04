@@ -12,7 +12,7 @@ MacHelper::MacHelper()
 	CFBundleRef mainBundle = CFBundleGetMainBundle();
 	CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
 	char path[PATH_MAX];
-	bool pathSet = CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
+	bool pathSet = CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8*)path, PATH_MAX);
 
 	// This is a copy, so we release it here
 	CFRelease(resourcesURL);

@@ -8,11 +8,11 @@
 #endif // _DEBUG
 
 // SFML
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
 
 // Raspberry Pi
 #ifdef SFML_SYSTEM_LINUX
@@ -22,31 +22,31 @@
 #endif // SFML SYSTEM_LINUX
 
 // Typical stdafx.h
+#include <algorithm>
 #include <cstdio>
+#include <deque>
+#include <fstream>
+#include <iostream>
+#include <list>
+#include <map>
+#include <memory>
+#include <set>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <set>
-#include <map>
-#include <list>
-#include <deque>
-#include <memory>
 
 // Additional C/C++ libs
+#include <atomic>
 #include <cassert>
 #include <cmath>
 #include <cstdlib>
-#include <functional>
-#include <sstream>
-#include <iomanip>
-#include <random>
-#include <type_traits>
 #include <exception>
-#include <thread>
+#include <functional>
+#include <iomanip>
 #include <mutex>
-#include <atomic>
+#include <random>
+#include <sstream>
+#include <thread>
+#include <type_traits>
 
 // Windows
 #ifdef _WIN32
