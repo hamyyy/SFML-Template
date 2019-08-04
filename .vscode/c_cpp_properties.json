@@ -23,6 +23,9 @@
 		{
 			"name": "Mac",
 			"intelliSenseMode": "clang-x64",
+			"macFrameworkPath": [
+				"/System/Library/Frameworks"
+			],
 			"includePath": [
 				"${workspaceFolder}/src",
 				"${workspaceFolder}/lib",

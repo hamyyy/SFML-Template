@@ -1,1 +1,1 @@
-CFLAGS := -O2 -s $(CFLAGS)
+CFLAGS := -O2 -s $(CFLAGS) -flto
