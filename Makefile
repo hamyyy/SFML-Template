@@ -242,15 +242,14 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 $(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR)
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(TARGET)')
-	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
-
-# TODO: Test this further
-$(BLD_DIR)/%.dll: $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR)
-	$(color_reset)
-	$(if $(_CLEAN),@echo; echo 'Linking: $@')
+ifeq ($(suffix $(TARGET)),.dll)
 	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+else
+	$(_Q)$(CC) $(_LIB_DIRS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+endif
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
+
 
 .PHONY: makepch
 makepch: $(_PCH_GCH)
