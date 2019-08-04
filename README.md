@@ -91,25 +91,22 @@ The environment variables used by the Makefile are managed from the **env** fold
     ./env/.all.mk: All platforms & builds
     ./env/.debug.mk: All platforms, Debug build  
     ./env/.release.mk: All platforms, Release build  
-    ./env/.tests.mk: All platforms, Tests build
     
     ./env/linux.all.mk: Linux, All builds  
     ./env/linux.debug.mk: Linux, Debug build  
     ./env/linux.release.mk: Linux, Release build
-    ./env/linux.tests.mk: Windows, Tests build  
 
     ./env/osx.all.mk: MacOS, All builds  
     ./env/osx.debug.mk: MacOS, Debug build  
     ./env/osx.release.mk: MacOS, Release build
-    ./env/osx.tests.mk: Windows, Tests build  
 
     ./env/rpi.release.mk: Linux (Raspberry Pi), Release build
     
     ./env/windows.all.mk: Windows, All builds  
     ./env/windows.debug.mk: Windows, Debug build  
-    ./env/windows.release.mk: Windows, Release build  
-    ./env/windows.tests.mk: Windows, Tests build  
-    
+    ./env/windows.release.mk: Windows, Release build 
+
+Unit Tests use the same settings as the Release build.
 
 
 ## Environment Variables

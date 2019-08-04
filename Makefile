@@ -6,6 +6,9 @@ PLATFORM?=linux
 # Build description (Primarily uses Debug/Release)
 BUILD?=Release
 _BUILDL := $(shell echo $(BUILD) | tr A-Z a-z)
+ifeq ($(BUILD),Tests)
+	_BUILDL := release
+endif
 
 # Maximum parallel jobs during build process
 MAX_PARALLEL_JOBS?=8
@@ -79,6 +82,7 @@ ifeq ($(BUILD),Tests)
 	SOURCE_FILES := $(patsubst $(TEST_DIR)/%,.$(TEST_DIR)/%,$(shell find $(TEST_DIR) -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc')) $(SOURCE_FILES)
 	_INCLUDE_DIRS := $(patsubst %,-I%,$(TEST_DIR)/) $(_INCLUDE_DIRS)
 	PROJECT_DIRS := .$(TEST_DIR) $(PROJECT_DIRS)
+	BUILD_FLAGS := $(BUILD_FLAGS:-mwindows=)
 endif
 
 #==============================================================================
@@ -114,6 +118,9 @@ endif
 #==============================================================================
 # Directories & Dependencies
 BLD_DIR := bin/$(BUILD)
+ifeq ($(BUILD),Tests)
+	BLD_DIR := bin/Release
+endif
 BLD_DIR := $(BLD_DIR:%/=%)
 TARGET := $(BLD_DIR)/$(NAME)
 _NAMENOEXT := $(NAME:.exe=)
