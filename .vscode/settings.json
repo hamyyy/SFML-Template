@@ -15,7 +15,7 @@
 	"editor.tabSize": 4,
 	"editor.insertSpaces": false,
 
-	"files.encoding": "windows1252",
+	"files.encoding": "utf8",
 	"files.trimTrailingWhitespace": true,
 	"files.eol": "\n",
 	"files.exclude": {
@@ -35,7 +35,9 @@
 	},
 	"files.associations": {
 		"*.json": "jsonc",
-		"*.stats": "cpp"
+		"*.stats": "cpp",
+		"*.desktop": "properties",
+		".clang-format": "yaml"
 	},
 
 	"terminal.integrated.shell.windows": "C:/Program Files/Git/bin/bash.exe",

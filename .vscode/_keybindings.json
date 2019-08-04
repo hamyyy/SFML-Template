@@ -22,7 +22,7 @@
 	},
 	{
 		"key": "shift+f9",
-		"command": "-editor.debug.action.toggleColumnBreakpoint",
+		"command": "-editor.debug.action.toggleInlineBreakpoint",
 		"when": "editorTextFocus"
 	},
 	{

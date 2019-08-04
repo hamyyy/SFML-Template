@@ -3,8 +3,11 @@
 CMD=$1
 BUILD=$2
 VSCODE=$3
+OPTIONS=$4
 
 cwd=${PWD##*/}
+
+export GCC_COLORS="error=01;31:warning=01;33:note=01;36:locus=00;34"
 
 if [[ $CMD == '' ]]; then
 	CMD=buildprod
@@ -58,8 +61,12 @@ if [[ $PLATFORM == 'windows' ]]; then
 	fi
 fi
 
-if [[ $BUILD != "Release" && $BUILD != 'Debug' ]]; then
+if [[ $BUILD != "Release" && $BUILD != 'Debug' && $BUILD != 'Tests' ]]; then
 	BUILD=Release
+fi
+
+if [[ $BUILD == 'Tests' ]]; then
+	NAME=tests_$NAME
 fi
 
 PROF_EXEC=gprof
@@ -80,6 +87,7 @@ build_success() {
 
 build_success_launch() {
 	display_styled 2 "Build Succeeded: Launching bin/$BUILD/$NAME"
+	echo
 }
 
 build_fail() {
@@ -96,10 +104,12 @@ build_prod_error() {
 
 launch() {
 	display_styled 2 "Launching bin/$BUILD/$NAME"
+	echo
 }
 
 launch_prod() {
 	display_styled 2 "Launching Production Build: $NAME"
+	echo
 }
 
 profiler_done() {
@@ -122,7 +132,11 @@ tput setaf 4
 if [[ $CMD == 'buildrun' ]]; then
 	if $MAKE_EXEC BUILD=$BUILD; then
 		build_success_launch
-		bin/$BUILD/$NAME
+		if [[ $BUILD == 'Tests' ]]; then
+			bin/Release/$NAME $OPTIONS
+		else
+			bin/$BUILD/$NAME $OPTIONS
+		fi
 	else
 		build_fail
 	fi
@@ -143,7 +157,11 @@ elif [[ $CMD == 'rebuild' ]]; then
 
 elif [[ $CMD == 'run' ]]; then
 	launch
-	bin/$BUILD/$NAME
+	if [[ $BUILD == 'Tests' ]]; then
+		bin/Release/$NAME $OPTIONS
+	else
+		bin/$BUILD/$NAME $OPTIONS
+	fi
 
 elif [[ $CMD == 'buildprod' ]]; then
 	if [[ $BUILD == 'Release' ]]; then
@@ -155,7 +173,6 @@ elif [[ $CMD == 'buildprod' ]]; then
 	else
 		build_prod_error
 	fi
-
 
 elif [[ $CMD == 'profile' ]]; then
 	if [[ $PLATFORM == 'osx' ]]; then
@@ -180,6 +197,8 @@ else
 	tput bold
 	echo $dec Error: Command \"$CMD\" not recognized. $dec
 	tput sgr0
+	exit 1
 fi
 
 tput sgr0
+exit 0

@@ -1,8 +1,5 @@
 CC := g++-8.1.0
-CFLAGS := -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=always
 MAX_PARALLEL_JOBS := 4
-
-CFLAGS := -Os -s $(CFLAGS)
 
 LIB_DIRS := \
 	/usr/local/gcc-8.1.0/lib \

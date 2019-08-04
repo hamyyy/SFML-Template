@@ -6,6 +6,7 @@ A cross-platform [SFML](https://www.sfml-dev.org) 2.5.1 & C++17 build environmen
 
 * GCC & Clang Compiler Configuration
 * Debugger support or standalone Debug build
+* Unit testing (with Catch2)
 * Static Profiler (gprof)
 * Automated dependencies
 * Automated production build task
@@ -88,13 +89,8 @@ The environment variables used by the Makefile are managed from the **env** fold
     ./build.sh: Contains the build scripts that tasks.json calls
 
     ./env/.all.mk: All platforms & builds
-
     ./env/.debug.mk: All platforms, Debug build  
     ./env/.release.mk: All platforms, Release build  
-    
-    ./env/windows.all.mk: Windows, All builds  
-    ./env/windows.debug.mk: Windows, Debug build  
-    ./env/windows.release.mk: Windows, Release build  
     
     ./env/linux.all.mk: Linux, All builds  
     ./env/linux.debug.mk: Linux, Debug build  
@@ -105,6 +101,12 @@ The environment variables used by the Makefile are managed from the **env** fold
     ./env/osx.release.mk: MacOS, Release build
 
     ./env/rpi.release.mk: Linux (Raspberry Pi), Release build
+    
+    ./env/windows.all.mk: Windows, All builds  
+    ./env/windows.debug.mk: Windows, Debug build  
+    ./env/windows.release.mk: Windows, Release build 
+
+Unit Tests use the same settings as the Release build.
 
 
 ## Environment Variables
@@ -115,6 +117,7 @@ The environment variables that can be added to each .mk file are outlined below.
     ./env/.(build).mk
     ./env/(platform).all.mk
     ./env/(platform).(build).mk
+
 
 **CFLAGS**:  
 Compiler flags to use.
@@ -181,6 +184,14 @@ Dependency .dll/.so files to include in the bin/(build) folders
 BUILD_DEPENDENCIES= \
 	C:/SFML-2.5.1/bin/openal32.dll
 ```
+
+## Unit Testing
+
+Unit Testing uses [Catch2](https://github.com/catchorg/Catch2). 
+
+One can build & run the unit tests with the appropriately named "Build & Run: Tests" task in vscode. The Unit tests are a slightly different build target. In addition to all files in test/, all files in the src/ directory are built to object files, except for Main.cpp. Refer to the Catch2 docs to build your test cases.
+
+How you write your unit tests will obviously depend on how you write your engine code.
 
 
 ## Build: Production
@@ -282,7 +293,7 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
 5. Edit the build.sh in **sfml-project1**, replace the entire contents to simply have:
   ```
   #!/bin/bash
-  bash ../build.sh $1 $2 $3
+  bash ../build.sh $1 $2 $3 $4
   ```
 6. Make a copy of **sfml-project1** and call it **sfml-project2**
 7. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
@@ -292,7 +303,7 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
 * This configuration assumes all source files are contained within the **src** folder, but uses the **root** as the working directory for assets & things referenced in your project. It also includes a **content** folder if you'd like to contain those asset files further (recommended).
 * By default, this configuration uses C++17. You can change the compiler flags in **env/\<platform\>.all.mk** under **CFLAGS**.
 
-This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the Prereqs up to date as well. Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
+This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the pre-reqs up to date as well. Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 
 That should be all you need to get started. Happy game making and/or programming!
 
@@ -303,10 +314,10 @@ If you have a reason to build your project without Code (on Raspbian or somethin
 1. Use any bash terminal (Git Bash if Windows).
 2. Run a variation of the following:
   ```
-  bash build.sh (build|buildrun|rebuild|run|buildprod|profile) (Debug|Release)
+  bash build.sh (build|buildrun|rebuild|run|buildprod|profile) (Debug|Release) (executable commmand line options)
   ```
 
-For instance, to Build & Run Release, you'd use:
+For instance, to build & run the Release build, you'd use:
   ```
   bash build.sh buildrun Release
   ```
@@ -315,6 +326,12 @@ If you run the script without any parameters, it's the same as the following:
   ```
   bash build.sh buildprod Release
   ```
+
+To build & run the unit tests, use:
+  ```
+  bash build.sh buildrun Tests vscode '-w NoTests -s'
+  ```
+  (The last parameter contains Catch2 commmand line options)
 
 If the build mode is not Debug or Release, it will default to Release. If you need to, change the "Path" variables within the build.sh file in the "if [[ $VSCODE != 'vscode' ]] ; then" block.
 

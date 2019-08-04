@@ -141,6 +141,54 @@
 			]
 		},
 		{
+			"label": "Build & Run: Tests",
+			"command": "bash ./build.sh buildrun Tests vscode '-w NoTests -s'",
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
+			"label": "Build: Tests",
+			"command": "bash ./build.sh build Tests vscode",
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
+			"label": "Run: Tests",
+			"command": "bash ./build.sh run Tests vscode '-w NoTests -s'",
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
+			"label": "Rebuild: Tests",
+			"command": "bash ./build.sh rebuild Tests vscode",
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
 			"label": "Build: Production",
 			"command": "bash ./build.sh buildprod Release vscode",
 			"type": "shell",

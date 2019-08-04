@@ -1,6 +1,4 @@
 CC := g++.exe
-CFLAGS := -Wfatal-errors -Wunreachable-code -Wextra -Wall -std=c++17 -fdiagnostics-color=always
-RC := windres.exe
 
 _MINGW := C:/mingw32/bin
 _SFML := C:/SFML-2.5.1
