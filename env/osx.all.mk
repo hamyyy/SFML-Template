@@ -12,6 +12,7 @@ BUILD_DEPENDENCIES :=
 MACOS_ICON := sfml
 
 BUILD_FLAGS := \
+	-F/Library/Frameworks \
 	-framework CoreFoundation
 
 PRODUCTION_DEPENDENCIES := \
