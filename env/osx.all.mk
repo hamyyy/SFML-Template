@@ -11,15 +11,7 @@ BUILD_DEPENDENCIES :=
 
 MACOS_ICON := sfml
 
-LINK_LIBRARIES :=
-
 BUILD_FLAGS := \
-	-F/Library/Frameworks \
-	-framework sfml-audio \
-	-framework sfml-graphics \
-	-framework sfml-network \
-	-framework sfml-system \
-	-framework sfml-window \
 	-framework CoreFoundation
 
 PRODUCTION_DEPENDENCIES := \
@@ -31,16 +23,11 @@ PRODUCTION_MACOS_BUNDLE_NAME := SFML Boilerplate
 PRODUCTION_MACOS_MAKE_DMG := true
 PRODUCTION_MACOS_BACKGROUND := dmg-background
 
-PRODUCTION_MACOS_FRAMEWORKS := \
-	sfml-audio \
-	sfml-graphics \
-	sfml-network \
-	sfml-system \
-	sfml-window \
-	FLAC \
-	ogg \
-	vorbis \
-	vorbisenc \
-	vorbisfile \
-	OpenAL \
-	freetype
+PRODUCTION_MACOS_DYLIBS := \
+	/usr/local/lib/libsfml-graphics.2.5 \
+	/usr/local/lib/libsfml-audio.2.5 \
+	/usr/local/lib/libsfml-network.2.5 \
+	/usr/local/lib/libsfml-window.2.5 \
+	/usr/local/lib/libsfml-system.2.5
+
+PRODUCTION_MACOS_FRAMEWORKS :=

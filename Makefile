@@ -111,6 +111,7 @@ ifeq ($(PLATFORM),osx)
 	PRODUCTION_FOLDER := $(PRODUCTION_FOLDER)/$(PRODUCTION_MACOS_BUNDLE_NAME).app/Contents
 	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES)
+	PRODUCTION_MACOS_DYLIBS := $(PRODUCTION_MACOS_DYLIBS:%=%.dylib)
 	PRODUCTION_MACOS_FRAMEWORKS := $(PRODUCTION_MACOS_FRAMEWORKS:%=%.framework)
 	PRODUCTION_MACOS_BACKGROUND := env/osx/$(PRODUCTION_MACOS_BACKGROUND)
 endif
@@ -333,6 +334,10 @@ makeproduction: rmprod mkdirprod releasetoprod
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 	@echo ' Done'
 ifeq ($(PLATFORM),osx)
+	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(shell cp -r $(dylib) $(PRODUCTION_FOLDER)/MacOS ))
+    $(_Q)install_name_tool -add_rpath @executable_path/../Frameworks $(PRODUCTION_FOLDER)/MacOS/$(NAME)
+    $(_Q)install_name_tool -add_rpath @loader_path/.. $(PRODUCTION_FOLDER)/MacOS/$(NAME)
+    $(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(shell install_name_tool -change $(notdir $(dylib)) @rpath/MacOS/$(notdir $(dylib)) $(PRODUCTION_FOLDER)/MacOS/$(NAME)))
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
 ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(shell hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ &> /dev/null)
