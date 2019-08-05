@@ -1,22 +1,26 @@
 # sfml-vscode-boilerplate
 A cross-platform [SFML](https://www.sfml-dev.org) 2.5.1 & C++17 build environment for [Visual Studio Code](https://code.visualstudio.com/)
 
+---
 
 ## Features
 
+* Cross-platform build environments (Windows, Linux & MacOS)
 * GCC & Clang Compiler Configuration
 * Debugger support or standalone Debug build
 * Unit testing (with Catch2)
-* Static Profiler (gprof)
-* Automated dependencies
-* Automated production build task
-* Cross-platform build environments (Windows, Linux & MacOS)
+* Static Profiler on Windows/Linux (gprof)
 * Bash terminal integration
+* Automated copying of dependencies
+* Automated production build
+* Automated app bundling on MacOS
+* Basic app bundle on Linux
 * Optionally auto-generate assembly from compiled objects (using objdump)
 * Optional precompiled header (cross-platform as well)
 * Optional Keybindings (F8, F9 & F10)
 * Optionally build on Raspberry Pi! (see bottom of Readme)
 
+---
 
 ## Prerequisites
 
@@ -28,6 +32,7 @@ A cross-platform [SFML](https://www.sfml-dev.org) 2.5.1 & C++17 build environmen
 ### MacOS
 * [SFML 2.5.1 - Clang 64-bit](https://www.sfml-dev.org/files/SFML-2.5.1-macOS-clang.tar.gz)
 * Command Line Tools / XCode (type "xcode-select --install" in terminal to trigger the installer)
+* [Homebrew](https://brew.sh/) (for makeicns, or to optionally install SFML)
 
 ### Linux
 * Get SFML 2.5.1 from your distro if it has it, or compile from source
@@ -40,14 +45,17 @@ A cross-platform [SFML](https://www.sfml-dev.org) 2.5.1 & C++17 build environmen
   * [x86 and x86_64 Assembly (Optional Syntax Highlighting)](https://marketplace.visualstudio.com/items?itemName=13xforever.language-x86-64-assembly)
   * [Studio Icons (Optional Icon Theme)](https://marketplace.visualstudio.com/items?itemName=jtlowe.vscode-icon-theme)
 
+---
 
 ## Installation
 
 ### Windows
+
 1. Download & Extract SFML to **C:/SFML-2.5.1/** where the bin/lib/include folders are contained within
 2. Download & Extract MinGW to **C:/mingw32/** where the bin/lib/include folders are contained within
 
 ### MacOS
+
 1. Install "Command Line Tools" in MacOS if they're not already installed (type "xcode-select --install" in terminal)
 2. Follow the "Installing SFML" directions here: https://www.sfml-dev.org/tutorials/2.5/start-osx.php#installing-sfml
 
@@ -56,6 +64,7 @@ A cross-platform [SFML](https://www.sfml-dev.org) 2.5.1 & C++17 build environmen
 2. Run **sudo apt install libsfml-dev**. The SFML version you got will vary depending on the distro. 2.5.1 is included in [Ubuntu 19.04 Disco Dingo](http://cdimage.ubuntu.com/daily-live/current/HEADER.html) for example.
 
 ### All
+
 3. Download & Install Visual Studio Code if you don't already have it.
 4. Install the official **C/C++** Extension, reload the window & wait for the dependencies to install.
 5. If on Windows, install **Git Bash**, and ensure the **"terminal.integrated.shell.windows"** property in the project's **settings.json** is set to **bash.exe**'s correct location (default: C:/Program Files/Git/bin/bash.exe). We'll be using this for the terminal in our workspace so that the Makefile can run in both Windows, Mac & Linux
@@ -63,6 +72,7 @@ A cross-platform [SFML](https://www.sfml-dev.org) 2.5.1 & C++17 build environmen
 
 **Note:** You can manage the "Path" environment variable from Windows if you'd like, but I've found sandboxing it in VS Code is better for tracking things like .dll dependencies.
 
+---
 
 ## Configuration
 
@@ -76,11 +86,56 @@ At this point, everything you need is installed
 6. Copy the keybindings into this file. Feel free to change them if you don't like them later.
 7. Hit the **F9** key to run the **Build & Run: Release** task. It should run the Makefile, find the compiler, build the Main.cpp into Main.o, and launch the sample SFML app. **Shift+F9** will launch the basic Debug build, and F8 will launch the actual Debugger alongside the Debug build.
 
+---
 
 ## Adding Source Files
 
-Source files and folders are automatically detected by the Makefile. It looks for them in the "src" folder, and at the moment builds from .c, .cpp & .rc files.
+Source files and folders are automatically detected by the Makefile. It looks for them in the "src" folder, and at the moment builds from .c, .cpp, .cc & .rc files.
 
+---
+
+## Adding external libraries (the "lib" folder)
+
+This build system assumes that any libraries includes in the "lib" folder are either pre-built or header-only. It's auto-included as one of the search directories in the Makefile. 
+
+Usage example:
+
+```
++ lib/
+  + catch2/
+    + catch.hpp
+  + nlohmann_json/
+    + json.hpp
+  + XInput/
+    + XInput.h
+    + XInput.lib
+```
+
+test/test_someTest.cpp
+```
+#include <catch2/catch.hpp>
+...
+```
+
+src/JsonImpl.hpp
+```
+#include <nlohmann_json/json.hpp>
+...
+```
+
+src/InputManager.hpp
+```
+#include <XInput/XInput.h>
+...
+```
+
+env/windows.all.mk
+```makefile
+LINK_LIBRARIES := \
+  XInput
+```
+
+---
 
 ## Makefile Environment
 
@@ -108,16 +163,16 @@ The environment variables used by the Makefile are managed from the **env** fold
 
 Unit Tests use the same settings as the Release build.
 
-
-## Environment Variables
-
-The environment variables that can be added to each .mk file are outlined below. If you need a line-break anywhere simply add a **"\\"** character. You can set base variables in *.all.mk and then build specific variables using "VAR := $(VAR)" syntax in *.debug.mk or *.release.mk. The heirarchy goes:
+The environment variables that can be added to each .mk file are outlined below. If you need a line-break anywhere simply add a **"\\"** character. You can set base variables in *.all.mk and then build specific variables using "VAR := $(VAR)" syntax in *.debug.mk or *.release.mk. The hierarchy goes:
 
     ./env/.all.mk
     ./env/.(build).mk
     ./env/(platform).all.mk
     ./env/(platform).(build).mk
 
+---
+
+## Environment Variables
 
 **CFLAGS**:  
 Compiler flags to use.
@@ -129,7 +184,7 @@ Max number of parallel jobs to run, based on number of cpus cores available
 If set to 'true', the build output will only show the path/filename of the source file being built as well as the linking step and a couple helpful messages. All other commands will be hidden (including assembly dumps)
 
 **DUMP_ASSEMBLY**:  
-If set to 'true', *.o.asm files will generate within the bin/(Build)/asm folder. The bin folder is hidden from VS Code by default, but you can open the asm folder in a seaparate instance and browse the assembly that way if you'd like to, or customize it from settings.json.
+If set to 'true', *.o.asm files will generate within the bin/(Build)/asm folder. The bin folder is hidden from VS Code by default, but you can open the asm folder in a separate instance and browse the assembly that way if you'd like to, or customize it from settings.json.
 
 **PRECOMPILED_HEADER**:  
 Define a precompiled header file (no extension). If this variable is not defined in the env files, then the precompiled header will not be used. This file will be excluded from Rebuild/Build tasks, but if the bin/(build) directory is removed, it will be as well.
@@ -185,21 +240,30 @@ BUILD_DEPENDENCIES= \
 	C:/SFML-2.5.1/bin/openal32.dll
 ```
 
-## Unit Testing
+## MacOS-specific:
 
-Unit Testing uses [Catch2](https://github.com/catchorg/Catch2). 
+**MACOS_FRAMEWORK_PATHS**:  
+Framework paths, other than /System/Library/Frameworks
+```makefile
+MACOS_FRAMEWORK_PATHS= \
+	/Library/Frameworks
+```
 
-One can build & run the unit tests with the appropriately named "Build & Run: Tests" task in vscode. The Unit tests are a slightly different build target. In addition to all files in test/, all files in the src/ directory are built to object files, except for Main.cpp. Refer to the Catch2 docs to build your test cases.
+**MACOS_FRAMEWORKS**:
+Frameworks to include, (no extension)
+```makefile
+MACOS_FRAMEWORKS= \
+	CoreFoundation
+```
 
-How you write your unit tests will obviously depend on how you write your engine code.
-
+---
 
 ## Build: Production
 
 I thought it was important to include a build task that creates a final "build" folder and copies the files in the bin/Release folder, any dependency .dlls, and any other directories into it. It's accessed via (**Ctrl+Shift+B** > **Build: Production**) and uses a couple special environment variables:
 
 **PRODUCTION_DEPENDENCIES**:  
-Files & folders to copy into the "build" folder upon using the "Build: Production" task.
+Files & folders to copy into the "build" folder upon using the "Build: Production" task. In MacOS, this is anything going into the the app bundle's "Resources" folder.
 ```makefile
 PRODUCTION_DEPENDENCIES= \
   C:/mingw32/bin/libgcc_s_dw2-1.dll \
@@ -230,18 +294,115 @@ The folder the production build will go into. This can be an absolute path or a 
 PRODUCTION_FOLDER=build
 ```
 
-### Production building in MacOS
+---
 
-Option 1: The "Build: Production" script now works on MacOS. It creats a bundle & a basic dmg, but it does no code signing whatsoever! You must do that yourself (for now). There's a lot to document about, but for now: it requires a CFResourcesBundle.cpp file to change the working directory if run inside of a bundle, an Info.plist.json that gets compiled to the binary Info.plist, an icon that gets compiled to an *.icns file. See osx.all.mk for additional production environment variables. Be aware some of it is still pretty experimental.
+## Build: Production (MacOS)
 
-Option 2: Use Xcode to bundle your final build! It's as simple as that. Otherwise your game/program will launch through a terminal window. Follow the rest of the directions outlined [HERE](https://www.sfml-dev.org/tutorials/2.5/start-osx.php), copy your code-base in the Xcode project folder, and you should be good to go. 
+Option 1: The "Build: Production" script creates a bundle & a basic .dmg image, but it does no code signing whatsoever! You must do that yourself (for now). There's a lot to document about, but to start, it requires a MacOS/MacHelper.cpp file to ensure the working directory is looking for resources inside the bundle's Resource folder. There's an Info.plist.json that gets compiled to the binary Info.plist, and an icon that gets compiled to an *.icns file. See osx.all.mk for additional production environment variables. Be aware some of it is still pretty experimental. The variables are outlined below.
+
+Option 2: Use Xcode to bundle your final build! It's as simple as that. Follow the rest of the directions outlined [HERE](https://www.sfml-dev.org/tutorials/2.5/start-osx.php), copy your code-base in the Xcode project folder, and go from there.
+
+**PRODUCTION_MACOS_ICON**:  
+The app bundle's icon (.png, no extension)
+```makefile
+PRODUCTION_MACOS_ICON := sfml
+```
+
+**PRODUCTION_MACOS_BUNDLE_DEVELOPER**:  
+Your name, company, etc.
+```makefile
+PRODUCTION_MACOS_BUNDLE_DEVELOPER := developer
+```
+
+**PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME**:  
+App's display name (used everywhere)
+```makefile
+PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME := SFML Boilerplate
+```
+
+**PRODUCTION_MACOS_BUNDLE_NAME**:  
+Internal app name (used somewhere by MacOS... ???)
+```makefile
+PRODUCTION_MACOS_BUNDLE_NAME := SFML Boilerplate
+```
+
+**PRODUCTION_MACOS_MAKE_DMG**:  
+set to "true" to make a .dmg image 
+```makefile
+PRODUCTION_MACOS_MAKE_DMG := true
+```
+
+**PRODUCTION_MACOS_BACKGROUND**:  
+Background image file (.png) to use in the .dmg image. A "...@2x.png" file is also expected
+```makefile
+PRODUCTION_MACOS_BACKGROUND := dmg-background
+```
+
+**PRODUCTION_MACOS_DYLIBS**:  
+Dynamically linked libraries to include in the final build.
+```makefile
+PRODUCTION_MACOS_DYLIBS := \
+	/usr/local/lib/libsfml-graphics.2.5 \
+	/usr/local/lib/libsfml-audio.2.5 \
+	/usr/local/lib/libsfml-network.2.5 \
+	/usr/local/lib/libsfml-window.2.5 \
+	/usr/local/lib/libsfml-system.2.5
+```
+
+**PRODUCTION_MACOS_FRAMEWORKS**:  
+Any frameworks to add to the app bundle's "Frameworks" folder. (Path, no extension)
+```makefile
+PRODUCTION_MACOS_FRAMEWORKS :=
+  /Library/Frameworks/ogg
+```
+
+---
+
+## Build: Production (Linux/Ubuntu)
+
+A default Ubuntu app build is included, but beyond that, you're on your own. The App's configuration is set in env/linux/exec.desktop. Similar to MacOS build these are the linux specific variables:
+
+**PRODUCTION_LINUX_ICON**:  
+The app icon (.png, no extension)
+```makefile
+PRODUCTION_LINUX_ICON := sfml
+```
+
+**PRODUCTION_LINUX_APP_NAME**:  
+The app's name
+```makefile
+PRODUCTION_LINUX_APP_NAME := SFML Boilerplate
+```
+
+**PRODUCTION_LINUX_APP_COMMENT**:  
+The app's description
+```makefile
+PRODUCTION_LINUX_APP_COMMENT := My SFML Game
+```
+
+---
+
+## Build & Run: Tests
+
+Unit Testing uses [Catch2](https://github.com/catchorg/Catch2). 
+
+One can build & run the unit tests with the appropriately named "Build & Run: Tests" task in vscode. The Unit tests are a slightly different build target. You create tests in the **test/** directory, and they get built alongside the "Release" build target. Refer to the Catch2 docs to build your test cases. 
+
+How you write your unit tests will obviously depend on how you write your engine code, but here are some examples:
+
+* Tests for any non-rendering functions (bezier curves, rngs, utility classes, etc)
+* Tests for rendering functions that create & display a window briefly
+* Tests for implementations of any external libraries
+
+---
 
 ## Profile: Debug
 
 Running the **Profile: Debug** task will build the Debug target (if necessary) and generate a **profiler_analysis.stats** file from a **gmon.out** file using gcc's "gprof" profiler. You can then examine the stats file in the workspace.
 
-Note: You might see a "BFD: Dwarf Error: Could not find abbrev number ###" error in the terminal. I'm not sure what this means yet, but it doesn't seem to stop the stats from generating.
+Note: You might see a "BFD: Dwarf Error: Could not find abbrev number ###" error in the terminal. I'm not sure what this means yet or how to get rid of it, but it doesn't seem to stop the stats from generating.
 
+---
 
 ## Include directories & .vscode folder
 
@@ -249,19 +410,21 @@ If you need to add additional external libraries, these are a couple different p
 
 * **.vscode/c\_cpp\_properties.json** - You'll see **compilerPath** & **includePath**. The compilerPath includes all the compiler's directories so, the includePath only needs the root project directory and any additional libraries you want to include. SFML is included as well in this boilerplate. See details below.
 
-  * _"compilerPath"_ - Path to the compiler's binary to use (in our case, it's MinGW GCC.
-  * _"includePath"_ - Used by the C/C++ extension for additional include directories. The relative project directoy is included by default. You can also add directories recursively with **/****
+  * **compilerPath** - Path to the compiler's binary to use (in our case, it's MinGW GCC.
+  * **includePath** - Used by the C/C++ extension for additional include directories. The relative project directory is included by default. You can also add directories recursively with **/****
 
 * **.vscode/settings.json** - Contain all of your workspace settings & overrides VS Code's main settings.json. Here are some settings of interest:
 
-  * _"files.exclude"_ - Add any filetypes you want to exclude from the folder panel.
-  * _"files.encoding"_ - This uses the same encoding as CodeBlocks (**windows1252**), but feel free to change it to suit your needs.
-  * _"editor.fontFamily"_ - I set this to Courier by default. Change/remove this line if you want to stick to VS Code's default (Consolas), or your own preference. Same with _"editor.fontSize"_ & _"editor.lineHeight"_.
-  * _"terminal.integrated.env.****"_ - Environment variables for use when the terminal runs. Note: These override the OS defaults.
+  * **files.exclude** - Add any filetypes you want to exclude from the folder panel. By default, some of the build files are excluded from VS Code, so that one can focus on just coding.
+  * **files.encoding** - This has been set to **utf8** by default, but you may want to use **windows1252** instead if you want less headaches. Feel free to change this to suit your needs.
+  * **editor.fontFamily** - Set to Courier by default. Change/remove this line if you want to stick to VS Code's default (Consolas), or your own preference. I'm a big fan of [Courier Prime Code](https://quoteunquoteapps.com/courierprime/).
+  * **terminal.integrated.env.(platform)** - Environment variables for use when the terminal runs. Note: These purposefully override the OS defaults so you can have an isolated environment.
 
 * **.vscode/launch.json** - Used to store the configuration to launch the debugger.
 * **.vscode/tasks.json** - Used to store the task definitions (Build & Run commands, etc.).
 * **.vscode/_keybindings.json** - As mentioned before, this is used purely to store handy keybindings that one can add themselves, and not recognized by VS Code.
+
+---
 
 ## Creating an application icon on Windows
 
@@ -278,6 +441,8 @@ The "win-make_icon_from_all.sh" script looks for 4 files: icon_16.png, icon_32.p
 The "win-make_icon_from256.sh" script is even simpler. You make one icon - icon_256.png, and it will generate the other sizes for you and output the app.ico file.
 
 You can obviously modify these scripts to support other sizes used in edge cases (scaling factors use 20, 40, 64 & 96 for instance), but the 4 included are the most widely used.
+
+---
 
 ## Multiple Projects
 
@@ -298,6 +463,8 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
 6. Make a copy of **sfml-project1** and call it **sfml-project2**
 7. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
 
+---
+
 ## Notes
 
 * This configuration assumes all source files are contained within the **src** folder, but uses the **root** as the working directory for assets & things referenced in your project. It also includes a **content** folder if you'd like to contain those asset files further (recommended).
@@ -306,6 +473,8 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
 This will be an ongoing project that I'll try to update as new SFML versions come out. Updating SFML releases should be relatively painless as I'll keep the pre-reqs up to date as well. Feel free to offer suggestions/report issues if there's anything I missed, or could do better.
 
 That should be all you need to get started. Happy game making and/or programming!
+
+---
 
 ## Build Without VS Code (experimental)
 
@@ -331,12 +500,57 @@ To build & run the unit tests, use:
   ```
   bash build.sh buildrun Tests vscode '-w NoTests -s'
   ```
-  (The last parameter contains Catch2 commmand line options)
+  (The last parameter contains Catch2 command line options)
 
 If the build mode is not Debug or Release, it will default to Release. If you need to, change the "Path" variables within the build.sh file in the "if [[ $VSCODE != 'vscode' ]] ; then" block.
+
+---
 
 ## Build on Raspberry Pi (experimental)
 
 I'll maybe make a full guide for this, but I'd recommend doing your development on another machine, and then just pulling the project via git and building it on the Pi with the build script in the previous section. Raspbian Lite (as of 1/6/2019) only comes with GCC 6.x, so you'll want to add GCC 8.x via **[this guide](https://solarianprogrammer.com/2017/12/08/raspberry-pi-raspbian-install-gcc-compile-cpp-17-programs/)** and compile SFML 2.5.1 from source. Once your app/game is compiled, you can launch it via startx & matchbox-window-manager (after enabling OpenGL from raspi-config).
 
 In the precompiled header (src/PCH.hpp), I added an extra SFML define for the Pi aptly named **SFML_SYSTEM_PI** so you can conditionalize parts of your code for PI specific things (think "kiosk mode"). From there, you're in the wild west.
+
+---
+
+## MSYS2 (on Windows) (or using any other mingw version)
+
+As of 8/5/2019, GCC 7.3.0 is still the most stable GCC build on Windows, but if you want to try out newer versions of GCC, you can use [MSYS2](https://www.msys2.org/).
+
+Start with the clean msys2 install. I'd recommend the one below. It includes GCC 8.3.0.
+
+* [MSYS2 (64-bit, 5/24/2019 stable)](http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20190524.exe)
+
+I recommend NOT updating using the "pacman -Syu" command because although you will have a bleeding edge version of GCC (9.1.0 for instance), your builds will be very unstable. For instance, in revision 3, I could not get a working debug build. Follow this process, exactly:
+
+1. Install the recommended version above (You'll get GCC 8.3.0, with a non-experimental std::filesystem). Install to C:/msys64
+2. Install the current stable GCC toolchain (includes boost & a ton of stuff). Open msys2 and run the command:
+```
+pacman -S mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain mingw-w64-i686-openal mingw-w64-x86_64-openal
+```
+3. That will install both x86 & x64 versions (so you can try both). It may take a while, but once finished, exit msys2.
+4. Build SFML. To start with, install CMake & doxygen (64 bit version). Then download [this script](https://gist.github.com/andrew-r-king/5f8ea0eda064cbfb33f4f5d373011e0b) and edit the GCC_DIR line to either "/c/msys64/mingw64/bin" or "/c/msys64/mingw32/bin" depending on which architecture you want to target. Run the script, and if all goes well, you should have a compiled version of SFML in C:/SFML/2.5.1.
+5. rename that folder so its architecture specific. For my own build, I did "C:/SFML-2.5.1-gcc-8.3.0/mingw64"
+6. Open sfml-vscode-boilerplate in VS Code, go into settings.json and comment out ".vscode/launch.json in "files.exclude", because we need to edit it. Also comment out "build.sh"
+7. Also in settings.json, go down to "terminal.integrated.env.windows" and change it to "C:/msys64/mingw64/bin;C:/SFML-2.5.1-gcc-8.3.0/mingw64/bin" (the new paths)
+8. In ".vscode/c_cpp_properties.json", go to the Win32 configuration and change the "compilerPath" to "C:/msys64/mingw64/bin/gcc.exe" and the SFML "includePath" to "C:/SFML-2.5.1-gcc-8.3.0/mingw64/include"
+9. In ".vscode/launch.json", go to the "windows" configuration and change "miDebuggerPath" to "C:/msys64/mingw64/bin/gdb.exe"
+10. Finally, in env/windows.all.mk, change _MINGW & _SFML (arbitrary variables) to:
+```makefile
+_MINGW := C:/msys64/mingw64/bin
+_SFML := C:/SFML-2.5.1-gcc-8.3.0/mingw64
+```
+
+11. Finally, in build.sh, line 44, (windows path if running the script outside vscode), change to 'export PATH="/c/SFML-2.5.1/bin:/c/mingw32/bin:$PATH"', or alternatively if you're building without vscode (described above), you can add this snippet of in build.sh above "bash ../build.sh $1 $2 $3 $4":
+```shell
+if [[ $1 == '' && $2 == '' ]]; then
+	if [[ $OSTYPE == 'msys' || $OSTYPE == 'win32' ]]; then
+		export PATH="/c/SFML-2.5.1-gcc-8.3.0/mingw64/bin:/c/msys64/mingw64/bin:$PATH"
+		bash ../build.sh buildprod Release vscode
+		exit 0
+	fi
+fi
+```
+
+Run any build task (from scratch) and you should be good to go!
