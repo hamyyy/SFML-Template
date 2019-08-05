@@ -23,8 +23,10 @@
 		{
 			"name": "Mac",
 			"intelliSenseMode": "clang-x64",
+			"compilerPath": "/usr/bin/clang",
 			"macFrameworkPath": [
-				"/System/Library/Frameworks"
+                "/Library/Frameworks",
+                "/System/Library/Frameworks"
 			],
 			"includePath": [
 				"${workspaceFolder}/src",
