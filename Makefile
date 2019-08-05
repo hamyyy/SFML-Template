@@ -60,6 +60,7 @@ NAME?=game.exe
 #==============================================================================
 # The source file directory
 SRC_DIR := src
+LIB_DIR := lib
 
 # Project .cpp or .rc files (relative to $(SRC_DIR) directory)
 SOURCE_FILES := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '*.cpp' -o -name '*.c' -o -name '*.cc' -o -name '*.rc'))
@@ -67,8 +68,8 @@ SOURCE_FILES := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '*.cpp' 
 PROJECT_DIRS := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -mindepth 1 -maxdepth 99 -type d))
 
 # Add prefixes to the above variables
-_LIB_DIRS := $(LIB_DIRS:%=-L%)
-_INCLUDE_DIRS := $(patsubst %,-I%,$(SRC_DIR)/ lib/ $(INCLUDE_DIRS))
+_LIB_DIRS := $(LIB_DIR:%=-L%/) $(LIB_DIRS:%=-L%)
+_INCLUDE_DIRS := $(patsubst %,-I%,$(SRC_DIR)/ $(LIB_DIR)/ $(INCLUDE_DIRS))
 
 _BUILD_MACROS := $(BUILD_MACROS:%=-D%)
 _LINK_LIBRARIES := $(LINK_LIBRARIES:%=-l%)
@@ -87,7 +88,7 @@ endif
 
 #==============================================================================
 # Linux Specific
-LINUX_ICON?=icon
+PRODUCTION_LINUX_ICON?=icon
 
 # The full working directory
 ifeq ($(PLATFORM),linux)
@@ -96,7 +97,7 @@ endif
 
 #==============================================================================
 # MacOS Specific
-MACOS_ICON?=icon
+PRODUCTION_MACOS_ICON?=icon
 PRODUCTION_MACOS_BUNDLE_COMPANY?=developer
 PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME?=App
 PRODUCTION_MACOS_BUNDLE_NAME?=App
@@ -112,8 +113,13 @@ ifeq ($(PLATFORM),osx)
 	PRODUCTION_FOLDER_RESOURCES := $(PRODUCTION_FOLDER)/Resources
 	PRODUCTION_DEPENDENCIES := $(PRODUCTION_DEPENDENCIES)
 	PRODUCTION_MACOS_DYLIBS := $(PRODUCTION_MACOS_DYLIBS:%=%.dylib)
+	MACOS_FRAMEWORKS := := $(MACOS_FRAMEWORKS:%=%.framework)
 	PRODUCTION_MACOS_FRAMEWORKS := $(PRODUCTION_MACOS_FRAMEWORKS:%=%.framework)
 	PRODUCTION_MACOS_BACKGROUND := env/osx/$(PRODUCTION_MACOS_BACKGROUND)
+	MACOS_FRAMEWORK_PATHS := $(MACOS_FRAMEWORK_PATHS:%=-F%)
+ifneq ($(PRODUCTION_MACOS_FRAMEWORKS),)
+	BUILD_FLAGS := $(BUILD_FLAGS) $(MACOS_FRAMEWORK_PATHS) $(MACOS_FRAMEWORKS:%=-framework %)
+endif
 endif
 
 #==============================================================================
@@ -301,24 +307,24 @@ ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
 	$(color_reset)
 endif
-	$(_Q)makeicns -in env/osx/$(MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(MACOS_ICON).icns
+	$(_Q)makeicns -in env/osx/$(PRODUCTION_MACOS_ICON).png -out $(PRODUCTION_FOLDER)/Resources/$(PRODUCTION_MACOS_ICON).icns
 	$(_Q)plutil -convert binary1 env/osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleExecutable -string $(NAME) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleName -string $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
-	$(_Q)plutil -replace CFBundleIconFile -string $(MACOS_ICON) $(PRODUCTION_FOLDER)/Info.plist
+	$(_Q)plutil -replace CFBundleIconFile -string $(PRODUCTION_MACOS_ICON) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleDisplayName -string "$(PRODUCTION_MACOS_BUNDLE_DISPLAY_NAME)" $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleIdentifier -string com.$(PRODUCTION_MACOS_BUNDLE_DEVELOPER).$(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)cp $(TARGET) $(PRODUCTION_FOLDER)/MacOS
 	$(_Q)chmod +x $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 else ifeq ($(PLATFORM),linux)
 	$(_Q)cp $(TARGET) $(PRODUCTION_FOLDER)
-	$(_Q)cp env/linux/$(LINUX_ICON).png $(PRODUCTION_FOLDER)/$(LINUX_ICON).png
+	$(_Q)cp env/linux/$(PRODUCTION_LINUX_ICON).png $(PRODUCTION_FOLDER)/$(PRODUCTION_LINUX_ICON).png
 	$(_Q)cp env/linux/exec.desktop $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)sed -i 's/^Exec=.*/Exec=$(_LINUX_GREP_CWD)\/$(PRODUCTION_FOLDER)\/$(NAME)/' $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)sed -i 's/^Path=.*/Path=$(_LINUX_GREP_CWD)\/$(PRODUCTION_FOLDER)/' $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)sed -i 's/^Name=.*/Name=$(PRODUCTION_LINUX_APP_NAME)/' $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)sed -i 's/^Comment=.*/Comment=$(PRODUCTION_LINUX_APP_COMMENT)/' $(PRODUCTION_FOLDER)/$(NAME).desktop
-	$(_Q)sed -i 's/^Icon=.*/Icon=$(_LINUX_GREP_CWD)\/$(PRODUCTION_FOLDER)\/$(LINUX_ICON).png/' $(PRODUCTION_FOLDER)/$(NAME).desktop
+	$(_Q)sed -i 's/^Icon=.*/Icon=$(_LINUX_GREP_CWD)\/$(PRODUCTION_FOLDER)\/$(PRODUCTION_LINUX_ICON).png/' $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)chmod +x $(PRODUCTION_FOLDER)/$(NAME)
 	$(_Q)chmod +x $(PRODUCTION_FOLDER)/$(NAME).desktop
 	$(_Q)cp $(PRODUCTION_FOLDER)/$(NAME).desktop ~/.local/share/applications
@@ -338,7 +344,7 @@ ifeq ($(PLATFORM),osx)
 	$(_Q)install_name_tool -add_rpath @executable_path/../Frameworks $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 	$(_Q)install_name_tool -add_rpath @loader_path/.. $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(shell install_name_tool -change $(notdir $(dylib)) @rpath/MacOS/$(notdir $(dylib)) $(PRODUCTION_FOLDER)/MacOS/$(NAME)))
-	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r /Library/Frameworks/$(framework) $(PRODUCTION_FOLDER)/Frameworks))
+	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r $(framework) $(PRODUCTION_FOLDER)/Frameworks))
 ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(shell hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ &> /dev/null)
 	@echo 'Creating the dmg image for the application...'

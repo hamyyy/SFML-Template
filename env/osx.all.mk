@@ -7,13 +7,17 @@ LIB_DIRS := \
 INCLUDE_DIRS := \
 	/usr/local/include
 
-BUILD_DEPENDENCIES :=
+BUILD_FLAGS :=
 
-MACOS_ICON := sfml
+MACOS_FRAMEWORK_PATHS := \
+	/Library/Frameworks
 
-BUILD_FLAGS := \
-	-F/Library/Frameworks \
-	-framework CoreFoundation
+# Name, no extension (eg. CoreFoundation, ogg)
+MACOS_FRAMEWORKS := \
+	CoreFoundation
+
+# Icon .png
+PRODUCTION_MACOS_ICON := sfml
 
 PRODUCTION_DEPENDENCIES := \
 	$(PRODUCTION_DEPENDENCIES)
@@ -31,4 +35,5 @@ PRODUCTION_MACOS_DYLIBS := \
 	/usr/local/lib/libsfml-window.2.5 \
 	/usr/local/lib/libsfml-system.2.5
 
+# Path, no extension (eg. /Library/Frameworks/ogg)
 PRODUCTION_MACOS_FRAMEWORKS :=
