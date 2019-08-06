@@ -219,7 +219,7 @@ LINK_LIBRARIES= \
   something
 ```
 
-**FLAGS_RELEASE**:  
+**BUILD_FLAGS**:  
 Additional compiler flags for the particular build (including prefix)
 ```makefile
 BUILD_FLAGS= \
