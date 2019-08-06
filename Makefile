@@ -176,7 +176,7 @@ _Q := $(if $(_CLEAN),@)
 # Compiler & flags
 CC?=g++
 RC?=windres.exe
-CFLAGS?=-O2 -Wall -flto -fdiagnostics-color=always
+CFLAGS?=-O2 -Wall -fdiagnostics-color=always
 
 CFLAGS_DEPS = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.Td
 CFLAGS_DEPS_T = -MT $@ -MMD -MP -MF $(DEP_DIR)/.$(TEST_DIR)/$*.Td
