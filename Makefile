@@ -10,6 +10,12 @@ ifeq ($(BUILD),Tests)
 	_BUILDL := release
 endif
 
+# The sub-folder containing the target source files
+SRC_TARGET?=
+ifneq ($(SRC_TARGET),)
+	_SRC_TARGET := /$(SRC_TARGET)
+endif
+
 # Maximum parallel jobs during build process
 MAX_PARALLEL_JOBS?=8
 
@@ -24,6 +30,12 @@ CLEAN_OUTPUT?=true
 -include env/.$(_BUILDL).mk
 -include env/$(PLATFORM).all.mk
 -include env/$(PLATFORM).$(_BUILDL).mk
+ifneq ($(SRC_TARGET),)
+-include env/$(SRC_TARGET)/.all.mk
+-include env/$(SRC_TARGET)/.$(_BUILDL).mk
+-include env/$(SRC_TARGET)/$(PLATFORM).all.mk
+-include env/$(SRC_TARGET)/$(PLATFORM).$(_BUILDL).mk
+endif
 
 #==============================================================================
 # File/Folder dependencies for the production build recipe (makeproduction)
@@ -59,7 +71,7 @@ NAME?=game.exe
 
 #==============================================================================
 # The source file directory
-SRC_DIR := src
+SRC_DIR := src$(_SRC_TARGET)
 LIB_DIR := lib
 
 # Project .cpp or .rc files (relative to $(SRC_DIR) directory)
@@ -133,14 +145,14 @@ _NAMENOEXT := $(_NAMENOEXT:.dll=)
 
 _SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES:.rc=.res),$(SOURCE_FILES:%.rc=))
 
-OBJ_DIR := $(BLD_DIR)/obj
+OBJ_DIR := $(BLD_DIR)/obj$(_SRC_TARGET)
 _OBJS := $(_SOURCES_IF_RC:.c=.c.o)
 _OBJS := $(_OBJS:.cpp=.cpp.o)
 _OBJS := $(_OBJS:.cc=.cc.o)
 OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
-DEP_DIR := $(BLD_DIR)/dep
+DEP_DIR := $(BLD_DIR)/dep$(_SRC_TARGET)
 _DEPS := $(_SOURCES_IF_RC)
 _DEPS := $(_DEPS:%=%.d)
 DEPS := $(_DEPS:%=$(DEP_DIR)/%) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
@@ -158,7 +170,7 @@ ifneq ($(_PCH),)
 endif
 
 ifeq ($(DUMP_ASSEMBLY),true)
-	ASM_DIR := $(BLD_DIR)/asm
+	ASM_DIR := $(BLD_DIR)/asm$(_SRC_TARGET)
 	_ASMS := $(_OBJS:%.res=)
 	_ASMS := $(_ASMS:.o=.o.asm)
 	ASMS := $(_ASMS:%=$(ASM_DIR)/%)
