@@ -1,3 +1,9 @@
+.SUFFIXES:
+SUFFIXES =
+.SUFFIXES: .c .cpp .h .hpp .rc .res .inl .o .d .asm
+
+$(VERBOSE).SILENT:
+
 #==============================================================================
 MAKEFLAGS += --no-print-directory
 #==============================================================================
@@ -211,16 +217,16 @@ POST_COMPILE_T = mv -f $(DEP_DIR)/.$(TEST_DIR)/$*.Td $(DEP_DIR)/.$(TEST_DIR)/$*.
 
 #==============================================================================
 # Build Scripts
-.DELETE_ON_ERROR: all
 all:
 	@$(MAKE) makepch
 	@$(MAKE) -j$(MAX_PARALLEL_JOBS) makebuild
+.DELETE_ON_ERROR: all
 
-.PHONY: rebuild
 rebuild: clean all
+.PHONY: rebuild
 
-.PHONY: buildprod
 buildprod: all makeproduction
+.PHONY: buildprod
 
 #==============================================================================
 # Functions
@@ -235,6 +241,15 @@ define comple_with
 endef
 
 MKDIR := $(_Q)mkdir -p
+
+makepch: $(_PCH_GCH)
+	@echo > /dev/null
+.PHONY: makepch
+
+makebuild: $(TARGET)
+	$(color_reset)
+	@echo '$(BUILD) build target is up to date.'
+.PHONY: makebuild
 
 #==============================================================================
 # Build Recipes
@@ -260,7 +275,7 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(if $(_CLEAN),,$(color_reset))
 	$(_Q)$(ASM_COMPILE)
 
-$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR)
+$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
@@ -271,43 +286,32 @@ else
 endif
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
-
-.PHONY: makepch
-makepch: $(_PCH_GCH)
-	@echo > /dev/null
-
-.PHONY: makebuild
-makebuild: $(TARGET)
-	$(color_reset)
-	@echo '$(BUILD) build target is up to date.'
-
 $(_DIRECTORIES):
 	$(if $(_CLEAN),,$(color_reset))
 	$(MKDIR) $@
 
-.PHONY: clean
 clean:
 	$(color_reset)
 	$(if $(_CLEAN),@echo 'Cleaning old build files & folders...'; echo)
 	$(_Q)$(RM) $(TARGET) $(DEPS) $(OBJS)
+.PHONY: clean
 
 #==============================================================================
 # Production recipes
 
-.PHONY: rmprod
 rmprod:
 	$(color_reset)
 	-$(_Q)rm -rf $(if $(filter osx,$(PLATFORM)),$(PRODUCTION_FOLDER_MACOS),$(PRODUCTION_FOLDER))
 ifeq ($(PLATFORM),linux)
 	-$(_Q)rm -rf ~/.local/share/applications/$(NAME).desktop
 endif
+.PHONY: rmprod
 
-.PHONY: mkdirprod
 mkdirprod:
 	$(color_reset)
 	$(MKDIR) $(PRODUCTION_FOLDER)
+.PHONY: mkdirprod
 
-.PHONY: releasetoprod
 releasetoprod: $(TARGET)
 	$(color_reset)
 ifeq ($(PLATFORM),osx)
@@ -341,8 +345,8 @@ else ifeq ($(PLATFORM),linux)
 else
 	$(_Q)cp $(TARGET) $(PRODUCTION_FOLDER)
 endif
+.PHONY: releasetoprod
 
-.PHONY: makeproduction
 makeproduction: rmprod mkdirprod releasetoprod
 	$(color_reset)
 	@echo -n 'Adding dynamic libraries & project dependencies...'
@@ -372,6 +376,7 @@ ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	@echo 'Created $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg'
 endif
 endif
+.PHONY: makeproduction
 
 #==============================================================================
 # Dependency recipes
