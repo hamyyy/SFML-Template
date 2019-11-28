@@ -2,7 +2,6 @@
 SUFFIXES =
 .SUFFIXES: .c .cpp .h .hpp .rc .res .inl .o .d .asm
 
-$(VERBOSE).SILENT:
 
 #==============================================================================
 MAKEFLAGS += --no-print-directory
