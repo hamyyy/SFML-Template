@@ -30,6 +30,9 @@ DUMP_ASSEMBLY?=false
 # Clean output?
 CLEAN_OUTPUT?=true
 
+# If dll, build as a static library?
+BUILD_STATIC?=false
+
 # Platform specific environment variables
 -include env/.all.mk
 -include env/.$(_BUILDL).mk
@@ -278,8 +281,13 @@ $(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
 	$(color_reset)
 	$(if $(_CLEAN),@echo; echo 'Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
+ifeq ($(BUILD_STATIC),true)
+	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).a
+	ar.exe -r -s $(BLD_DIR)/lib$(_NAMENOEXT).a $(OBJS)
+else
 	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+endif
 else
 	$(_Q)$(CC) $(_LIB_DIRS) $(if $(filter Release,$(BUILD)),-s,) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
