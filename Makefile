@@ -232,13 +232,11 @@ buildprod: all makeproduction
 
 #==============================================================================
 # Functions
-define color_reset
-	@tput setaf 4
-endef
+color_reset := @tput setaf 4
 
-define comple_with
+define compile_with
 	$(color_reset)
-	$(if $(_CLEAN),@echo "   $($(2):$(OBJ_DIR)/%=%)")
+	$(if $(_CLEAN),@echo '   $($(2):$(OBJ_DIR)/%=%)')
 	$(_Q)$(3) && $(4)
 endef
 
@@ -261,15 +259,15 @@ endif
 # Build Recipes
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%
 $(OBJ_DIR)/%.o: $(SRC_DIR)/% $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call comple_with,@,<,$(OBJ_COMPILE),$(POST_COMPILE))
+	$(call compile_with,@,<,$(OBJ_COMPILE),$(POST_COMPILE))
 
 $(OBJ_DIR)/.$(TEST_DIR)/%.o: $(TEST_DIR)/%
 $(OBJ_DIR)/.$(TEST_DIR)/%.o: $(TEST_DIR)/% $(_PCH_GCH) $(DEP_DIR)/.$(TEST_DIR)/%.d | $(_DIRECTORIES)
-	$(call comple_with,@,<,$(OBJ_COMPILE_T),$(POST_COMPILE_T))
+	$(call compile_with,@,<,$(OBJ_COMPILE_T),$(POST_COMPILE_T))
 
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT)
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call comple_with,@,<,$(PCH_COMPILE),$(POST_COMPILE))
+	$(call compile_with,@,<,$(PCH_COMPILE),$(POST_COMPILE))
 
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(DEP_DIR)/%.d | $(_DIRECTORIES)
