@@ -171,6 +171,8 @@ _PCH_HFILE := $(_PCH_HFILE:$(SRC_DIR)/%=%)
 _PCH_EXT := $(_PCH_HFILE:$(PRECOMPILED_HEADER).%=%)
 _PCH_COMPILER_EXT := $(if $(filter osx,$(PLATFORM)),p,g)ch
 
+_SYMBOLS := $(if $(filter osx,$(PLATFORM)),,$(if $(filter Release,$(BUILD)),-s,))
+
 
 _PCH := $(_PCH_HFILE:%=$(OBJ_DIR)/%)
 ifneq ($(_PCH),)
@@ -288,10 +290,10 @@ ifeq ($(BUILD_STATIC),true)
 	$(_Q)ar.exe -r -s $(BLD_DIR)/lib$(_NAMENOEXT).a $(OBJS)
 else
 	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 else
-	$(_Q)$(CC) $(_LIB_DIRS) $(if $(filter Release,$(BUILD)),-s,) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
 
