@@ -226,10 +226,6 @@ if [[ $BUILD != "Release" && $BUILD != 'Debug' && $BUILD != 'Tests' ]]; then
 	BUILD=Release
 fi
 
-if [[ $BUILD == 'Tests' ]]; then
-	NAME=tests_$NAME
-fi
-
 PROF_EXEC=gprof
 PROF_ANALYSIS_FILE=profiler_analysis.stats
 
@@ -245,6 +241,9 @@ for target in $BUILD_TARGETS; do
 	if [[ $PLATFORM == 'windows' ]]; then
 		if [[ $target == 'main' ]]; then
 			export NAME=$cwd.exe
+			if [[ $BUILD == 'Tests' ]]; then
+				NAME=tests_$NAME
+			fi
 		else
 			if [[ $BUILD == 'Debug' ]]; then
 				export NAME=$target-d.dll
@@ -255,6 +254,9 @@ for target in $BUILD_TARGETS; do
 	else
 		if [[ $target == 'main' ]]; then
 			export NAME=$cwd
+			if [[ $BUILD == 'Tests' ]]; then
+				NAME=tests_$NAME
+			fi
 		else
 			if [[ $BUILD == 'Debug' ]]; then
 				export NAME=$target-d.so
