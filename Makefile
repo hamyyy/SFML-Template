@@ -234,7 +234,7 @@ buildprod: all makeproduction
 
 #==============================================================================
 # Functions
-color_reset := @tput setaf 4
+color_reset := @tput setaf 4 && tput bold
 
 define compile_with
 	$(color_reset)
