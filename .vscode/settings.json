@@ -9,7 +9,7 @@
 
 	"debug.toolBarLocation": "docked",
 
-	"editor.fontFamily": "'Ubuntu Mono', 'Courier', 'Courier New', Consolas, monospace",
+	"editor.fontFamily": "'Ubuntu Mono', 'Courier Prime Code', 'Courier', 'Courier New', Consolas, monospace",
 	"editor.lineHeight": 20,
 	"editor.fontSize": 12,
 	"editor.tabSize": 4,

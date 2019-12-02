@@ -238,7 +238,7 @@ endef
 
 define comple_with
 	$(color_reset)
-	$(if $(_CLEAN),@echo $($(2):$(OBJ_DIR)/%=%))
+	$(if $(_CLEAN),@echo "   $($(2):$(OBJ_DIR)/%=%)")
 	$(_Q)$(3) && $(4)
 endef
 
@@ -250,7 +250,11 @@ makepch: $(_PCH_GCH)
 
 makebuild: $(TARGET)
 	$(color_reset)
-	@echo '$(BUILD) build target is up to date.'
+ifeq ($(SRC_TARGET),)
+	@echo '   Target is up to date.'
+else
+	@echo '   $(NAME): Target is up to date.'
+endif
 .PHONY: makebuild
 
 #==============================================================================
@@ -270,7 +274,7 @@ $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_D
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(color_reset)
-	$(if $(_CLEAN),@echo $(<:$(OBJ_DIR)/%=%))
+	$(if $(_CLEAN),@echo "   $(<:$(OBJ_DIR)/%=%)")
 	$(_Q)$(RC_COMPILE)
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
@@ -279,7 +283,7 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 
 $(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
 	$(color_reset)
-	$(if $(_CLEAN),@echo; echo 'Linking: $(TARGET)')
+	$(if $(_CLEAN),@echo; echo '   Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
 ifeq ($(BUILD_STATIC),true)
 	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).a
@@ -299,7 +303,7 @@ $(_DIRECTORIES):
 
 clean:
 	$(color_reset)
-	$(if $(_CLEAN),@echo 'Cleaning old build files & folders...'; echo)
+	$(if $(_CLEAN),@echo '   Cleaning old build files & folders...'; echo)
 	$(_Q)$(RM) $(TARGET) $(DEPS) $(OBJS)
 .PHONY: clean
 
@@ -322,7 +326,7 @@ mkdirprod:
 releasetoprod: $(TARGET)
 	$(color_reset)
 ifeq ($(PLATFORM),osx)
-	@echo 'Creating the MacOS application bundle...'
+	@echo '   Creating the MacOS application bundle...'
 	$(MKDIR) $(PRODUCTION_FOLDER)/Resources $(PRODUCTION_FOLDER)/Frameworks $(PRODUCTION_FOLDER)/MacOS
 ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
@@ -356,7 +360,7 @@ endif
 
 makeproduction: rmprod mkdirprod releasetoprod
 	$(color_reset)
-	@echo -n 'Adding dynamic libraries & project dependencies...'
+	@echo -n '   Adding dynamic libraries & project dependencies...'
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 	@echo ' Done'
@@ -368,7 +372,7 @@ ifeq ($(PLATFORM),osx)
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r $(framework) $(PRODUCTION_FOLDER)/Frameworks))
 ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(shell hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ &> /dev/null)
-	@echo 'Creating the dmg image for the application...'
+	@echo '   Creating the dmg image for the application...'
 	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg > /dev/null
 	$(_Q)hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg > /dev/null
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
@@ -380,7 +384,7 @@ ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(_Q)hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ > /dev/null
 	$(_Q)hdiutil convert $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg -format UDZO -o $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
 	$(_Q)rm -f $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg
-	@echo 'Created $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg'
+	@echo '   Created $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg'
 endif
 endif
 .PHONY: makeproduction
