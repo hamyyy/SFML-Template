@@ -378,8 +378,8 @@ endif
 
 makeproduction: rmprod mkdirprod releasetoprod
 	$(color_reset)
-	@echo '   Adding dynamic libraries & project dependencies...'
 ifneq ($(PRODUCTION_DEPENDENCIES),)
+	@echo '   Adding dynamic libraries & project dependencies...'
 	@echo
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(call copy_to,$(dep),$(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
