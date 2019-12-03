@@ -2,7 +2,9 @@
 
 int main()
 {
+#if defined(_DEBUG)
 	std::cout << "Hello World!" << std::endl;
+#endif
 
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
 #ifdef SFML_SYSTEM_WINDOWS

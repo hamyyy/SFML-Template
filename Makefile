@@ -1,3 +1,8 @@
+.SUFFIXES:
+SUFFIXES =
+.SUFFIXES: .c .cpp .h .hpp .rc .res .inl .o .d .asm
+
+
 #==============================================================================
 MAKEFLAGS += --no-print-directory
 #==============================================================================
@@ -10,6 +15,12 @@ ifeq ($(BUILD),Tests)
 	_BUILDL := release
 endif
 
+# The sub-folder containing the target source files
+SRC_TARGET?=
+ifneq ($(SRC_TARGET),)
+	_SRC_TARGET := /$(SRC_TARGET)
+endif
+
 # Maximum parallel jobs during build process
 MAX_PARALLEL_JOBS?=8
 
@@ -19,11 +30,20 @@ DUMP_ASSEMBLY?=false
 # Clean output?
 CLEAN_OUTPUT?=true
 
+# If dll, build as a static library?
+BUILD_STATIC?=false
+
 # Platform specific environment variables
 -include env/.all.mk
 -include env/.$(_BUILDL).mk
 -include env/$(PLATFORM).all.mk
 -include env/$(PLATFORM).$(_BUILDL).mk
+ifneq ($(SRC_TARGET),)
+-include env/$(SRC_TARGET)/.all.mk
+-include env/$(SRC_TARGET)/.$(_BUILDL).mk
+-include env/$(SRC_TARGET)/$(PLATFORM).all.mk
+-include env/$(SRC_TARGET)/$(PLATFORM).$(_BUILDL).mk
+endif
 
 #==============================================================================
 # File/Folder dependencies for the production build recipe (makeproduction)
@@ -59,7 +79,7 @@ NAME?=game.exe
 
 #==============================================================================
 # The source file directory
-SRC_DIR := src
+SRC_DIR := src$(_SRC_TARGET)
 LIB_DIR := lib
 
 # Project .cpp or .rc files (relative to $(SRC_DIR) directory)
@@ -133,14 +153,14 @@ _NAMENOEXT := $(_NAMENOEXT:.dll=)
 
 _SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES:.rc=.res),$(SOURCE_FILES:%.rc=))
 
-OBJ_DIR := $(BLD_DIR)/obj
+OBJ_DIR := $(BLD_DIR)/obj$(_SRC_TARGET)
 _OBJS := $(_SOURCES_IF_RC:.c=.c.o)
 _OBJS := $(_OBJS:.cpp=.cpp.o)
 _OBJS := $(_OBJS:.cc=.cc.o)
 OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
-DEP_DIR := $(BLD_DIR)/dep
+DEP_DIR := $(BLD_DIR)/dep$(_SRC_TARGET)
 _DEPS := $(_SOURCES_IF_RC)
 _DEPS := $(_DEPS:%=%.d)
 DEPS := $(_DEPS:%=$(DEP_DIR)/%) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
@@ -151,6 +171,8 @@ _PCH_HFILE := $(_PCH_HFILE:$(SRC_DIR)/%=%)
 _PCH_EXT := $(_PCH_HFILE:$(PRECOMPILED_HEADER).%=%)
 _PCH_COMPILER_EXT := $(if $(filter osx,$(PLATFORM)),p,g)ch
 
+_SYMBOLS := $(if $(filter osx,$(PLATFORM)),,$(if $(filter Release,$(BUILD)),-s,))
+
 
 _PCH := $(_PCH_HFILE:%=$(OBJ_DIR)/%)
 ifneq ($(_PCH),)
@@ -158,7 +180,7 @@ ifneq ($(_PCH),)
 endif
 
 ifeq ($(DUMP_ASSEMBLY),true)
-	ASM_DIR := $(BLD_DIR)/asm
+	ASM_DIR := $(BLD_DIR)/asm$(_SRC_TARGET)
 	_ASMS := $(_OBJS:%.res=)
 	_ASMS := $(_ASMS:.o=.o.asm)
 	ASMS := $(_ASMS:%=$(ASM_DIR)/%)
@@ -199,107 +221,118 @@ POST_COMPILE_T = mv -f $(DEP_DIR)/.$(TEST_DIR)/$*.Td $(DEP_DIR)/.$(TEST_DIR)/$*.
 
 #==============================================================================
 # Build Scripts
-.DELETE_ON_ERROR: all
 all:
 	@$(MAKE) makepch
 	@$(MAKE) -j$(MAX_PARALLEL_JOBS) makebuild
+.DELETE_ON_ERROR: all
 
-.PHONY: rebuild
 rebuild: clean all
+.PHONY: rebuild
 
-.PHONY: buildprod
 buildprod: all makeproduction
+.PHONY: buildprod
 
 #==============================================================================
 # Functions
-define color_reset
-	@tput setaf 4
-endef
+color_reset := @tput setaf 4
 
-define comple_with
+define compile_with
 	$(color_reset)
-	$(if $(_CLEAN),@echo $($(2):$(OBJ_DIR)/%=%))
+	$(if $(_CLEAN),@echo '   $($(2):$(OBJ_DIR)/%=%)')
 	$(_Q)$(3) && $(4)
 endef
 
 MKDIR := $(_Q)mkdir -p
 
+makepch: $(_PCH_GCH)
+	@echo > /dev/null
+.PHONY: makepch
+
+makebuild: $(TARGET)
+	$(color_reset)
+ifeq ($(SRC_TARGET),)
+	@echo '   Target is up to date.'
+else
+	@echo '   $(NAME): Target is up to date.'
+endif
+.PHONY: makebuild
+
 #==============================================================================
 # Build Recipes
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%
 $(OBJ_DIR)/%.o: $(SRC_DIR)/% $(_PCH_GCH) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call comple_with,@,<,$(OBJ_COMPILE),$(POST_COMPILE))
+	$(call compile_with,@,<,$(OBJ_COMPILE),$(POST_COMPILE))
 
 $(OBJ_DIR)/.$(TEST_DIR)/%.o: $(TEST_DIR)/%
 $(OBJ_DIR)/.$(TEST_DIR)/%.o: $(TEST_DIR)/% $(_PCH_GCH) $(DEP_DIR)/.$(TEST_DIR)/%.d | $(_DIRECTORIES)
-	$(call comple_with,@,<,$(OBJ_COMPILE_T),$(POST_COMPILE_T))
+	$(call compile_with,@,<,$(OBJ_COMPILE_T),$(POST_COMPILE_T))
 
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT)
 $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(call comple_with,@,<,$(PCH_COMPILE),$(POST_COMPILE))
+	$(call compile_with,@,<,$(PCH_COMPILE),$(POST_COMPILE))
 
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(DEP_DIR)/%.d | $(_DIRECTORIES)
 	$(color_reset)
-	$(if $(_CLEAN),@echo $(<:$(OBJ_DIR)/%=%))
+	$(if $(_CLEAN),@echo "   $(<:$(OBJ_DIR)/%=%)")
 	$(_Q)$(RC_COMPILE)
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(if $(_CLEAN),,$(color_reset))
 	$(_Q)$(ASM_COMPILE)
 
-$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(BLD_DIR) $(TEST_DIR)
+$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
 	$(color_reset)
-	$(if $(_CLEAN),@echo; echo 'Linking: $(TARGET)')
+	$(if $(_CLEAN),@echo; echo '   Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
-	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ -s $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+ifeq ($(BUILD_STATIC),true)
+	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).a
+	$(_Q)ar.exe -r -s $(BLD_DIR)/lib$(_NAMENOEXT).a $(OBJS)
 else
-	$(_Q)$(CC) $(_LIB_DIRS) $(if $(filter Release,$(BUILD)),-s,) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
+	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+endif
+else
+	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
-
-
-.PHONY: makepch
-makepch: $(_PCH_GCH)
-	@echo > /dev/null
-
-.PHONY: makebuild
-makebuild: $(TARGET)
-	$(color_reset)
-	@echo '$(BUILD) build target is up to date.'
 
 $(_DIRECTORIES):
 	$(if $(_CLEAN),,$(color_reset))
 	$(MKDIR) $@
 
-.PHONY: clean
 clean:
 	$(color_reset)
-	$(if $(_CLEAN),@echo 'Cleaning old build files & folders...'; echo)
+	$(if $(_CLEAN),@echo '   Cleaning old build files & folders...'; echo)
 	$(_Q)$(RM) $(TARGET) $(DEPS) $(OBJS)
+.PHONY: clean
 
 #==============================================================================
 # Production recipes
 
-.PHONY: rmprod
 rmprod:
 	$(color_reset)
 	-$(_Q)rm -rf $(if $(filter osx,$(PLATFORM)),$(PRODUCTION_FOLDER_MACOS),$(PRODUCTION_FOLDER))
 ifeq ($(PLATFORM),linux)
 	-$(_Q)rm -rf ~/.local/share/applications/$(NAME).desktop
 endif
+.PHONY: rmprod
 
-.PHONY: mkdirprod
 mkdirprod:
 	$(color_reset)
 	$(MKDIR) $(PRODUCTION_FOLDER)
+.PHONY: mkdirprod
 
-.PHONY: releasetoprod
+define copy_to
+	@printf '\xE2\xAE\xAB'
+	@echo "  Copying $(1) to \"$(CURDIR)/$(2)\""
+	$(shell cp -r $(1) $(2))
+endef
+
 releasetoprod: $(TARGET)
 	$(color_reset)
 ifeq ($(PLATFORM),osx)
-	@echo 'Creating the MacOS application bundle...'
+	@echo '   Creating the MacOS application bundle...'
 	$(MKDIR) $(PRODUCTION_FOLDER)/Resources $(PRODUCTION_FOLDER)/Frameworks $(PRODUCTION_FOLDER)/MacOS
 ifeq ($(shell brew ls --versions makeicns),)
 	brew install makeicns
@@ -329,23 +362,23 @@ else ifeq ($(PLATFORM),linux)
 else
 	$(_Q)cp $(TARGET) $(PRODUCTION_FOLDER)
 endif
+.PHONY: releasetoprod
 
-.PHONY: makeproduction
 makeproduction: rmprod mkdirprod releasetoprod
 	$(color_reset)
-	@echo -n 'Adding dynamic libraries & project dependencies...'
-	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
+	@echo '   Adding dynamic libraries & project dependencies...'
+	@echo
+	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(call copy_to,$(dep),$(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
-	@echo ' Done'
 ifeq ($(PLATFORM),osx)
-	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(shell cp -r $(dylib) $(PRODUCTION_FOLDER)/MacOS ))
+	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(call copy_to,$(dylib),$(PRODUCTION_FOLDER)/MacOS ))
 	$(_Q)install_name_tool -add_rpath @executable_path/../Frameworks $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 	$(_Q)install_name_tool -add_rpath @loader_path/.. $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(shell install_name_tool -change $(notdir $(dylib)) @rpath/MacOS/$(notdir $(dylib)) $(PRODUCTION_FOLDER)/MacOS/$(NAME)))
-	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r $(framework) $(PRODUCTION_FOLDER)/Frameworks))
+	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(call copy_to,$(framework),$(PRODUCTION_FOLDER)/Frameworks))
 ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(shell hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ &> /dev/null)
-	@echo 'Creating the dmg image for the application...'
+	@echo '   Creating the dmg image for the application...'
 	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg > /dev/null
 	$(_Q)hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg > /dev/null
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
@@ -357,9 +390,10 @@ ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(_Q)hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ > /dev/null
 	$(_Q)hdiutil convert $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg -format UDZO -o $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
 	$(_Q)rm -f $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg
-	@echo 'Created $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg'
+	@echo '   Created $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg'
 endif
 endif
+.PHONY: makeproduction
 
 #==============================================================================
 # Dependency recipes

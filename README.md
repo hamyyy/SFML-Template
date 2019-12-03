@@ -400,8 +400,6 @@ How you write your unit tests will obviously depend on how you write your engine
 
 Running the **Profile: Debug** task will build the Debug target (if necessary) and generate a **profiler_analysis.stats** file from a **gmon.out** file using gcc's "gprof" profiler. You can then examine the stats file in the workspace.
 
-Note: You might see a "BFD: Dwarf Error: Could not find abbrev number ###" error in the terminal. I'm not sure what this means yet or how to get rid of it, but it doesn't seem to stop the stats from generating.
-
 ---
 
 ## Include directories & .vscode folder
@@ -462,6 +460,35 @@ Recently, I wanted to avoid duplicate Makefiles in my various projects, so I fou
   ```
 6. Make a copy of **sfml-project1** and call it **sfml-project2**
 7. Open either project in vscode, and they should each should compile! Voila! You can now use a shared Makefile between projects this way
+
+---
+
+## Multiple Targets (experimental)
+
+Multiple targets (dynamic libraries + 1 executable) are supported at the moment, although there's a couple setup changes you'll need.
+
+1. Place all the files in **src** into a new folder called **main**. "main" is a special target that will compile the main executable
+2. Create a new folder in **src** with your library's name. Place the code of that target within that folder.
+3. Optionally, add the same folder name in the **env** folder & add any .mk files (same patterns) into that folder. For instance, you might have a library & a main target that depends on that library. You would need to supply the main target with "LINK_LIBRARIES := my_lib" that way, but can still use the main .mk files to configure both targets.
+4. Now, you just need to supply build.sh with the target names. You can do this 2 ways. If you only plan on editing & building inside of vscode, you can add this to .vscode/tasks.json:
+  ```json
+  "options": {
+      "env": {
+          "BUILD_TARGETS": "target1 target2 main"
+      }
+  }
+  ```
+Note: Ordered from first built to last built (main must be last if it's included)
+
+6. However, if you want to build outside of vscode, you just need to add that as an environment variable. The best place for it is at the top of build.sh (which stays nice and clean if you followed the multiple projects step). That version would look like:
+  ```bash
+  #!/bin/bash
+  export BUILD_TARGETS='target1 target2 main'
+
+  bash ../build.sh $1 $2 $3 $4
+  ```
+7. At this point, you can build away, and you'll notice some extra verbiage related to multiple targets in the build output.
+
 
 ---
 
