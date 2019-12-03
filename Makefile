@@ -385,7 +385,7 @@ ifneq ($(PRODUCTION_DEPENDENCIES),)
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 endif
 ifeq ($(PLATFORM),osx)
-	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(call copy_to,$(dylib),$(PRODUCTION_FOLDER)/MacOS ))
+	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(call copy_to,$(dylib),$(PRODUCTION_FOLDER)/MacOS))
 	$(_Q)install_name_tool -add_rpath @executable_path/../Frameworks $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 	$(_Q)install_name_tool -add_rpath @loader_path/.. $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(shell install_name_tool -change $(notdir $(dylib)) @rpath/MacOS/$(notdir $(dylib)) $(PRODUCTION_FOLDER)/MacOS/$(NAME)))
