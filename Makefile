@@ -234,7 +234,7 @@ buildprod: all makeproduction
 
 #==============================================================================
 # Functions
-color_reset := @tput setaf 4 && tput bold
+color_reset := @tput setaf 4
 
 define compile_with
 	$(color_reset)
@@ -323,6 +323,12 @@ mkdirprod:
 	$(MKDIR) $(PRODUCTION_FOLDER)
 .PHONY: mkdirprod
 
+define copy_to
+	@printf '\xE2\xAE\xAB'
+	@echo "  Copying $(1) to \"$(CURDIR)/$(2)\""
+	$(shell cp -r $(1) $(2))
+endef
+
 releasetoprod: $(TARGET)
 	$(color_reset)
 ifeq ($(PLATFORM),osx)
@@ -360,16 +366,16 @@ endif
 
 makeproduction: rmprod mkdirprod releasetoprod
 	$(color_reset)
-	@echo -n '   Adding dynamic libraries & project dependencies...'
-	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(shell cp -r $(dep) $(PRODUCTION_FOLDER_RESOURCES)))
+	@echo '   Adding dynamic libraries & project dependencies...'
+	@echo
+	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(call copy_to,$(dep),$(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
-	@echo ' Done'
 ifeq ($(PLATFORM),osx)
-	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(shell cp -r $(dylib) $(PRODUCTION_FOLDER)/MacOS ))
+	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(call copy_to,$(dylib),$(PRODUCTION_FOLDER)/MacOS ))
 	$(_Q)install_name_tool -add_rpath @executable_path/../Frameworks $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 	$(_Q)install_name_tool -add_rpath @loader_path/.. $(PRODUCTION_FOLDER)/MacOS/$(NAME)
 	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(shell install_name_tool -change $(notdir $(dylib)) @rpath/MacOS/$(notdir $(dylib)) $(PRODUCTION_FOLDER)/MacOS/$(NAME)))
-	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(shell cp -r $(framework) $(PRODUCTION_FOLDER)/Frameworks))
+	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(call copy_to,$(framework),$(PRODUCTION_FOLDER)/Frameworks))
 ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(shell hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ &> /dev/null)
 	@echo '   Creating the dmg image for the application...'

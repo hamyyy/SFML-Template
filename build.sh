@@ -12,22 +12,6 @@ export GCC_COLORS="error=01;31:warning=01;33:note=01;36:locus=00;34"
 #==============================================================================
 # Function declarations
 
-dec=\=\=\=\=\=\=
-
-display_styled() {
-	tput setaf $1
-	tput bold
-	echo $dec $2 $dec
-	tput sgr0
-}
-
-display_styled_block() {
-	tput setaf $1
-	tput bold
-	echo ██ $2
-	tput sgr0
-}
-
 display_styled_symbol() {
 	tput setaf $1
 	tput bold
@@ -41,11 +25,15 @@ build_success() {
 	echo
 }
 
+launch() {
+	display_styled_symbol 2 " " "Launching bin/$BUILD/$NAME"
+	echo
+}
+
 build_success_launch() {
 	echo
 	display_styled_symbol 2 "✔" "Succeeded!"
-	display_styled_symbol 2 " " "Launching bin/$BUILD/$NAME."
-	echo
+	launch
 }
 
 build_fail() {
@@ -59,44 +47,32 @@ build_fail() {
 
 build_prod_error() {
 	echo
-	display_styled 1 "Error: buildprod must be run on Release build."
+	display_styled_symbol 1 "⭙" "Error: buildprod must be run on Release build."
 	tput sgr0
 	exit 1
 }
 
-launch() {
-	echo
-	display_styled 2 "Launching bin/$BUILD/$NAME"
-	echo
-}
-
-launch_prod() {
-	echo
-	display_styled 2 "Launching Production Build: $NAME"
-	echo
-}
-
 profiler_done() {
 	echo
-	display_styled 2 "Profiler Completed: View $PROF_ANALYSIS_FILE for details"
+	display_styled_symbol 2 "⯌" "Profiler Completed: View $PROF_ANALYSIS_FILE for details"
 	echo
 }
 
 profiler_error() {
 	echo
-	display_styled 1 "Error: Profiler must be run on Debug build."
+	display_styled_symbol 1 "⭙" "Error: Profiler must be run on Debug build."
 	tput sgr0
 	exit 1
 }
 
 profiler_osx() {
-	display_styled 1 "Error: Profiling (with gprof) is not supported on Mac OSX."
+	display_styled_symbol 1 "⭙" "Error: Profiling (with gprof) is not supported on Mac OSX."
 	tput sgr0
 	exit 1
 }
 
 buildrun() {
-	display_styled_block 3 "Build & Run: $BUILD (target: $NAME)"
+	display_styled_symbol 3 "⬤" "Build & Run: $BUILD (target: $NAME)"
 	echo
 	if $MAKE_EXEC BUILD=$BUILD; then
 		build_success_launch
@@ -111,7 +87,7 @@ buildrun() {
 }
 
 build() {
-	display_styled_block 3 "Build: $BUILD (target: $NAME)"
+	display_styled_symbol 3 "⬤" "Build: $BUILD (target: $NAME)"
 	echo
 	if $MAKE_EXEC BUILD=$BUILD; then
 		build_success
@@ -121,7 +97,7 @@ build() {
 }
 
 rebuild() {
-	display_styled_block 3 "Rebuild: $BUILD (target: $NAME)"
+	display_styled_symbol 3 "⬤" "Rebuild: $BUILD (target: $NAME)"
 	echo
 	if $MAKE_EXEC BUILD=$BUILD rebuild; then
 		build_success
@@ -131,7 +107,7 @@ rebuild() {
 }
 
 run() {
-	display_styled_block 3 "Run: $BUILD (target: $NAME)"
+	display_styled_symbol 3 "⬤" "Run: $BUILD (target: $NAME)"
 	echo
 	launch
 	if [[ $BUILD == 'Tests' ]]; then
@@ -142,7 +118,7 @@ run() {
 }
 
 buildprod() {
-	display_styled_block 3 "Production Build: $BUILD (target: $NAME)"
+	display_styled_symbol 3 "⬤" "Production Build: $BUILD (target: $NAME)"
 	echo
 	if [[ $BUILD == 'Release' ]]; then
 		if $MAKE_EXEC BUILD=$BUILD buildprod; then
@@ -156,7 +132,7 @@ buildprod() {
 }
 
 profile() {
-	display_styled_block 3 "Profile: $BUILD (target: $NAME)"
+	display_styled_symbol 3 "⬤" "Profile: $BUILD (target: $NAME)"
 	echo
 	if [[ $PLATFORM == 'osx' ]]; then
 		profiler_osx
@@ -166,7 +142,7 @@ profile() {
 			tput sgr0
 			bin/$BUILD/$NAME
 			tput setaf 4
-			gprof bin/Debug/$NAME gmon.out > $PROF_ANALYSIS_FILE
+			gprof bin/Debug/$NAME gmon.out > $PROF_ANALYSIS_FILE 2> /dev/null
 			profiler_done
 		else
 			build_fail
