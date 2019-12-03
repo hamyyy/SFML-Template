@@ -301,8 +301,8 @@ endif
 else
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
-ifneq ($(BUILD_DEPENDENCIES),)
 	@echo
+ifneq ($(BUILD_DEPENDENCIES),)
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(call copy_to,$(dep),$(BLD_DIR)))
 	@echo
 endif
