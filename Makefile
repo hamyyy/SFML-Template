@@ -38,6 +38,8 @@ BUILD_STATIC?=false
 -include env/.$(_BUILDL).mk
 -include env/$(PLATFORM).all.mk
 -include env/$(PLATFORM).$(_BUILDL).mk
+
+# Target specific variables
 ifneq ($(SRC_TARGET),)
 -include env/$(SRC_TARGET)/.all.mk
 -include env/$(SRC_TARGET)/.$(_BUILDL).mk
@@ -88,7 +90,6 @@ SOURCE_FILES := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -name '*.cpp' 
 PROJECT_DIRS := $(patsubst $(SRC_DIR)/%,%,$(shell find $(SRC_DIR) -mindepth 1 -maxdepth 99 -type d))
 
 # Add prefixes to the above variables
-_LIB_DIRS := $(LIB_DIR:%=-L%/) $(LIB_DIRS:%=-L%)
 _INCLUDE_DIRS := $(patsubst %,-I%,$(SRC_DIR)/ $(LIB_DIR)/ $(INCLUDE_DIRS))
 
 _BUILD_MACROS := $(BUILD_MACROS:%=-D%)
@@ -150,6 +151,11 @@ BLD_DIR := $(BLD_DIR:%/=%)
 TARGET := $(BLD_DIR)/$(NAME)
 _NAMENOEXT := $(NAME:.exe=)
 _NAMENOEXT := $(_NAMENOEXT:.dll=)
+
+ifneq ($(SRC_TARGET),)
+	LIB_DIRS := $(LIB_DIRS) $(BLD_DIR)
+endif
+_LIB_DIRS := $(LIB_DIR:%=-L%/) $(LIB_DIRS:%=-L%)
 
 _SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES:.rc=.res),$(SOURCE_FILES:%.rc=))
 
@@ -283,7 +289,7 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 
 $(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
 	$(color_reset)
-	$(if $(_CLEAN),@echo; echo '   Linking: $(TARGET)')
+	$(if $(_CLEAN),@echo; printf '\xE2\x87\x9B'; echo '  Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
 ifeq ($(BUILD_STATIC),true)
 	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).a
@@ -295,7 +301,11 @@ endif
 else
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
-	$(foreach dep,$(BUILD_DEPENDENCIES),$(shell cp -r $(dep) $(BLD_DIR)))
+ifneq ($(BUILD_DEPENDENCIES),)
+	@echo
+	$(foreach dep,$(BUILD_DEPENDENCIES),$(call copy_to,$(dep),$(BLD_DIR)))
+	@echo
+endif
 
 $(_DIRECTORIES):
 	$(if $(_CLEAN),,$(color_reset))
@@ -367,9 +377,11 @@ endif
 makeproduction: rmprod mkdirprod releasetoprod
 	$(color_reset)
 	@echo '   Adding dynamic libraries & project dependencies...'
+ifneq ($(PRODUCTION_DEPENDENCIES),)
 	@echo
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(call copy_to,$(dep),$(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
+endif
 ifeq ($(PLATFORM),osx)
 	$(foreach dylib,$(PRODUCTION_MACOS_DYLIBS),$(call copy_to,$(dylib),$(PRODUCTION_FOLDER)/MacOS ))
 	$(_Q)install_name_tool -add_rpath @executable_path/../Frameworks $(PRODUCTION_FOLDER)/MacOS/$(NAME)
