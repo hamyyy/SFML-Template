@@ -74,7 +74,11 @@ profiler_osx() {
 buildrun() {
 	display_styled_symbol 3 "⬤" "Build & Run: $BUILD (target: $NAME)"
 	echo
-	if $MAKE_EXEC BUILD=$BUILD; then
+	BLD=$BUILD
+	if [[ $BUILD == 'Tests' && $1 != 'main' ]]; then
+		BLD=Release
+	fi
+	if $MAKE_EXEC BUILD=$BLD; then
 		build_success_launch
 		if [[ $BUILD == 'Tests' ]]; then
 			bin/Release/$NAME $OPTIONS
@@ -89,7 +93,11 @@ buildrun() {
 build() {
 	display_styled_symbol 3 "⬤" "Build: $BUILD (target: $NAME)"
 	echo
-	if $MAKE_EXEC BUILD=$BUILD; then
+	BLD=$BUILD
+	if [[ $BUILD == 'Tests' && $1 != 'main' ]]; then
+		BLD=Release
+	fi
+	if $MAKE_EXEC BUILD=$BLD; then
 		build_success
 	else
 		build_fail
@@ -99,7 +107,11 @@ build() {
 rebuild() {
 	display_styled_symbol 3 "⬤" "Rebuild: $BUILD (target: $NAME)"
 	echo
-	if $MAKE_EXEC BUILD=$BUILD rebuild; then
+	BLD=$BUILD
+	if [[ $BUILD == 'Tests' && $1 != 'main' ]]; then
+		BLD=Release
+	fi
+	if $MAKE_EXEC BUILD=$BLD rebuild; then
 		build_success
 	else
 		build_fail
@@ -246,7 +258,7 @@ for target in $BUILD_TARGETS; do
 		export SRC_TARGET=$target
 	fi
 
-	CHILD_CMD=$CMD
+	CHILD_CMD="$CMD $target"
 	if [[ $CMD == 'buildrun' && $target != 'main' ]]; then
 		CHILD_CMD=build
 	fi
