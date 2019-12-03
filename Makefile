@@ -334,7 +334,7 @@ mkdirprod:
 .PHONY: mkdirprod
 
 define copy_to
-	@printf '\xE2\xAE\xAB'
+	@printf "\xE2\x9E\xA6"
 	@echo "  Copying $(1) to \"$(CURDIR)/$(2)\""
 	$(shell cp -r $(1) $(2))
 endef
