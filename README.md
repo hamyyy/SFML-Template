@@ -478,6 +478,8 @@ Multiple targets (dynamic libraries + 1 executable) are supported at the moment,
       }
   }
   ```
+**BUILD_TARGETS** is a simple list of the folders, which then get output as the library name. For instance, "target1" would build out to "target1.dll" in Release, and "target1-d.dll" in Debug. "main" triggers the main target, and outputs "(root folder).exe" as it does w/o multiple targets.
+
 Note: Ordered from first built to last built (main must be last if it's included)
 
 6. However, if you want to build outside of vscode, you just need to add that as an environment variable. The best place for it is at the top of build.sh (which stays nice and clean if you followed the multiple projects step). That version would look like:

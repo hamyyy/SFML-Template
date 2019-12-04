@@ -335,7 +335,7 @@ mkdirprod:
 
 define copy_to
 	@printf "\xE2\x9E\xA6"
-	@echo "  Copying $(1) to \"$(CURDIR)/$(2)\""
+	@echo "  Copying \"$(1)\" to \"$(CURDIR)/$(2)\""
 	$(shell cp -r $(1) $(2))
 endef
 
