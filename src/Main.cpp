@@ -1,17 +1,17 @@
-#include "Main.hpp"
+#include "Platform/PlatformHelper.hpp"
 
 int main()
 {
+	PlatformHelper platform;
+
 #if defined(_DEBUG)
 	std::cout << "Hello World!" << std::endl;
 #endif
 
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-#ifdef SFML_SYSTEM_WINDOWS
-	__windowsHelper.setIcon(window.getSystemHandle());
-#endif
+	platform.setIcon(window.getSystemHandle());
 
-	sf::CircleShape shape(window.getSize().x/2);
+	sf::CircleShape shape(window.getSize().x / 2);
 	shape.setFillColor(sf::Color::White);
 
 	sf::Texture shapeTexture;

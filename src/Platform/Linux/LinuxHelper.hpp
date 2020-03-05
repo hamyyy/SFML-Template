@@ -1,9 +1,8 @@
 #ifndef LINUX_HELPER_HPP
 #define LINUX_HELPER_HPP
 
-class LinuxHelper
+struct LinuxHelper
 {
-public:
 	LinuxHelper();
 };
 

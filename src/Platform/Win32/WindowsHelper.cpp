@@ -1,7 +1,7 @@
 #ifdef _WIN32
-#include "WindowsHelper.hpp"
+	#include "WindowsHelper.hpp"
 
-#include "Icon.h"
+	#include "Icon.h"
 
 /******************************************************************************
  *
@@ -20,7 +20,7 @@ WindowsHelper::WindowsHelper()
  * The window handle uses 32x32 (ICON_BIG) & 16x16 (ICON_SMALL) sized icons.
  * This should be called any time the SFML window is create/recreated
  *****************************************************************************/
-void WindowsHelper::setIcon(const HWND& inHandle)
+void WindowsHelper::setIcon(HWND inHandle)
 {
 	if (m_hIcon32)
 		SendMessage(inHandle, WM_SETICON, ICON_BIG, (LPARAM)m_hIcon32);
@@ -33,7 +33,7 @@ void WindowsHelper::setIcon(const HWND& inHandle)
  * sizes (for instance 16x16, 32x32 & 64x64). This is referred to as an
  * "Icon Directory". Additionally, it can have a single icon
  *****************************************************************************/
-PBYTE WindowsHelper::getIconDirectory(const int& inResourceId)
+PBYTE WindowsHelper::getIconDirectory(const int inResourceId)
 {
 	HMODULE hModule = GetModuleHandle(nullptr);
 	HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(inResourceId), RT_GROUP_ICON);
@@ -48,7 +48,7 @@ PBYTE WindowsHelper::getIconDirectory(const int& inResourceId)
  * This will attempt to load a single icon from an icon directory
  * If the requested size isn't found, the first one is returned
  *****************************************************************************/
-HICON WindowsHelper::getIconFromIconDirectory(const PBYTE& inIconDirectory, const uint& inSize)
+HICON WindowsHelper::getIconFromIconDirectory(PBYTE inIconDirectory, const uint inSize)
 {
 	HMODULE hModule = GetModuleHandle(nullptr);
 	int resourceId = LookupIconIdFromDirectoryEx(inIconDirectory, TRUE, inSize, inSize, LR_DEFAULTCOLOR);

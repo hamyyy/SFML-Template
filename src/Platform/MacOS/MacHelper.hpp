@@ -1,9 +1,8 @@
 #ifndef MACOS_HELPER_HPP
 #define MACOS_HELPER_HPP
 
-class MacHelper
+struct MacHelper
 {
-public:
 	MacHelper();
 };
 
