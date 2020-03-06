@@ -66,6 +66,6 @@
 #include "Utility/Types.hpp"
 
 // Macros
-#define _UNUSED(x) (void)(x)
+#define UNUSED(x) (void)(x)
 
 #endif // PRECOMPILED_HEADER_HPP

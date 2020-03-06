@@ -8,7 +8,9 @@ int main()
 	std::cout << "Hello World!" << std::endl;
 #endif
 
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+	sf::RenderWindow window;
+	float screenScalingFactor = platform.getScreenScalingFactor(window.getSystemHandle());
+	window.create(sf::VideoMode(200.0f * screenScalingFactor, 200.0f * screenScalingFactor), "SFML works!");
 	platform.setIcon(window.getSystemHandle());
 
 	sf::CircleShape shape(window.getSize().x / 2);

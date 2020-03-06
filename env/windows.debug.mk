@@ -1,4 +1,5 @@
 LINK_LIBRARIES := \
+	$(LINK_LIBRARIES) \
 	sfml-graphics-d \
 	sfml-audio-d \
 	sfml-network-d \
