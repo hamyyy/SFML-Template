@@ -1,4 +1,5 @@
 CC := g++-8.1.0
+CFLAGS := $(CFLAGS) -fpic
 MAX_PARALLEL_JOBS := 4
 
 LIB_DIRS := \
