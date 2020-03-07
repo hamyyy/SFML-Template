@@ -303,7 +303,7 @@ else
 ifeq ($(suffix $(TARGET)),.so)
 ifeq ($(BUILD_STATIC),true)
 	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(_Q)ar rcs -r -s $(BLD_DIR)/lib$(_NAMENOEXT).a $(OBJS)
+	$(_Q)ar -r -s $(BLD_DIR)/lib$(_NAMENOEXT).a $(OBJS)
 else
 	$(_Q)$(CC) -shared $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
