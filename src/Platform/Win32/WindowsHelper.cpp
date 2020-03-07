@@ -38,11 +38,10 @@ WindowsHelper::~WindowsHelper()
  * The window handle uses 32x32 (ICON_BIG) & 16x16 (ICON_SMALL) sized icons.
  * This should be called any time the SFML window is create/recreated
  *****************************************************************************/
-void WindowsHelper::setIcon(HWND inHandle)
+void WindowsHelper::setIcon(HWND inHandle, const float inScaleFactor)
 {
-	float scalingFactor = getScreenScalingFactor(inHandle);
-	std::size_t indexSmallIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(scalingFactor - 1.0f), 0.0f), static_cast<float>(m_hIcons.size()) - 1.0f));
-	std::size_t indexBigIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(scalingFactor - 1.0f), 0.0f) + 1.0f, static_cast<float>(m_hIcons.size()) - 1.0f));
+	std::size_t indexSmallIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(inScaleFactor - 1.0f), 0.0f), static_cast<float>(m_hIcons.size()) - 1.0f));
+	std::size_t indexBigIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(inScaleFactor - 1.0f), 0.0f) + 1.0f, static_cast<float>(m_hIcons.size()) - 1.0f));
 
 	if (m_hIcons[indexBigIcon])
 		SendMessage(inHandle, WM_SETICON, ICON_BIG, (LPARAM)m_hIcons[indexBigIcon]);
@@ -65,6 +64,7 @@ void WindowsHelper::toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, co
 		HDC screenDC = GetDC(inHandle);
 		int screenWidth = GetDeviceCaps(screenDC, HORZRES);
 		int screenHeight = GetDeviceCaps(screenDC, VERTRES);
+		ReleaseDC(inHandle, screenDC);
 
 		int width = static_cast<int>(inResolution.x);
 		int height = static_cast<int>(inResolution.y);
@@ -77,7 +77,7 @@ void WindowsHelper::toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, co
 
 		SetWindowLongPtr(inHandle, GWL_STYLE, win32Style);
 		SetWindowLongPtr(inHandle, GWL_EXSTYLE, 0);
-		SetWindowPos(inHandle, NULL, left, top, width, height, flags);
+		SetWindowPos(inHandle, nullptr, left, top, width, height, flags);
 	}
 	else
 	{
@@ -101,20 +101,23 @@ void WindowsHelper::toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, co
 /******************************************************************************
  * Gets the refresh rate of the device from the supplied handle
  *****************************************************************************/
-int WindowsHelper::getRefreshRate(HWND inHandle)
+int WindowsHelper::getRefreshRate()
 {
-	HDC screenDC = GetDC(inHandle);
-	return GetDeviceCaps(screenDC, VREFRESH);
+	HDC screenDC = GetDC(nullptr);
+	int refresh = GetDeviceCaps(screenDC, VREFRESH);
+	ReleaseDC(nullptr, screenDC);
+	return refresh;
 }
 
 /******************************************************************************
  * Gets the screen scaling factor of the device from the supplied handle
  *****************************************************************************/
-float WindowsHelper::getScreenScalingFactor(HWND inHandle)
+float WindowsHelper::getScreenScalingFactor()
 {
-	HDC screenDC = GetDC(inHandle);
+	HDC screenDC = GetDC(nullptr);
 	int logicalScreenHeight = GetDeviceCaps(screenDC, VERTRES);
 	int physicalScreenHeight = GetDeviceCaps(screenDC, DESKTOPVERTRES);
+	ReleaseDC(nullptr, screenDC);
 	return static_cast<float>(physicalScreenHeight) / static_cast<float>(logicalScreenHeight);
 }
 

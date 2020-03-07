@@ -11,7 +11,7 @@ int main()
 	sf::RenderWindow window;
 	float screenScalingFactor = platform.getScreenScalingFactor(window.getSystemHandle());
 	window.create(sf::VideoMode(200.0f * screenScalingFactor, 200.0f * screenScalingFactor), "SFML works!");
-	platform.setIcon(window.getSystemHandle());
+	platform.setIcon(window.getSystemHandle(), screenScalingFactor);
 
 	sf::CircleShape shape(window.getSize().x / 2);
 	shape.setFillColor(sf::Color::White);

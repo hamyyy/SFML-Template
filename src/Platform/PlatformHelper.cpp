@@ -3,10 +3,10 @@
 /******************************************************************************
  *
  *****************************************************************************/
-void PlatformHelper::setIcon(const sf::WindowHandle& inHandle)
+void PlatformHelper::setIcon(const sf::WindowHandle& inHandle, const float inScaleFactor)
 {
 #ifdef _WIN32
-	m_windowsHelper.setIcon(inHandle);
+	m_windowsHelper.setIcon(inHandle, inScaleFactor);
 #else
 	UNUSED(inHandle);
 #endif
@@ -32,10 +32,10 @@ void PlatformHelper::toggleFullscreen(const sf::WindowHandle& inHandle, const sf
  *****************************************************************************/
 int PlatformHelper::getRefreshRate(const sf::WindowHandle& inHandle)
 {
-#ifdef _WIN32
-	return m_windowsHelper.getRefreshRate(inHandle);
-#else
 	UNUSED(inHandle);
+#ifdef _WIN32
+	return m_windowsHelper.getRefreshRate();
+#else
 	return 59; // maybe 62?
 #endif
 }
@@ -45,12 +45,10 @@ int PlatformHelper::getRefreshRate(const sf::WindowHandle& inHandle)
  *****************************************************************************/
 float PlatformHelper::getScreenScalingFactor(const sf::WindowHandle& inHandle)
 {
-
-#ifdef _WIN32
-	return m_windowsHelper.getScreenScalingFactor(inHandle);
-#else
-	// TODO: other platforms
 	UNUSED(inHandle);
+#ifdef _WIN32
+	return m_windowsHelper.getScreenScalingFactor();
+#else
 	return 1.0f;
 #endif
 }

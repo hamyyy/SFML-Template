@@ -8,10 +8,10 @@ struct WindowsHelper
 	WindowsHelper();
 	~WindowsHelper();
 
-	void setIcon(HWND inHandle);
+	void setIcon(HWND inHandle, const float inScaleFactor);
 	void toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, const bool inWindowed, const sf::Vector2u& inResolution);
-	int getRefreshRate(HWND inHandle = NULL);
-	float getScreenScalingFactor(HWND inHandle = NULL);
+	int getRefreshRate();
+	float getScreenScalingFactor();
 
 private:
 	PBYTE getIconDirectory(const int inResourceId);
