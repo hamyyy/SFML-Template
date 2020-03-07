@@ -227,8 +227,8 @@ POST_COMPILE_T = mv -f $(DEP_DIR)/.$(TEST_DIR)/$*.Td $(DEP_DIR)/.$(TEST_DIR)/$*.
 
 #==============================================================================
 # Unicode
-UNI_COPY := echo "➦"
-UNI_LINK := echo "⇛"
+UNI_COPY := echo -n "➦"
+UNI_LINK := echo -n "⇛"
 ifeq ($(PLATFORM),windows)
 	UNI_COPY := printf '\xE2\x9E\xA6'
 	UNI_LINK := printf '\xE2\x87\x9B'
