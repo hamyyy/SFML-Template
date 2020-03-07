@@ -226,6 +226,15 @@ POST_COMPILE = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 POST_COMPILE_T = mv -f $(DEP_DIR)/.$(TEST_DIR)/$*.Td $(DEP_DIR)/.$(TEST_DIR)/$*.d && touch $@
 
 #==============================================================================
+# Unicode
+UNI_COPY := echo "➦"
+UNI_LINK := echo "⇛"
+ifeq ($(PLATFORM),windows)
+	UNI_COPY := printf '\xE2\x9E\xA6'
+	UNI_LINK := printf '\xE2\x87\x9B'
+endif
+
+#==============================================================================
 # Build Scripts
 all:
 	@$(MAKE) makepch
@@ -290,7 +299,7 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 
 $(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
 	$(color_reset)
-	$(if $(_CLEAN),@echo; printf '\xE2\x87\x9B'; echo '  Linking: $(TARGET)')
+	$(if $(_CLEAN),@echo; $(UNI_LINK); echo '  Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
 ifeq ($(BUILD_STATIC),true)
 	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).a
@@ -345,7 +354,7 @@ mkdirprod:
 .PHONY: mkdirprod
 
 define do_copy_to_clean
-	@printf "\xE2\x9E\xA6"
+	@$(UNI_COPY)
 	@echo  "  Copying \"$(1)\" to \"$(CURDIR)/$(2)\""
 	$(shell cp -r $(1) $(2))
 endef
