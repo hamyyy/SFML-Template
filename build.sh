@@ -251,9 +251,9 @@ for target in $BUILD_TARGETS; do
 			fi
 		else
 			if [[ $BUILD == 'Debug' ]]; then
-				export NAME=$target-d.so
+				export NAME=lib$target-d.so
 			else
-				export NAME=$target.so
+				export NAME=lib$target.so
 			fi
 		fi
 	fi

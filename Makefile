@@ -303,7 +303,7 @@ else
 ifeq ($(suffix $(TARGET)),.so)
 	$(_Q)$(CC) -shared $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
-	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ '-Wl,-R$$ORIGIN' $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 endif
 	@echo
