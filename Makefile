@@ -300,7 +300,12 @@ else
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 else
+ifeq ($(suffix $(TARGET)),.so)
+	# gcc -Wall -fPIC -c *.c # TODO
+	$(_Q)$(CC) -shared -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+else
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+endif
 endif
 	@echo
 ifneq ($(BUILD_DEPENDENCIES),)

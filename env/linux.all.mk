@@ -1,4 +1,5 @@
 CC := g++
+CFLAGS := $(CFLAGS) -fpic
 
 LIB_DIRS := \
 	/usr/local/lib
