@@ -11,6 +11,10 @@ WindowsHelper::WindowsHelper()
 	// Get the icon directory
 	PBYTE iconDirectory = getIconDirectory(WIN32_ICON_MAIN);
 
+	// Get the default device info
+	m_screenScalingFactor = getScreenScalingFactor();
+	m_refreshRate = getRefreshRate();
+
 	// Store each icon
 	std::array<int, 6> icons = { 16, 32, 48, 64, 128 };
 	for (auto& it : icons)
@@ -38,10 +42,11 @@ WindowsHelper::~WindowsHelper()
  * The window handle uses 32x32 (ICON_BIG) & 16x16 (ICON_SMALL) sized icons.
  * This should be called any time the SFML window is create/recreated
  *****************************************************************************/
-void WindowsHelper::setIcon(HWND inHandle, const float inScaleFactor)
+void WindowsHelper::setIcon(HWND inHandle)
 {
-	std::size_t indexSmallIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(inScaleFactor - 1.0f), 0.0f), static_cast<float>(m_hIcons.size()) - 1.0f));
-	std::size_t indexBigIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(inScaleFactor - 1.0f), 0.0f) + 1.0f, static_cast<float>(m_hIcons.size()) - 1.0f));
+	float screenScalingFactor = getScreenScalingFactor();
+	std::size_t indexSmallIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(screenScalingFactor - 1.0f), 0.0f), static_cast<float>(m_hIcons.size()) - 1.0f));
+	std::size_t indexBigIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(screenScalingFactor - 1.0f), 0.0f) + 1.0f, static_cast<float>(m_hIcons.size()) - 1.0f));
 
 	if (m_hIcons[indexBigIcon])
 		SendMessage(inHandle, WM_SETICON, ICON_BIG, (LPARAM)m_hIcons[indexBigIcon]);
@@ -103,10 +108,13 @@ void WindowsHelper::toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, co
  *****************************************************************************/
 int WindowsHelper::getRefreshRate()
 {
+	if (m_refreshRate != 0)
+		return m_refreshRate;
+
 	HDC screenDC = GetDC(nullptr);
-	int refresh = GetDeviceCaps(screenDC, VREFRESH);
+	m_refreshRate = GetDeviceCaps(screenDC, VREFRESH);
 	ReleaseDC(nullptr, screenDC);
-	return refresh;
+	return m_refreshRate;
 }
 
 /******************************************************************************
@@ -114,11 +122,15 @@ int WindowsHelper::getRefreshRate()
  *****************************************************************************/
 float WindowsHelper::getScreenScalingFactor()
 {
+	if (m_screenScalingFactor != 0.0f)
+		return m_screenScalingFactor;
+
 	HDC screenDC = GetDC(nullptr);
 	int logicalScreenHeight = GetDeviceCaps(screenDC, VERTRES);
 	int physicalScreenHeight = GetDeviceCaps(screenDC, DESKTOPVERTRES);
 	ReleaseDC(nullptr, screenDC);
-	return static_cast<float>(physicalScreenHeight) / static_cast<float>(logicalScreenHeight);
+	m_screenScalingFactor = static_cast<float>(physicalScreenHeight) / static_cast<float>(logicalScreenHeight);
+	return m_screenScalingFactor;
 }
 
 /******************************************************************************

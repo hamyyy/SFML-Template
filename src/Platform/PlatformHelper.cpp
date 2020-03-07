@@ -3,10 +3,10 @@
 /******************************************************************************
  *
  *****************************************************************************/
-void PlatformHelper::setIcon(const sf::WindowHandle& inHandle, const float inScaleFactor)
+void PlatformHelper::setIcon(const sf::WindowHandle& inHandle)
 {
 #ifdef _WIN32
-	m_windowsHelper.setIcon(inHandle, inScaleFactor);
+	m_windowsHelper.setIcon(inHandle);
 #else
 	UNUSED(inHandle);
 #endif
