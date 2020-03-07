@@ -10,8 +10,8 @@ struct WindowsHelper
 
 	void setIcon(HWND inHandle);
 	void toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, const bool inWindowed, const sf::Vector2u& inResolution);
-	int getRefreshRate();
 	float getScreenScalingFactor();
+	int getRefreshRate();
 
 private:
 	PBYTE getIconDirectory(const int inResourceId);

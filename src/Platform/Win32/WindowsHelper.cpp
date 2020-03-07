@@ -44,9 +44,8 @@ WindowsHelper::~WindowsHelper()
  *****************************************************************************/
 void WindowsHelper::setIcon(HWND inHandle)
 {
-	float screenScalingFactor = getScreenScalingFactor();
-	std::size_t indexSmallIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(screenScalingFactor - 1.0f), 0.0f), static_cast<float>(m_hIcons.size()) - 1.0f));
-	std::size_t indexBigIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(screenScalingFactor - 1.0f), 0.0f) + 1.0f, static_cast<float>(m_hIcons.size()) - 1.0f));
+	std::size_t indexSmallIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(m_screenScalingFactor - 1.0f), 0.0f), static_cast<float>(m_hIcons.size()) - 1.0f));
+	std::size_t indexBigIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(m_screenScalingFactor - 1.0f), 0.0f) + 1.0f, static_cast<float>(m_hIcons.size()) - 1.0f));
 
 	if (m_hIcons[indexBigIcon])
 		SendMessage(inHandle, WM_SETICON, ICON_BIG, (LPARAM)m_hIcons[indexBigIcon]);
@@ -104,20 +103,6 @@ void WindowsHelper::toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, co
 }
 
 /******************************************************************************
- * Gets the refresh rate of the device from the supplied handle
- *****************************************************************************/
-int WindowsHelper::getRefreshRate()
-{
-	if (m_refreshRate != 0)
-		return m_refreshRate;
-
-	HDC screenDC = GetDC(nullptr);
-	m_refreshRate = GetDeviceCaps(screenDC, VREFRESH);
-	ReleaseDC(nullptr, screenDC);
-	return m_refreshRate;
-}
-
-/******************************************************************************
  * Gets the screen scaling factor of the device from the supplied handle
  *****************************************************************************/
 float WindowsHelper::getScreenScalingFactor()
@@ -128,9 +113,25 @@ float WindowsHelper::getScreenScalingFactor()
 	HDC screenDC = GetDC(nullptr);
 	int logicalScreenHeight = GetDeviceCaps(screenDC, VERTRES);
 	int physicalScreenHeight = GetDeviceCaps(screenDC, DESKTOPVERTRES);
-	ReleaseDC(nullptr, screenDC);
 	m_screenScalingFactor = static_cast<float>(physicalScreenHeight) / static_cast<float>(logicalScreenHeight);
+	ReleaseDC(nullptr, screenDC);
+
 	return m_screenScalingFactor;
+}
+
+/******************************************************************************
+ * Gets the refresh rate of the device from the supplied handle
+ *****************************************************************************/
+int WindowsHelper::getRefreshRate()
+{
+	if (m_refreshRate != 0)
+		return m_refreshRate;
+
+	HDC screenDC = GetDC(nullptr);
+	m_refreshRate = GetDeviceCaps(screenDC, VREFRESH);
+	ReleaseDC(nullptr, screenDC);
+
+	return m_refreshRate;
 }
 
 /******************************************************************************
