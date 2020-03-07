@@ -238,9 +238,9 @@ for target in $BUILD_TARGETS; do
 			fi
 		else
 			if [[ $BUILD == 'Debug' ]]; then
-				export NAME=$target-d.dll
+				export NAME=lib$target-d.dll
 			else
-				export NAME=$target.dll
+				export NAME=lib$target.dll
 			fi
 		fi
 	else

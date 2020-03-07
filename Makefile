@@ -293,17 +293,17 @@ $(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
 	$(if $(_CLEAN),@echo; printf '\xE2\x87\x9B'; echo '  Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
 ifeq ($(BUILD_STATIC),true)
-	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(_Q)ar.exe -r -s $(BLD_DIR)/lib$(_NAMENOEXT).a $(OBJS)
+	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).a
+	$(_Q)ar.exe -r -s $(BLD_DIR)/$(_NAMENOEXT).a $(OBJS)
 else
-	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/lib$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).def $(BLD_DIR)/$(_NAMENOEXT).a
+	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 else
 ifeq ($(suffix $(TARGET)),.so)
 ifeq ($(BUILD_STATIC),true)
-	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(_Q)ar -r -s $(BLD_DIR)/lib$(_NAMENOEXT).a $(OBJS)
+	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).a
+	$(_Q)ar -r -s $(BLD_DIR)/$(_NAMENOEXT).a $(OBJS)
 else
 	$(_Q)$(CC) -shared $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
