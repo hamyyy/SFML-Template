@@ -55,7 +55,8 @@ void WindowsHelper::setIcon(HWND inHandle)
 }
 
 /******************************************************************************
- *
+ * Instead of the SFML way of recreating the window each time fullscreen/window
+ * is swapped, this quickly resizes the window instead (similar to MonoGame)
  *****************************************************************************/
 void WindowsHelper::toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, const bool inWindowed, const sf::Vector2u& inResolution)
 {
