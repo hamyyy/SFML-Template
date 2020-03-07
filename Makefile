@@ -301,8 +301,7 @@ else
 endif
 else
 ifeq ($(suffix $(TARGET)),.so)
-	-$(_Q)rm -rf $(BLD_DIR)/lib$(_NAMENOEXT).def $(BLD_DIR)/lib$(_NAMENOEXT).a
-	$(_Q)$(CC) -shared -Wl,--out-implib="$(BLD_DIR)/lib$(_NAMENOEXT).a" $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	$(_Q)$(CC) -shared $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 else
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
