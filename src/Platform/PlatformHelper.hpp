@@ -15,7 +15,7 @@
 
 struct PlatformHelper
 {
-	void setIcon(const sf::WindowHandle& inHandle, const float inScaleFactor);
+	void setIcon(const sf::WindowHandle& inHandle);
 	void toggleFullscreen(const sf::WindowHandle& inHandle, const sf::Uint32 inStyle, const bool inWindowed, const sf::Vector2u& inResolution);
 	int getRefreshRate(const sf::WindowHandle& inHandle);
 	float getScreenScalingFactor(const sf::WindowHandle& inHandle);
