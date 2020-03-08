@@ -244,16 +244,31 @@ for target in $BUILD_TARGETS; do
 			fi
 		fi
 	else
-		if [[ $target == 'main' ]]; then
-			export NAME=$cwd
-			if [[ $BUILD == 'Tests' ]]; then
-				NAME=tests_$NAME
+		if [[ $PLATFORM == 'osx' ]]; then
+			if [[ $target == 'main' ]]; then
+				export NAME=$cwd
+				if [[ $BUILD == 'Tests' ]]; then
+					NAME=tests_$NAME
+				fi
+			else
+				if [[ $BUILD == 'Debug' ]]; then
+					export NAME=lib$target-d.dylib
+				else
+					export NAME=lib$target.dylib
+				fi
 			fi
 		else
-			if [[ $BUILD == 'Debug' ]]; then
-				export NAME=lib$target-d.so
+			if [[ $target == 'main' ]]; then
+				export NAME=$cwd
+				if [[ $BUILD == 'Tests' ]]; then
+					NAME=tests_$NAME
+				fi
 			else
-				export NAME=lib$target.so
+				if [[ $BUILD == 'Debug' ]]; then
+					export NAME=lib$target-d.so
+				else
+					export NAME=lib$target.so
+				fi
 			fi
 		fi
 	fi

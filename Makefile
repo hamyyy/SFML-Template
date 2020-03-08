@@ -315,6 +315,14 @@ else
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 else
+ifeq ($(suffix $(TARGET)),.dylib)
+ifeq ($(BUILD_STATIC),true)
+	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).a
+	$(_Q)ar -r -s $(BLD_DIR)/$(_NAMENOEXT).a $(OBJS)
+else
+	$(_Q)$(CC) -dynamiclib -undefined suppress -flat_namespace $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+endif
+else
 ifeq ($(suffix $(TARGET)),.so)
 ifeq ($(BUILD_STATIC),true)
 	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).a
@@ -324,6 +332,7 @@ else
 endif
 else
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(ORIGIN_FLAG) $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+endif
 endif
 endif
 	@echo
