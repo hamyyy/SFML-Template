@@ -10,10 +10,18 @@
 
 namespace util
 {
-#if __GNUC__ >= 8
+#if defined(__APPLE__)
+	#if __clang_major__ >= 9
 namespace fs = std::filesystem;
-#else
+	#else
 namespace fs = std::experimental::filesystem::v1;
+	#endif
+#else
+	#if __GNUC__ >= 8
+namespace fs = std::filesystem;
+	#else
+namespace fs = std::experimental::filesystem::v1;
+	#endif
 #endif
 }
 

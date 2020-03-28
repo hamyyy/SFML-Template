@@ -12,6 +12,7 @@
 	"editor.fontFamily": "'Ubuntu Mono', 'Courier Prime Code', 'Courier', 'Courier New', Consolas, monospace",
 	"editor.tabSize": 4,
 	"editor.insertSpaces": false,
+	"editor.formatOnSave": true,
 
 	"files.encoding": "utf8",
 	"files.trimTrailingWhitespace": true,
