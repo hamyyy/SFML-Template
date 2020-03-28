@@ -8,6 +8,7 @@ _CFLAGS_OTHER := -fdiagnostics-color=always
 CFLAGS := $(_CFLAGS_STD) $(_CFLAGS_WARNINGS) $(_CFLAGS_OTHER)
 
 LINK_LIBRARIES := \
+	stdc++fs \
 	sfml-graphics \
 	sfml-audio \
 	sfml-network \

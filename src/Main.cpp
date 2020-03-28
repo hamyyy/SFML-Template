@@ -1,8 +1,8 @@
-#include "Platform/PlatformHelper.hpp"
+#include "Platform/Platform.hpp"
 
 int main()
 {
-	PlatformHelper platform;
+	util::Platform platform;
 
 #if defined(_DEBUG)
 	std::cout << "Hello World!" << std::endl;

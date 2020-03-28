@@ -1,54 +1,55 @@
-#include "PlatformHelper.hpp"
+#ifdef __linux__
+	#include "Platform/Unix/LinuxPlatform.hpp"
 
+	#include <X11/Xlib.h>
+
+namespace util
+{
 /******************************************************************************
  *
  *****************************************************************************/
-void PlatformHelper::setIcon(const sf::WindowHandle& inHandle)
+LinuxPlatform::LinuxPlatform()
 {
-#ifdef _WIN32
-	m_windowsHelper.setIcon(inHandle);
-#else
-	UNUSED(inHandle);
-#endif
+	// TODO: Investigate further
+	XInitThreads();
 }
 
 /******************************************************************************
  *
  *****************************************************************************/
-void PlatformHelper::toggleFullscreen(const sf::WindowHandle& inHandle, const sf::Uint32 inStyle, const bool inWindowed, const sf::Vector2u& inResolution)
+void LinuxPlatform::setIcon(const sf::WindowHandle& inHandle)
 {
-#ifdef _WIN32
-	m_windowsHelper.toggleFullscreen(inHandle, inStyle, inWindowed, inResolution);
-#else
+	UNUSED(inHandle);
+}
+
+/******************************************************************************
+ *
+ *****************************************************************************/
+void LinuxPlatform::toggleFullscreen(const sf::WindowHandle& inHandle, const sf::Uint32 inStyle, const bool inWindowed, const sf::Vector2u& inResolution)
+{
 	UNUSED(inHandle);
 	UNUSED(inStyle);
 	UNUSED(inWindowed);
 	UNUSED(inResolution);
-#endif
 }
 
 /******************************************************************************
  *
  *****************************************************************************/
-int PlatformHelper::getRefreshRate(const sf::WindowHandle& inHandle)
+float LinuxPlatform::getScreenScalingFactor(const sf::WindowHandle& inHandle)
 {
 	UNUSED(inHandle);
-#ifdef _WIN32
-	return m_windowsHelper.getRefreshRate();
-#else
-	return 59; // maybe 62?
-#endif
-}
-
-/******************************************************************************
- *
- *****************************************************************************/
-float PlatformHelper::getScreenScalingFactor(const sf::WindowHandle& inHandle)
-{
-	UNUSED(inHandle);
-#ifdef _WIN32
-	return m_windowsHelper.getScreenScalingFactor();
-#else
 	return 1.0f;
-#endif
 }
+
+/******************************************************************************
+ *
+ *****************************************************************************/
+int LinuxPlatform::getRefreshRate(const sf::WindowHandle& inHandle)
+{
+	UNUSED(inHandle);
+	return 59;
+}
+}
+
+#endif // __linux__

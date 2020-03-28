@@ -1,19 +1,21 @@
 #ifdef _WIN32
-	#include "WindowsHelper.hpp"
+	#include "Platform/Win32/WindowsPlatform.hpp"
 
 	#include "Icon.h"
 
+namespace util
+{
 /******************************************************************************
  *
  *****************************************************************************/
-WindowsHelper::WindowsHelper()
+WindowsPlatform::WindowsPlatform()
 {
 	// Get the icon directory
 	PBYTE iconDirectory = getIconDirectory(WIN32_ICON_MAIN);
 
 	// Get the default device info
-	m_screenScalingFactor = getScreenScalingFactor();
-	m_refreshRate = getRefreshRate();
+	m_screenScalingFactor = getScreenScalingFactor(nullptr);
+	m_refreshRate = getRefreshRate(nullptr);
 
 	// Store each icon
 	std::array<int, 6> icons = { 16, 32, 48, 64, 128 };
@@ -27,7 +29,7 @@ WindowsHelper::WindowsHelper()
 /******************************************************************************
  *
  *****************************************************************************/
-WindowsHelper::~WindowsHelper()
+WindowsPlatform::~WindowsPlatform()
 {
 	for (auto& it : m_hIcons)
 	{
@@ -42,7 +44,7 @@ WindowsHelper::~WindowsHelper()
  * The window handle uses 32x32 (ICON_BIG) & 16x16 (ICON_SMALL) sized icons.
  * This should be called any time the SFML window is create/recreated
  *****************************************************************************/
-void WindowsHelper::setIcon(HWND inHandle)
+void WindowsPlatform::setIcon(const sf::WindowHandle& inHandle)
 {
 	std::size_t indexSmallIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(m_screenScalingFactor - 1.0f), 0.0f), static_cast<float>(m_hIcons.size()) - 1.0f));
 	std::size_t indexBigIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(m_screenScalingFactor - 1.0f), 0.0f) + 1.0f, static_cast<float>(m_hIcons.size()) - 1.0f));
@@ -55,10 +57,9 @@ void WindowsHelper::setIcon(HWND inHandle)
 }
 
 /******************************************************************************
- * Instead of the SFML way of recreating the window each time fullscreen/window
- * is swapped, this quickly resizes the window instead (similar to MonoGame)
+ *
  *****************************************************************************/
-void WindowsHelper::toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, const bool inWindowed, const sf::Vector2u& inResolution)
+void WindowsPlatform::toggleFullscreen(const sf::WindowHandle& inHandle, const sf::Uint32 inStyle, const bool inWindowed, const sf::Vector2u& inResolution)
 {
 	DWORD win32Style = sfmlWindowStyleToWin32WindowStyle(inStyle);
 	UINT flags = SWP_DRAWFRAME | SWP_FRAMECHANGED;
@@ -106,8 +107,10 @@ void WindowsHelper::toggleFullscreen(HWND inHandle, const sf::Uint32 inStyle, co
 /******************************************************************************
  * Gets the screen scaling factor of the device from the supplied handle
  *****************************************************************************/
-float WindowsHelper::getScreenScalingFactor()
+float WindowsPlatform::getScreenScalingFactor(const sf::WindowHandle& inHandle)
 {
+	UNUSED(inHandle);
+
 	if (m_screenScalingFactor != 0.0f)
 		return m_screenScalingFactor;
 
@@ -123,8 +126,10 @@ float WindowsHelper::getScreenScalingFactor()
 /******************************************************************************
  * Gets the refresh rate of the device from the supplied handle
  *****************************************************************************/
-int WindowsHelper::getRefreshRate()
+int WindowsPlatform::getRefreshRate(const sf::WindowHandle& inHandle)
 {
+	UNUSED(inHandle);
+
 	if (m_refreshRate != 0)
 		return m_refreshRate;
 
@@ -140,7 +145,7 @@ int WindowsHelper::getRefreshRate()
  * sizes (for instance 16x16, 32x32 & 64x64). This is referred to as an
  * "Icon Directory". Additionally, it can have a single icon
  *****************************************************************************/
-PBYTE WindowsHelper::getIconDirectory(const int inResourceId)
+PBYTE WindowsPlatform::getIconDirectory(const int inResourceId)
 {
 	HMODULE hModule = GetModuleHandle(nullptr);
 	HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(inResourceId), RT_GROUP_ICON);
@@ -155,7 +160,7 @@ PBYTE WindowsHelper::getIconDirectory(const int inResourceId)
  * This will attempt to load a single icon from an icon directory
  * If the requested size isn't found, the first one is returned
  *****************************************************************************/
-HICON WindowsHelper::getIconFromIconDirectory(PBYTE inIconDirectory, const uint inSize)
+HICON WindowsPlatform::getIconFromIconDirectory(PBYTE inIconDirectory, const uint inSize)
 {
 	HMODULE hModule = GetModuleHandle(nullptr);
 	int resourceId = LookupIconIdFromDirectoryEx(inIconDirectory, TRUE, inSize, inSize, LR_DEFAULTCOLOR);
@@ -172,10 +177,9 @@ HICON WindowsHelper::getIconFromIconDirectory(PBYTE inIconDirectory, const uint 
 /******************************************************************************
  * Takes an SFML window style and matches it back to the Win32 equivalent
  *****************************************************************************/
-DWORD WindowsHelper::sfmlWindowStyleToWin32WindowStyle(const sf::Uint32 inStyle)
+DWORD WindowsPlatform::sfmlWindowStyleToWin32WindowStyle(const sf::Uint32 inStyle)
 {
 	DWORD style = 0;
-	// TODO: Exclusive fullscreen, if possible from here
 	if (inStyle == sf::Style::None || inStyle == sf::Style::Fullscreen)
 	{
 		style = WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
@@ -193,5 +197,6 @@ DWORD WindowsHelper::sfmlWindowStyleToWin32WindowStyle(const sf::Uint32 inStyle)
 
 	return style;
 }
+}
 
-#endif
+#endif // _WIN32

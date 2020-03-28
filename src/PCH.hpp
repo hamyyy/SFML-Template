@@ -63,6 +63,7 @@
 #endif // _WIN32
 
 // Utils
+#include "Utility/FileSystem.hpp"
 #include "Utility/Types.hpp"
 
 // Macros
