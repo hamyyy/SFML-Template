@@ -279,7 +279,7 @@ for target in $BUILD_TARGETS; do
 
 	CHILD_CMD="cmd_$CMD $target"
 	if [[ $CMD == 'buildrun' && $target != 'main' ]]; then
-		CHILD_CMD=build
+		CHILD_CMD="cmd_build"
 	fi
 
 
