@@ -22,6 +22,13 @@ int main()
 	shapeTexture.loadFromFile("content/sfml.png");
 	shape.setTexture(&shapeTexture);
 
+	std::vector<int> someVect {1,5,3,6};
+
+	for (auto& it : someVect)
+	{
+		std::cout << it << std::endl;
+	}
+
 	sf::Event event;
 
 	while (window.isOpen())
