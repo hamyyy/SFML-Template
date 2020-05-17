@@ -543,39 +543,38 @@ In the precompiled header (src/PCH.hpp), I added an extra SFML define for the Pi
 
 ---
 
-## MSYS2 (on Windows) (or using any other mingw version)
+## MSYS2 (on Windows) (or changing the mingw version)
 
-As of 8/5/2019, GCC 7.3.0 is still the most stable GCC build on Windows, but if you want to try out newer versions of GCC, you can use [MSYS2](https://www.msys2.org/).
+GCC 7.3.0 is still probably the most stable GCC build on Windows, but if you want to try out newer versions, you can use [MSYS2](https://www.msys2.org/).
 
-Start with the clean msys2 install. I'd recommend the one below. It includes GCC 8.3.0.
-
+Start with a clean install from here:
 * [MSYS2 (64-bit, 5/24/2019 stable)](http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20190524.exe)
 
-I recommend NOT updating using the "pacman -Syu" command because although you will have a bleeding edge version of GCC (9.1.0 for instance), your builds will be very unstable. For instance, in revision 3, I could not get a working debug build. Follow this process, exactly:
-
-1. Install the recommended version above (You'll get GCC 8.3.0, with a non-experimental std::filesystem). Install to C:/msys64
-2. Install the current stable GCC toolchain (includes boost & a ton of stuff). Open msys2 and run the command:
+1. Install to `C:/msys64` (default)
+2. Run `pacman -Syu` & restart Msys2 when it tells you do.
+3. Run `pacman -Su` to update packages
+4. Run the following command:
 ```
 pacman -S mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain mingw-w64-i686-openal mingw-w64-x86_64-openal
 ```
-3. That will install both x86 & x64 versions (so you can try both). It may take a while, but once finished, exit msys2.
-4. Build SFML. To start with, install CMake & doxygen (64 bit version). Then download [this script](https://gist.github.com/andrew-r-king/5f8ea0eda064cbfb33f4f5d373011e0b) and edit the GCC_DIR line to either "/c/msys64/mingw64/bin" or "/c/msys64/mingw32/bin" depending on which architecture you want to target. Run the script, and if all goes well, you should have a compiled version of SFML in C:/SFML/2.5.1.
-5. rename that folder so its architecture specific. For my own build, I did "C:/SFML-2.5.1-gcc-8.3.0/mingw64"
-6. Open sfml-vscode-boilerplate in VS Code, go into settings.json and comment out ".vscode/launch.json in "files.exclude", because we need to edit it. Also comment out "build.sh"
-7. Also in settings.json, go down to "terminal.integrated.env.windows" and change it to "C:/msys64/mingw64/bin;C:/SFML-2.5.1-gcc-8.3.0/mingw64/bin" (the new paths)
-8. In ".vscode/c_cpp_properties.json", go to the Win32 configuration and change the "compilerPath" to "C:/msys64/mingw64/bin/gcc.exe" and the SFML "includePath" to "C:/SFML-2.5.1-gcc-8.3.0/mingw64/include"
-9. In ".vscode/launch.json", go to the "windows" configuration and change "miDebuggerPath" to "C:/msys64/mingw64/bin/gdb.exe"
-10. Finally, in env/windows.all.mk, change _MINGW & _SFML (arbitrary variables) to:
+5. That will install both x86 & x64 versions (so you can try both) of GCC 10.1.0 (as of 5/16/20). It may take a while, but once finished, exit msys2.
+6. Build SFML. To start with, install CMake & doxygen (64 bit version). Then download [this script](https://gist.github.com/andrew-r-king/5f8ea0eda064cbfb33f4f5d373011e0b) and edit the GCC_DIR line to either "/c/msys64/mingw64/bin" or "/c/msys64/mingw32/bin" depending on which architecture you want to target. Run the script, and if all goes well, you should have a compiled version of SFML in C:/SFML/2.5.1. You can also build from "master" instead by calling the script with that as a parameter.
+7. rename that folder so its architecture specific. For my own build, I did "C:/SFML-2.5.1-gcc-10.1.0/mingw64"
+8. Open sfml-vscode-boilerplate in VS Code, go into settings.json and comment out ".vscode/launch.json in "files.exclude", because we need to edit it. Also comment out "build.sh"
+9. Also in settings.json, go down to "terminal.integrated.env.windows" and change it to "C:/msys64/mingw64/bin;C:/SFML-2.5.1-gcc-10.1.0/mingw64/bin" (the new paths)
+10. In ".vscode/c_cpp_properties.json", go to the Win32 configuration and change the "compilerPath" to "C:/msys64/mingw64/bin/gcc.exe" and the SFML "includePath" to "C:/SFML-2.5.1-gcc-10.1.0/mingw64/include"
+11. In ".vscode/launch.json", go to the "windows" configuration and change "miDebuggerPath" to "C:/msys64/mingw64/bin/gdb.exe"
+12. Finally, in env/windows.all.mk, change _MINGW & _SFML (arbitrary variables) to:
 ```makefile
 _MINGW := C:/msys64/mingw64/bin
-_SFML := C:/SFML-2.5.1-gcc-8.3.0/mingw64
+_SFML := C:/SFML-2.5.1-gcc-10.1.0/mingw64
 ```
 
-11. Finally, in build.sh, line 44, (windows path if running the script outside vscode), change to 'export PATH="/c/SFML-2.5.1/bin:/c/mingw32/bin:$PATH"', or alternatively if you're building without vscode (described above), you can add this snippet of in build.sh above "bash ../build.sh $1 $2 $3 $4":
+13. Finally, in build.sh, line 44, (windows path if running the script outside vscode), change to 'export PATH="/c/SFML-2.5.1/bin:/c/mingw32/bin:$PATH"', or alternatively if you're building without vscode (described above), you can add this snippet of in build.sh above "bash ../build.sh $1 $2 $3 $4":
 ```shell
 if [[ $1 == '' && $2 == '' ]]; then
 	if [[ $OSTYPE == 'msys' || $OSTYPE == 'win32' ]]; then
-		export PATH="/c/SFML-2.5.1-gcc-8.3.0/mingw64/bin:/c/msys64/mingw64/bin:$PATH"
+		export PATH="/c/SFML-2.5.1-gcc-10.1.0/mingw64/bin:/c/msys64/mingw64/bin:$PATH"
 		bash ../build.sh buildprod Release vscode
 		exit 0
 	fi
