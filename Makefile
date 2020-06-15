@@ -148,9 +148,13 @@ ifeq ($(BUILD),Tests)
 	BLD_DIR := bin/Release
 endif
 BLD_DIR := $(BLD_DIR:%/=%)
+_BASENAME := $(basename $(NAME))
+ifeq ($(BUILD_STATIC),true)
+ifeq ($(suffix $(NAME)),.dll)
+	NAME := $(_BASENAME)-s.a
+endif
+endif
 TARGET := $(BLD_DIR)/$(NAME)
-_NAMENOEXT := $(NAME:.exe=)
-_NAMENOEXT := $(_NAMENOEXT:.dll=)
 
 ifneq ($(SRC_TARGET),)
 	LIB_DIRS := $(LIB_DIRS) $(BLD_DIR)
@@ -196,6 +200,8 @@ endif
 _DIRECTORIES := $(sort bin $(BLD_DIR) $(OBJ_DIR) $(OBJ_SUBDIRS) $(DEP_DIR) $(DEP_SUBDIRS) $(ASM_DIR) $(ASM_SUBDIRS))
 
 _CLEAN := $(filter true,$(CLEAN_OUTPUT))
+
+_TARGET_DEPS := $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
 
 # Quiet flag
 _Q := $(if $(_CLEAN),@)
@@ -268,8 +274,13 @@ define compile_with
 endef
 
 define compile_static_lib
-	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT)-s.a
-	$(_Q)ar -r -s $(BLD_DIR)/$(_NAMENOEXT)-s.a $(OBJS)
+	-$(_Q)rm -rf $(BLD_DIR)/$(_BASENAME)-s.a
+	$(_Q)ar -r -s $(BLD_DIR)/$(_BASENAME)-s.a $(OBJS)
+endef
+
+define linking_with
+	$(color_reset)
+	$(if $(_CLEAN),@echo; $(UNI_LINK); echo '  Linking: $(1)')
 endef
 
 MKDIR := $(_Q)mkdir -p
@@ -312,35 +323,28 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(if $(_CLEAN),@echo "   $@")
 	$(_Q)$(ASM_COMPILE)
 
-$(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
-	$(color_reset)
-	$(if $(_CLEAN),@echo; $(UNI_LINK); echo '  Linking: $(TARGET)')
-ifeq ($(suffix $(TARGET)),.dll)
-ifeq ($(BUILD_STATIC),true)
-	$(call compile_static_lib)
-else
-	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).def $(BLD_DIR)/$(_NAMENOEXT).a
-	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-endif
-else
-ifeq ($(suffix $(TARGET)),.dylib)
-ifeq ($(BUILD_STATIC),true)
-	$(call compile_static_lib)
-else
-	$(_Q)$(CC) -dynamiclib -undefined suppress -flat_namespace $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-endif
-else
-ifeq ($(suffix $(TARGET)),.so)
-ifeq ($(BUILD_STATIC),true)
-	$(call compile_static_lib)
-else
+$(BLD_DIR)/$(_BASENAME)-s.a: $(_TARGET_DEPS)
+	$(call linking_with,$(BLD_DIR)/$(_BASENAME)-s.a)
+	-$(_Q)rm -rf $(BLD_DIR)/$(_BASENAME)-s.a
+	$(_Q)ar -r -s $(BLD_DIR)/$(_BASENAME)-s.a $(OBJS)
+
+$(BLD_DIR)/$(_BASENAME).dll: $(_TARGET_DEPS)
+	$(call linking_with,$(BLD_DIR)/$(_BASENAME).dll)
+	-$(_Q)rm -rf $(BLD_DIR)/$(_BASENAME).def $(BLD_DIR)/$(_BASENAME).a
+	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/$(_BASENAME).def" -Wl,--out-implib="$(BLD_DIR)/$(_BASENAME).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+
+$(BLD_DIR)/$(_BASENAME).so: $(_TARGET_DEPS)
+	$(call linking_with,$(BLD_DIR)/$(_BASENAME).so)
 	$(_Q)$(CC) -shared $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-endif
-else
+
+$(BLD_DIR)/$(_BASENAME).dylib: $(_TARGET_DEPS)
+	$(call linking_with,$(BLD_DIR)/$(_BASENAME).dylib)
+	$(_Q)$(CC) -dynamiclib -undefined suppress -flat_namespace $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+
+$(BLD_DIR)/$(_BASENAME): $(_TARGET_DEPS)
+$(BLD_DIR)/$(_BASENAME).exe: $(_TARGET_DEPS)
+	$(call linking_with,$(BLD_DIR)/$(_BASENAME).exe)
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(ORIGIN_FLAG) $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-endif
-endif
-endif
 	@echo
 ifneq ($(BUILD_DEPENDENCIES),)
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(call copy_to,$(dep),$(BLD_DIR)))
