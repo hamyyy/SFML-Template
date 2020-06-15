@@ -281,7 +281,6 @@ define linking_with
 endef
 
 define build_deps
-	@echo
 	$(foreach dep,$(BUILD_DEPENDENCIES),$(call copy_to,$(dep),$(BLD_DIR)))
 endef
 
@@ -325,32 +324,38 @@ $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	$(if $(_CLEAN),@echo "   $@")
 	$(_Q)$(ASM_COMPILE)
 
-$(BLD_DIR)/%-s.a: $(_TARGET_DEPS)
+$(BLD_DIR)/lib%-s.a: $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	-$(_Q)rm -rf $@
-	$(_Q)ar -r -s $@ $(OBJS)
+	$(_Q)ar -c -r -s $@ $(OBJS)
+	@echo
 
 $(BLD_DIR)/$(_BASENAME).dll: $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	-$(_Q)rm -rf $(BLD_DIR)/$(_BASENAME).def $(BLD_DIR)/$(_BASENAME).a
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/$(_BASENAME).def" -Wl,--out-implib="$(BLD_DIR)/$(_BASENAME).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	@echo
 
 $(BLD_DIR)/$(_BASENAME).so: $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	$(_Q)$(CC) -shared $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	@echo
 
 $(BLD_DIR)/$(_BASENAME).dylib: $(_TARGET_DEPS)
 	$(call linking_with,$(BLD_DIR)/$(_BASENAME).dylib)
 	$(_Q)$(CC) -dynamiclib -undefined suppress -flat_namespace $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	@echo
 
 $(BLD_DIR)/$(_BASENAME).exe: $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(ORIGIN_FLAG) $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	@echo
 	$(call build_deps)
 
 $(BLD_DIR)/$(_BASENAME): $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(ORIGIN_FLAG) $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
+	@echo
 	$(call build_deps)
 
 $(_DIRECTORIES):
