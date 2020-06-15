@@ -267,6 +267,11 @@ define compile_with
 	$(_Q)$(3) && $(4)
 endef
 
+define compile_static_lib
+	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT)-s.a
+	$(_Q)ar -r -s $(BLD_DIR)/$(_NAMENOEXT)-s.a $(OBJS)
+endef
+
 MKDIR := $(_Q)mkdir -p
 
 makepch: $(_PCH_GCH)
@@ -312,8 +317,7 @@ $(TARGET): $(_PCH_GCH) $(OBJS) $(ASMS) $(TEST_DIR)
 	$(if $(_CLEAN),@echo; $(UNI_LINK); echo '  Linking: $(TARGET)')
 ifeq ($(suffix $(TARGET)),.dll)
 ifeq ($(BUILD_STATIC),true)
-	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).a
-	$(_Q)ar.exe -r -s $(BLD_DIR)/$(_NAMENOEXT).a $(OBJS)
+	$(call compile_static_lib)
 else
 	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).def $(BLD_DIR)/$(_NAMENOEXT).a
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/$(_NAMENOEXT).def" -Wl,--out-implib="$(BLD_DIR)/$(_NAMENOEXT).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
@@ -321,16 +325,14 @@ endif
 else
 ifeq ($(suffix $(TARGET)),.dylib)
 ifeq ($(BUILD_STATIC),true)
-	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).a
-	$(_Q)ar -r -s $(BLD_DIR)/$(_NAMENOEXT).a $(OBJS)
+	$(call compile_static_lib)
 else
 	$(_Q)$(CC) -dynamiclib -undefined suppress -flat_namespace $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
 else
 ifeq ($(suffix $(TARGET)),.so)
 ifeq ($(BUILD_STATIC),true)
-	-$(_Q)rm -rf $(BLD_DIR)/$(_NAMENOEXT).a
-	$(_Q)ar -r -s $(BLD_DIR)/$(_NAMENOEXT).a $(OBJS)
+	$(call compile_static_lib)
 else
 	$(_Q)$(CC) -shared $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
 endif
