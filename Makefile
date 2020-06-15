@@ -151,7 +151,9 @@ BLD_DIR := $(BLD_DIR:%/=%)
 _BASENAME := $(basename $(NAME))
 ifeq ($(BUILD_STATIC),true)
 ifeq ($(suffix $(NAME)),$(filter $(suffix $(NAME)),.dll .dylib .so))
+ifneq ($(suffix $(NAME)),)
 	NAME := $(_BASENAME)-s.a
+endif
 endif
 endif
 TARGET := $(BLD_DIR)/$(NAME)
