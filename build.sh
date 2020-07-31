@@ -277,6 +277,10 @@ for target in $BUILD_TARGETS; do
 		export SRC_TARGET=$target
 	fi
 
+	if [[ ($CMD == 'run' || $CMD == 'profile') && $target != 'main' ]]; then
+		continue
+	fi
+
 	CHILD_CMD="cmd_$CMD $target"
 	if [[ $CMD == 'buildrun' && $target != 'main' ]]; then
 		CHILD_CMD="cmd_build"
