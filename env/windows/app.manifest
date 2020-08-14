@@ -24,6 +24,9 @@
 		<windowsSettings xmlns="http://schemas.microsoft.com/SMI/2017/WindowsSettings">
 			<gdiScaling>false</gdiScaling>
 		</windowsSettings>
+		<windowsSettings xmlns="http://schemas.microsoft.com/SMI/2020/WindowsSettings">
+			<heapType>SegmentHeap</heapType>
+		</windowsSettings>
 	</application>
 	<compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
 		<application>
