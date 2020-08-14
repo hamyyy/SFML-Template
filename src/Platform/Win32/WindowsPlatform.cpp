@@ -1,7 +1,7 @@
 #ifdef _WIN32
 	#include "Platform/Win32/WindowsPlatform.hpp"
 
-	#include "Icon.h"
+	#include "Resource.h"
 
 namespace util
 {
