@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3">
 	<assemblyIdentity
 		name="SFML Boilerplate"
 		processorArchitecture="ia64"
@@ -13,15 +13,18 @@
 			</requestedPrivileges>
 		</security>
 	</trustInfo>
-	<application xmlns="urn:schemas-microsoft-com:asm.v3">
-		<windowsSettings xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">
+	<asmv3:application>
+		<asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2011/WindowsSettings">
 			<disableWindowFiltering>true</disableWindowFiltering>
-			<dpiAware>true</dpiAware>
+		</asmv3:windowsSettings>
+		<asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">
 			<dpiAwareness>permonitorv2, permonitor, unaware</dpiAwareness>
-			<gdiScaling>true</gdiScaling>
-			<longPathAware>true</longPathAware>
-		</windowsSettings>
-	</application>
+      		<longPathAware>true</longPathAware>
+		</asmv3:windowsSettings>
+		<asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2017/WindowsSettings">
+			<gdiScaling>false</gdiScaling>
+		</asmv3:windowsSettings>
+	</asmv3:application>
 	<compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
 		<application>
 			<supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}" /> <!-- Windows Vista/Server 2008 -->
