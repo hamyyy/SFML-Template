@@ -1,5 +1,5 @@
 MAX_PARALLEL_JOBS := 8
-CLEAN_OUTPUT := true
+CLEAN_OUTPUT := false
 DUMP_ASSEMBLY := false
 
 _CFLAGS_STD := -std=c++17
