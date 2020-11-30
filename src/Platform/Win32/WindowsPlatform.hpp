@@ -10,7 +10,6 @@ namespace util
 struct WindowsPlatform : IPlatform
 {
 	WindowsPlatform();
-	~WindowsPlatform();
 
 	void setIcon(const sf::WindowHandle& inHandle) final;
 	void toggleFullscreen(const sf::WindowHandle& inHandle, const sf::Uint32 inStyle, const bool inWindowed, const sf::Vector2u& inResolution) final;
@@ -21,8 +20,6 @@ private:
 	PBYTE getIconDirectory(const int inResourceId);
 	HICON getIconFromIconDirectory(PBYTE inIconDirectory, const uint inSize);
 	DWORD sfmlWindowStyleToWin32WindowStyle(const sf::Uint32 inStyle);
-
-	std::vector<HICON> m_hIcons;
 
 	float m_screenScalingFactor = 0.0f;
 	int m_refreshRate = 0;

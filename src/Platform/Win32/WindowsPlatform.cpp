@@ -10,34 +10,9 @@ namespace util
  *****************************************************************************/
 WindowsPlatform::WindowsPlatform()
 {
-	// Get the icon directory
-	PBYTE iconDirectory = getIconDirectory(WIN32_ICON_MAIN);
-
 	// Get the default device info
 	m_screenScalingFactor = getScreenScalingFactor(nullptr);
 	m_refreshRate = getRefreshRate(nullptr);
-
-	// Store each icon
-	std::array<int, 6> icons = { 16, 32, 48, 64, 128 };
-	for (auto& it : icons)
-	{
-		HICON icon = getIconFromIconDirectory(iconDirectory, it);
-		m_hIcons.push_back(icon);
-	}
-}
-
-/******************************************************************************
- *
- *****************************************************************************/
-WindowsPlatform::~WindowsPlatform()
-{
-	for (auto& it : m_hIcons)
-	{
-		if (it)
-			DestroyIcon(it);
-	}
-
-	m_hIcons.clear();
 }
 
 /******************************************************************************
@@ -46,14 +21,25 @@ WindowsPlatform::~WindowsPlatform()
  *****************************************************************************/
 void WindowsPlatform::setIcon(const sf::WindowHandle& inHandle)
 {
-	std::size_t indexSmallIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(m_screenScalingFactor - 1.0f), 0.0f), static_cast<float>(m_hIcons.size()) - 1.0f));
-	std::size_t indexBigIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(m_screenScalingFactor - 1.0f), 0.0f) + 1.0f, static_cast<float>(m_hIcons.size()) - 1.0f));
+	// Get the icon directory
+	PBYTE iconDirectory = getIconDirectory(WIN32_ICON_MAIN);
+	std::array<int, 5> icons = { 16, 32, 48, 64, 128 };
 
-	if (m_hIcons[indexBigIcon])
-		SendMessage(inHandle, WM_SETICON, ICON_BIG, (LPARAM)m_hIcons[indexBigIcon]);
+	std::size_t indexSmallIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(m_screenScalingFactor - 1.0f), 0.0f), static_cast<float>(icons.size()) - 1.0f));
+	std::size_t indexBigIcon = static_cast<std::size_t>(std::min(std::max(std::ceil(m_screenScalingFactor - 1.0f), 0.0f) + 1.0f, static_cast<float>(icons.size()) - 1.0f));
 
-	if (m_hIcons[indexSmallIcon])
-		SendMessage(inHandle, WM_SETICON, ICON_SMALL, (LPARAM)m_hIcons[indexSmallIcon]);
+	HICON smallIcon = getIconFromIconDirectory(iconDirectory, icons[indexSmallIcon]);
+	HICON bigIcon = getIconFromIconDirectory(iconDirectory, icons[indexBigIcon]);
+
+	if (smallIcon)
+		SendMessage(inHandle, WM_SETICON, ICON_SMALL, (LPARAM)smallIcon);
+
+	if (bigIcon)
+		SendMessage(inHandle, WM_SETICON, ICON_BIG, (LPARAM)bigIcon);
+
+	// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon
+	// It is only necessary to call DestroyIcon for icons and cursors created with the following functions:
+	//   CreateIconFromResourceEx (if called without the LR_SHARED flag)
 }
 
 /******************************************************************************
@@ -163,14 +149,14 @@ PBYTE WindowsPlatform::getIconDirectory(const int inResourceId)
 HICON WindowsPlatform::getIconFromIconDirectory(PBYTE inIconDirectory, const uint inSize)
 {
 	HMODULE hModule = GetModuleHandle(nullptr);
-	int resourceId = LookupIconIdFromDirectoryEx(inIconDirectory, TRUE, inSize, inSize, LR_DEFAULTCOLOR);
+	int resourceId = LookupIconIdFromDirectoryEx(inIconDirectory, TRUE, inSize, inSize, LR_DEFAULTCOLOR | LR_SHARED);
 	HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId), RT_ICON);
 
 	HGLOBAL hData = LoadResource(hModule, hResource);
 	PBYTE data = (PBYTE)LockResource(hData);
 	DWORD sizeofData = SizeofResource(hModule, hResource);
 
-	HICON icon = CreateIconFromResourceEx(data, sizeofData, TRUE, 0x00030000, inSize, inSize, LR_DEFAULTCOLOR);
+	HICON icon = CreateIconFromResourceEx(data, sizeofData, TRUE, 0x00030000, inSize, inSize, LR_DEFAULTCOLOR | LR_SHARED);
 	return icon;
 }
 
