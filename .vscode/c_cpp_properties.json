@@ -45,7 +45,7 @@
 		},
 		{
 			"name": "Win32",
-			"intelliSenseMode": "gcc-x64",
+			"intelliSenseMode": "gcc-x86",
 			"compilerPath": "C:/mingw32/bin/gcc.exe",
 			"includePath": [
 				"${workspaceFolder}/src",

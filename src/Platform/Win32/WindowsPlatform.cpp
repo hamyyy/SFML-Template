@@ -149,14 +149,14 @@ PBYTE WindowsPlatform::getIconDirectory(const int inResourceId)
 HICON WindowsPlatform::getIconFromIconDirectory(PBYTE inIconDirectory, const uint inSize)
 {
 	HMODULE hModule = GetModuleHandle(nullptr);
-	int resourceId = LookupIconIdFromDirectoryEx(inIconDirectory, TRUE, inSize, inSize, LR_DEFAULTCOLOR | LR_SHARED);
+	int resourceId = LookupIconIdFromDirectoryEx(inIconDirectory, TRUE, inSize, inSize, LR_DEFAULTCOLOR);
 	HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId), RT_ICON);
 
 	HGLOBAL hData = LoadResource(hModule, hResource);
 	PBYTE data = (PBYTE)LockResource(hData);
 	DWORD sizeofData = SizeofResource(hModule, hResource);
 
-	HICON icon = CreateIconFromResourceEx(data, sizeofData, TRUE, 0x00030000, inSize, inSize, LR_DEFAULTCOLOR | LR_SHARED);
+	HICON icon = CreateIconFromResourceEx(data, sizeofData, TRUE, 0x00030000, inSize, inSize, LR_DEFAULTCOLOR);
 	return icon;
 }
 
