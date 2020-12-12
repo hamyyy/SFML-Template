@@ -163,18 +163,18 @@ ifneq ($(SRC_TARGET),)
 endif
 _LIB_DIRS := $(LIB_DIR:%=-L%/) $(LIB_DIRS:%=-L%)
 
-_SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES:.rc=.res),$(SOURCE_FILES:%.rc=))
+_SOURCES_IF_RC := $(if $(filter windows,$(PLATFORM)),$(SOURCE_FILES),$(SOURCE_FILES:%.rc=))
 
 OBJ_DIR := $(BLD_DIR)/obj$(_SRC_TARGET)
 _OBJS := $(_SOURCES_IF_RC:.c=.c.o)
 _OBJS := $(_OBJS:.cpp=.cpp.o)
 _OBJS := $(_OBJS:.cc=.cc.o)
+_OBJS := $(_OBJS:.rc=.res)
 OBJS := $(_OBJS:%=$(OBJ_DIR)/%)
 OBJ_SUBDIRS := $(PROJECT_DIRS:%=$(OBJ_DIR)/%)
 
 DEP_DIR := $(BLD_DIR)/dep$(_SRC_TARGET)
-_DEPS := $(_SOURCES_IF_RC)
-_DEPS := $(_DEPS:%=%.d)
+_DEPS := $(_SOURCES_IF_RC:%=%.d)
 DEPS := $(_DEPS:%=$(DEP_DIR)/%) $(DEP_DIR)/$(PRECOMPILED_HEADER).d
 DEP_SUBDIRS := $(PROJECT_DIRS:%=$(DEP_DIR)/%)
 
@@ -224,7 +224,7 @@ endif
 OBJ_COMPILE = $(CC) $(CFLAGS_DEPS) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(_INCLUDE_PCH) $(CFLAGS) -o $@ -c $<
 OBJ_COMPILE_T = $(CC) $(CFLAGS_DEPS_T) $(_BUILD_MACROS) $(_INCLUDE_DIRS) $(_INCLUDE_PCH) $(CFLAGS) -o $@ -c $<
 
-RC_COMPILE = -$(RC) -J rc -O coff -i $< -o $@
+RC_COMPILE = -$(RC) -J rc -O coff --preprocessor-arg=-MT --preprocessor-arg=$@ --preprocessor-arg=-MMD --preprocessor-arg=-MP --preprocessor-arg=-MF --preprocessor-arg=$(DEP_DIR)/$*.rc.Td $(_BUILD_MACROS) $(_INCLUDE_DIRS) -i $< -o $@
 ifeq ($(PLATFORM),osx)
 	ASM_COMPILE = otool -tvV $< | c++filt > $@
 else
@@ -232,6 +232,7 @@ else
 endif
 POST_COMPILE = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d && touch $@
 POST_COMPILE_T = mv -f $(DEP_DIR)/.$(TEST_DIR)/$*.Td $(DEP_DIR)/.$(TEST_DIR)/$*.d && touch $@
+POST_COMPILE_RC = mv -f $(DEP_DIR)/$*.rc.Td $(DEP_DIR)/$*.rc.d && touch $@
 
 #==============================================================================
 # Unicode
@@ -314,10 +315,8 @@ $(OBJ_DIR)/%.$(_PCH_EXT).$(_PCH_COMPILER_EXT) : $(SRC_DIR)/%.$(_PCH_EXT) $(DEP_D
 	$(call compile_with,@,<,$(PCH_COMPILE),$(POST_COMPILE))
 
 $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc
-$(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(DEP_DIR)/%.d | $(_DIRECTORIES)
-	$(color_reset)
-	$(if $(_CLEAN),@echo "   $(<:$(OBJ_DIR)/%=%)")
-	$(_Q)$(RC_COMPILE)
+$(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(DEP_DIR)/%.rc.d | $(_DIRECTORIES)
+	$(call compile_with,@,<,$(RC_COMPILE),$(POST_COMPILE_RC))
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
 	@tput setaf 6
