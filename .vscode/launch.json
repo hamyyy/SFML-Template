@@ -24,33 +24,24 @@
 			"windows": {
 				"MIMode": "gdb",
 				"miDebuggerPath": "C:/mingw32/bin/gdb.exe",
-				"environment": [
-					{
-						"name": "Path",
-						"value": "${config:terminal.integrated.env.windows.Path}"
-					}
-				]
+				"env": {
+					"Path": "${config:terminal.integrated.env.windows.Path}"
+				}
 			},
 			"linux": {
 				"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}",
 				"MIMode": "gdb",
 				"miDebuggerPath": "/usr/bin/gdb",
-				"environment": [
-					{
-						"name": "PATH",
-						"value": "${config:terminal.integrated.env.linux.PATH}"
-					}
-				]
+				"env": {
+					"PATH": "${config:terminal.integrated.env.linux.PATH}",
+				}
 			},
 			"osx": {
 				"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}",
 				"MIMode": "lldb",
-				"environment": [
-					{
-						"name": "PATH",
-						"value": "${config:terminal.integrated.env.osx.PATH}"
-					}
-				]
+				"env": {
+					"PATH": "${config:terminal.integrated.env.osx.PATH}",
+				}
 			},
 		}
 	]
