@@ -239,15 +239,15 @@ POST_COMPILE_RC = mv -f $(DEP_DIR)/$*.rc.Td $(DEP_DIR)/$*.rc.d && touch $@
 
 #==============================================================================
 # Unicode
-UNI_COPY := echo -n "➦"
-UNI_LINK := echo -n "⇛"
+UNI_COPY := ➦
+UNI_LINK := ⇛
 ifeq ($(PLATFORM),osx)
-	UNI_COPY := printf "➦"
-	UNI_LINK := printf "⇛"
+	UNI_COPY := ➦
+	UNI_LINK := ⇛
 endif
 ifeq ($(PLATFORM),windows)
-	UNI_COPY := printf '\xE2\x9E\xA6'
-	UNI_LINK := printf '\xE2\x87\x9B'
+	UNI_COPY := \xE2\x9E\xA6
+	UNI_LINK := \xE2\x87\x9B
 endif
 
 # Misc
@@ -271,17 +271,16 @@ buildprod: all makeproduction
 
 #==============================================================================
 # Functions
-color_reset := @tput setaf 4
+color_blue := \033[0;34m
+color_purple := \033[0;35m
 
 define compile_with
-	$(color_reset)
-	$(if $(_CLEAN),@echo '   $($(2):$(OBJ_DIR)/%=%)')
+	$(if $(_CLEAN),@printf '   $(color_blue)$($(2):$(OBJ_DIR)/%=%)\n')
 	$(_Q)$(3) && $(4)
 endef
 
 define linking_with
-	$(color_reset)
-	$(if $(_CLEAN),@echo; $(UNI_LINK); echo '  Linking: $(1)')
+	$(if $(_CLEAN),@printf '\n$(color_blue)$(UNI_LINK)  Linking: $(1)')
 endef
 
 define build_deps
@@ -291,15 +290,14 @@ endef
 MKDIR := $(_Q)mkdir -p
 
 makepch: $(_PCH_GCH)
-	@echo > /dev/null
+	@printf ''
 .PHONY: makepch
 
 makebuild: $(TARGET)
-	$(color_reset)
 ifeq ($(SRC_TARGET),)
-	@echo '   Target is up to date.'
+	@printf '   $(color_blue)Target is up to date.\n'
 else
-	@echo '   $(NAME): Target is up to date.'
+	@printf '   $(color_blue)$(NAME): Target is up to date.\n'
 endif
 .PHONY: makebuild
 
@@ -322,52 +320,49 @@ $(OBJ_DIR)/%.res: $(SRC_DIR)/%.rc $(DEP_DIR)/%.rc.d | $(_DIRECTORIES)
 	$(call compile_with,@,<,$(RC_COMPILE),$(POST_COMPILE_RC))
 
 $(ASM_DIR)/%.o.asm: $(OBJ_DIR)/%.o
-	@tput setaf 6
-	$(if $(_CLEAN),@echo "   $@")
+	$(if $(_CLEAN),@printf '   $(color_purple)$@\n')
 	$(_Q)$(ASM_COMPILE)
 
 $(BLD_DIR)/lib%-s.a: $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	-$(_Q)rm -rf $@
 	$(_Q)ar -c -r -s $@ $(OBJS)
-	@echo
+	@printf '\n'
 
 $(BLD_DIR)/$(_BASENAME).dll: $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	-$(_Q)rm -rf $(BLD_DIR)/$(_BASENAME).def $(BLD_DIR)/$(_BASENAME).a
 	$(_Q)$(CC) -shared -Wl,--output-def="$(BLD_DIR)/$(_BASENAME).def" -Wl,--out-implib="$(BLD_DIR)/$(_BASENAME).a" -Wl,--dll $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-	@echo
+	@printf '\n'
 
 $(BLD_DIR)/$(_BASENAME).so: $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	$(_Q)$(CC) -shared $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-	@echo
+	@printf '\n'
 
 $(BLD_DIR)/$(_BASENAME).dylib: $(_TARGET_DEPS)
 	$(call linking_with,$(BLD_DIR)/$(_BASENAME).dylib)
 	$(_Q)$(CC) -dynamiclib -undefined suppress -flat_namespace $(_LIB_DIRS) $(OBJS) -o $@ $(_SYMBOLS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-	@echo
+	@printf '\n'
 
 $(BLD_DIR)/$(_BASENAME).exe: $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(ORIGIN_FLAG) $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-	@echo
+	@printf '\n'
 	$(call build_deps)
 
 $(BLD_DIR)/$(_BASENAME): $(_TARGET_DEPS)
 	$(call linking_with,$@)
 	$(_Q)$(CC) $(_LIB_DIRS) $(_SYMBOLS) -o $@ $(ORIGIN_FLAG) $(OBJS) $(_LINK_LIBRARIES) $(BUILD_FLAGS)
-	@echo
+	@printf '\n'
 	$(call build_deps)
 
 $(_DIRECTORIES):
-	$(if $(_CLEAN),,$(color_reset))
+	$(if $(_CLEAN),,@printf '\$(color_blue)')
 	$(MKDIR) $@
-	$(if $(_CLEAN),,@echo)
 
 clean:
-	$(color_reset)
-	$(if $(_CLEAN),@echo '   Cleaning old build files & folders...'; echo)
+	$(if $(_CLEAN),@prtinf '   $(color_blue)Cleaning old build files & folders...\n\n')
 	$(_Q)$(RM) $(TARGET) $(DEPS) $(OBJS)
 .PHONY: clean
 
@@ -375,8 +370,7 @@ clean:
 # Production recipes
 
 rmprod:
-	$(color_reset)
-	@echo
+	@printf '\n'
 	-$(_Q)rm -rf $(if $(filter osx,$(PLATFORM)),$(PRODUCTION_FOLDER_MACOS),$(PRODUCTION_FOLDER))
 ifeq ($(PLATFORM),linux)
 	-$(_Q)rm -rf ~/.local/share/applications/$(NAME).desktop
@@ -384,18 +378,16 @@ endif
 .PHONY: rmprod
 
 mkdirprod:
-	$(color_reset)
 	$(MKDIR) $(PRODUCTION_FOLDER)
 .PHONY: mkdirprod
 
 define do_copy_to_clean
-	@$(UNI_COPY)
-	@echo  "  Copying \"$(1)\" to \"$(CURDIR)/$(2)\""
+	@printf  '$(color_blue)$(UNI_COPY)  Copying \"$(1)\" to \"$(CURDIR)/$(2)\"\n'
 	$(shell cp -r $(1) $(2))
 endef
 
 define do_copy_to
-	@echo  "cp -r $(1) $(2)"
+	@printf  '$(color_blue)cp -r $(1) $(2)\n'
 	$(shell cp -r $(1) $(2))
 endef
 
@@ -404,13 +396,12 @@ define copy_to
 endef
 
 releasetoprod: $(TARGET)
-	$(color_reset)
 ifeq ($(PLATFORM),osx)
-	@echo '   Creating the MacOS application bundle...'
-	@echo
+	@printf '   $(color_blue)Creating the MacOS application bundle...\n'
+	@printf '\n'
 	$(MKDIR) $(PRODUCTION_FOLDER)/Resources $(PRODUCTION_FOLDER)/Frameworks $(PRODUCTION_FOLDER)/MacOS
 	$(_Q)sips -s format icns env/osx/$(PRODUCTION_MACOS_ICON).png --out $(PRODUCTION_FOLDER)/Resources/$(PRODUCTION_MACOS_ICON).icns
-	@echo
+	@printf '\n'
 	$(_Q)plutil -convert binary1 env/osx/Info.plist.json -o $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleExecutable -string $(NAME) $(PRODUCTION_FOLDER)/Info.plist
 	$(_Q)plutil -replace CFBundleName -string $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER)/Info.plist
@@ -433,15 +424,14 @@ else ifeq ($(PLATFORM),linux)
 	$(_Q)cp $(PRODUCTION_FOLDER)/$(NAME).desktop ~/.local/share/applications
 else
 	$(_Q)cp $(TARGET) $(PRODUCTION_FOLDER)
-	$(if $(_CLEAN),,@echo)
+	$(if $(_CLEAN),,@printf '\n')
 endif
 .PHONY: releasetoprod
 
 makeproduction: rmprod mkdirprod releasetoprod
-	$(color_reset)
 ifneq ($(PRODUCTION_DEPENDENCIES),)
-	@echo '   Adding dynamic libraries & project dependencies...'
-	@echo
+	@printf '   $(color_blue)Adding dynamic libraries & project dependencies...\n'
+	@printf '\n'
 	$(foreach dep,$(PRODUCTION_DEPENDENCIES),$(call copy_to,$(dep),$(PRODUCTION_FOLDER_RESOURCES)))
 	$(foreach excl,$(PRODUCTION_EXCLUDE),$(shell find $(PRODUCTION_FOLDER_RESOURCES) -name '$(excl)' -delete))
 endif
@@ -455,9 +445,9 @@ ifeq ($(PLATFORM),osx)
 	$(foreach framework,$(PRODUCTION_MACOS_FRAMEWORKS),$(call copy_to,$(framework),$(PRODUCTION_FOLDER)/Frameworks))
 ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(shell hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ &> /dev/null)
-	@echo
-	@echo '   Creating the dmg image for the application...'
-	@echo
+	@printf '\n'
+	@printf '   $(color_blue)Creating the dmg image for the application...\n'
+	@printf '\n'
 	$(_Q)hdiutil create -megabytes 54 -fs HFS+ -volname $(PRODUCTION_MACOS_BUNDLE_NAME) $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg > /dev/null
 	$(_Q)hdiutil attach $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg > /dev/null
 	$(_Q)cp -r $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).app /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/
@@ -469,8 +459,8 @@ ifeq ($(PRODUCTION_MACOS_MAKE_DMG),true)
 	$(_Q)hdiutil detach /Volumes/$(PRODUCTION_MACOS_BUNDLE_NAME)/ > /dev/null
 	$(_Q)hdiutil convert $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg -format UDZO -o $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg > /dev/null
 	$(_Q)rm -f $(PRODUCTION_FOLDER_MACOS)/.tmp.dmg
-	@echo
-	@echo '   Created $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg'
+	@printf '\n'
+	@printf '   $(color_blue)Created $(PRODUCTION_FOLDER_MACOS)/$(PRODUCTION_MACOS_BUNDLE_NAME).dmg\n'
 endif
 endif
 .PHONY: makeproduction
