@@ -6,6 +6,9 @@ SUFFIXES =
 #==============================================================================
 MAKEFLAGS += --no-print-directory
 #==============================================================================
+
+SHELL := /bin/sh
+
 # Build platform
 PLATFORM?=linux
 # Build description (Primarily uses Debug/Release)
