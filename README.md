@@ -65,8 +65,8 @@ A cross-platform [SFML](https://www.sfml-dev.org) 2.5.1 & C++17 build environmen
 
 ### Linux
 
-1. Ensure the GCC Toolchain is installed (**sudo apt install build-essential**)
-2. Run **sudo apt install libsfml-dev**. The SFML version you got will vary depending on the distro. 2.5.1 is included in [Ubuntu 19.04 Disco Dingo](http://cdimage.ubuntu.com/daily-live/current/HEADER.html) for example.
+1. Ensure the GCC Toolchain is installed (**sudo apt install build-essential**) (**sudo pacman -S base-devel**)
+2. Install libsfml (**sudo apt install libsfml-dev**) (**sudo pacman -S sfml**). The SFML version you got will vary depending on the distro. 2.5.1 is included in [Ubuntu 19.04 Disco Dingo](http://cdimage.ubuntu.com/daily-live/current/HEADER.html) for example.
 
 ### All
 
