@@ -4,22 +4,22 @@
 	"version": "2.0.0",
 	"windows": {
 		"options": {
-			"env": {
-				"Path": "${config:terminal.integrated.env.windows.Path}"
+			"shell": {
+				"executable": "C:/Program Files/Git/bin/gitbash.exe", // change to bash.exe
 			}
 		}
 	},
 	"linux": {
 		"options": {
-			"env": {
-				"PATH": "${config:terminal.integrated.env.linux.PATH}"
+			"shell": {
+				"executable": "bash",
 			}
 		}
 	},
 	"osx": {
 		"options": {
-			"env": {
-				"PATH": "${config:terminal.integrated.env.osx.PATH}"
+			"shell": {
+				"executable": "bash",
 			}
 		}
 	},
@@ -34,7 +34,7 @@
 	"tasks": [
 		{
 			"label": "Build & Run: Release",
-			"command": "bash ./build.sh buildrun Release vscode",
+			"command": "./build.sh buildrun Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -46,7 +46,7 @@
 		},
 		{
 			"label": "Build: Release",
-			"command": "bash ./build.sh build Release vscode",
+			"command": "./build.sh build Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -58,7 +58,7 @@
 		},
 		{
 			"label": "Run: Release",
-			"command": "bash ./build.sh run Release vscode",
+			"command": "./build.sh run Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -70,7 +70,7 @@
 		},
 		{
 			"label": "Rebuild: Release",
-			"command": "bash ./build.sh rebuild Release vscode",
+			"command": "./build.sh rebuild Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -82,7 +82,7 @@
 		},
 		{
 			"label": "Build & Run: Debug",
-			"command": "bash ./build.sh buildrun Debug vscode",
+			"command": "./build.sh buildrun Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -94,7 +94,7 @@
 		},
 		{
 			"label": "Build: Debug",
-			"command": "bash ./build.sh build Debug vscode",
+			"command": "./build.sh build Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -106,7 +106,7 @@
 		},
 		{
 			"label": "Run: Debug",
-			"command": "bash ./build.sh run Debug vscode",
+			"command": "./build.sh run Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -118,7 +118,7 @@
 		},
 		{
 			"label": "Rebuild: Debug",
-			"command": "bash ./build.sh rebuild Debug vscode",
+			"command": "./build.sh rebuild Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -130,7 +130,7 @@
 		},
 		{
 			"label": "Profile: Debug",
-			"command": "bash ./build.sh profile Debug vscode",
+			"command": "./build.sh profile Debug vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -142,7 +142,7 @@
 		},
 		{
 			"label": "Build & Run: Tests",
-			"command": "bash ./build.sh buildrun Tests vscode '-w NoTests -s'",
+			"command": "./build.sh buildrun Tests vscode '-w NoTests -s'",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -154,7 +154,7 @@
 		},
 		{
 			"label": "Build: Tests",
-			"command": "bash ./build.sh build Tests vscode",
+			"command": "./build.sh build Tests vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -166,7 +166,7 @@
 		},
 		{
 			"label": "Run: Tests",
-			"command": "bash ./build.sh run Tests vscode '-w NoTests -s'",
+			"command": "./build.sh run Tests vscode '-w NoTests -s'",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -178,7 +178,7 @@
 		},
 		{
 			"label": "Rebuild: Tests",
-			"command": "bash ./build.sh rebuild Tests vscode",
+			"command": "./build.sh rebuild Tests vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
@@ -190,7 +190,7 @@
 		},
 		{
 			"label": "Build: Production",
-			"command": "bash ./build.sh buildprod Release vscode",
+			"command": "./build.sh buildprod Release vscode",
 			"type": "shell",
 			"group": {
 				"kind": "build",
